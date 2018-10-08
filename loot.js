@@ -159,7 +159,7 @@ let badMods=[
 	},
 	
 	{
-		"name":"dull",
+		"name":"crude",
 		"atk":0,
 		"par":0,
 		"dmg":0.8,
@@ -189,7 +189,7 @@ let goodMods=[
 		"atk":1,
 		"par":1,
 		"dmg":1,
-		"val":3,
+		"val":2,
 		"desc":"",
 		"materials":["steel"],
 		"cats":null,
@@ -201,7 +201,7 @@ let goodMods=[
 		"atk":2,
 		"par":1,
 		"dmg":1.3,
-		"val":3,
+		"val":4,
 		"desc":"",
 		"materials":["steel"],
 		"cats":null,
@@ -213,7 +213,7 @@ let goodMods=[
 		"atk":-1,
 		"par":-1,
 		"dmg":0.8,
-		"val":3,
+		"val":4,
 		"desc":"+4 DMG against undead",
 		"materials":["steel"],
 		"cats":null,
@@ -289,26 +289,33 @@ function nbToDice(max, deviation)
 		i++
 	}
 	
-	i=avail.length-1
 	var combos=[]
-	//while (avail.length>1)
-	while (i>0)
+	while (avail.length>=1)
 	{
+		i=avail.length-1
 		var cmb=[]
-		var s=sumArray(cmb)+avail[i]
-		if (s <= max+1)
+		while (i>0)
 		{
-			cmb[cmb.length]=(avail[i])
+			var s=sumArray(cmb)+avail[i]
+			if (s <= max+1)
+			{
+				cmb.push(avail[i])
+			}
+			else // if (s > max+1)
+			{
+				i--
+			}
 		}
-		else // if (s > max+1)
+		if (cmb.length > 0) // shouldn't be needed..
 		{
-			i--
+			//console.log("Empty dice combo produced for input "+max+", "+deviation)
+			combos.push(cmb)
 		}
-		break
+		avail.pop()
 	}
-	combos.push(cmb)
 	
-	// TODO multiple passes, reducing the size of avail
+	console.log(combos)
+	
 	
 	// TODO calculate each combo's deviation and compare it to target
 	
@@ -321,15 +328,19 @@ function nbToDice(max, deviation)
 		"12":0,
 		"20":0
 	}
-	for (var i in cmb) // change to whichever combo is taken
+	for (var i in combos[combos.length-1]) // change to whichever combo is picked
 	{
-		count[cmb[i].toString()]+=1
+		count[combos[combos.length-1][i].toString()]+=1
 	}
 	out=""
 	for (var i in count)
 	{
 		if (count[i] != 0)
+		{
+			if (out != "")
+				out+="+"
 			out+=count[i]+"d"+i
+		}
 	}
 	console.log("In: "+max+", "+deviation+", Out: "+out)
 	return out
@@ -429,6 +440,7 @@ function getItems(nbItems, meanval)
 			fw.par+=m.par
 			fw.dmg*=m.dmg
 			fw.val*=m.val
+			fw.desc+=" "+m.desc
 		}
 		
 		fw.dmg=nbToDice(fw.dmg, fw.dmgspread)
