@@ -1,0 +1,63 @@
+<head>
+	<title>Loot generator</title>
+	<meta charset="utf-8"/>
+	<script src="loot.js"></script>
+	<script>
+	function displayWeapons(chest)
+	{
+		// table
+		var t=document.getElementById("weaponsTable")
+		
+		for (var w in chest)
+		{
+			var tr=document.createElement("tr")
+			tr.className="weaponRow"
+			attrs=["name", "cat",  "atk",   "par",   "dmg",   "val",   "hands",  "desc"]
+			align=["left", "left", "right", "right", "right", "right", "center", "left"]
+			for (var n in attrs)
+			{
+				var td = document.createElement("td")
+				td.innerHTML=chest[w][attrs[n]]
+				td.style.textAlign=align[n]
+				tr.appendChild(td)
+			}
+			
+			if (w%2 == 0)
+				tr.className+=" gray"
+			t.appendChild(tr)
+		}
+		
+		// debug
+		document.getElementById("debug").innerHTML=""
+		for (var w in chest)
+		{
+			var p = document.createElement('p')
+			p.innerHTML=JSON.stringify(chest[w],2)
+			document.getElementById("debug").appendChild(p)
+		}
+		
+	}
+	</script>
+	<style>
+	.gray {
+		background-color:#EEE;
+	}
+	</style>
+</head>
+<body onload='displayWeapons(getItems(10, 20))'>
+<table id="weaponsTable">
+		<tr>
+			<th style="min-width:10em;">Name</th>
+			<th style="min-width:10em;">Classes</th>
+			<th style="min-width:2em;" >ATK</th>
+			<th style="min-width:2em;" >PAR</th>
+			<th style="min-width:2em;" >DMG</th>
+			<th style="min-width:3em;" >Value</th>
+			<th style="min-width:2em;" >Hands</th>
+			<th style="width:100%;"    >Notes</th>
+		</tr>
+</table>
+
+<p id="debug" style="font-family:monospace;">
+</p>
+</body>
