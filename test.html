@@ -28,25 +28,82 @@
 		table.appendChild(r)
 	}
 	
-	function test()
+	/**
+	 * func is a pointer to a function
+	 * input is an array of arguments
+	 * nbArgs is the number of argument each function takes
+	 * if it is 1, then each item of the argument will be passed sequentially
+	 * if it is more than 1, then it will be expected of input to be an
+	 * array of sub arrays of size <nbArgs>
+	 
+	 * corr is optional. An array of what the output should be.
+	 */
+	function test(func, input, nbArgs, corr)
 	{
-		// diceStrToArr
-		var diceStrToArrInput=["1d8", "2d4", "1d8 + 3d4", "1d16+2d4+5d6"]
-		var diceStrToArrCorr=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
-		for (var i in diceStrToArrInput)
-			addResult(diceStrToArrInput[i], diceStrToArr(diceStrToArrInput[i]), "diceStrToArr", diceStrToArrCorr[i])
-			
-		// diceMean
-		var diceMeanInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
-		var diceMeanCorr=[4.5, 5, 12, 31]
-		for (var i in diceMeanInput)
-			addResult(diceMeanInput[i], diceMean(diceMeanInput[i]), "diceMean", diceMeanCorr[i])
-			
-		// diceStdDeviation
-		var diceStdDeviationInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
-		var diceStdDeviationCorr=[Math.sqrt(5.25), Math.sqrt(2.5), Math.sqrt(9), Math.sqrt(115/3)] // unsure of last one
-		for (var i in diceStdDeviationInput)
-			addResult(diceStdDeviationInput[i], diceStdDeviation(diceStdDeviationInput[i]), "diceStdDeviation", diceStdDeviationCorr[i])
+		if (!document.getElementById(func.name))
+		{
+			var d = document.createElement("div")
+			d.className="testResults"
+			var h = document.createElement("h5")
+			h.innerHTML=func.name
+			d.appendChild(h)
+			var t = document.createElement("table")
+			t.style.fontFamily="monospace"
+			t.id = func.name
+			var tr = document.createElement("tr")
+			var th1 = document.createElement("th")
+			th1.innerHTML="In"
+			tr.appendChild(th1)
+			var th2 = document.createElement("th")
+			th2.innerHTML="Out"
+			tr.appendChild(th2)
+			t.appendChild(tr)
+			d.appendChild(t)
+			document.body.appendChild(d)
+		}
+		
+		// if it's stupid and it works, it's.. still stupid ?
+		if (typeof(corr) === "undefined")
+		{
+			corr=[]
+			for (var i=0;i<input.length;i++)
+				corr.push(undefined)
+		}
+		
+		if (nbArgs == 1)
+		{
+			for (var i in input)
+				addResult(input[i], func(input[i]), func.name, corr[i])
+		}
+		// can this be meta-programmed ? IDK
+		else if (nbArgs == 2)
+		{
+			for (var i in input)
+				addResult(input[i], func(input[i][0], input[i][1]), func.name, corr[i])
+		}
+		else if (nbArgs == 3)
+		{
+			for (var i in input)
+				addResult(input[i], func(input[i][0], input[i][1]), func.name, corr[i])
+		}
+		else if (nbArgs == 4)
+		{
+			for (var i in input)
+				addResult(input[i], func(input[i][0], input[i][1], input[i][2], input[i][3]), func.name, corr[i])
+		}
+		else
+		{
+			throw "Too much arguments !"
+		}
+	}
+	
+	function testAll()
+	{
+		
+		test(diceStrToArr, ["1d8", "2d4", "1d8 + 3d4", "1d16+2d4+5d6"], 1, [[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]])
+		test(diceMean, [[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]], 1, [4.5, 5, 12, 31])
+		test(diceStdDeviation, [[8], [4,4], [8,4,4,4]], 1, [Math.sqrt(5.25), Math.sqrt(2.5), Math.sqrt(9)]) // last one slowed down page loading, it's annoying
+		test(nbToDice, [[2,1],[6,1], [6,10], [12,1], [12,2], [12,2.25], [12,2.5], [12,3], [12,3.5]], 2)
 	}
 	</script>
 	<style>
@@ -68,45 +125,5 @@
 	}
 	</style>
 </head>
-<body onload='test()'>
-	
-<div class="testResults">
-<h5>diceStrToArr</h5>
-<table id="diceStrToArr" style="font-family:monospace;">
-	<tr>
-		<th>In</th>
-		<th>Out</th>
-	</tr>
-</table>
-</div>
-
-<div class="testResults">
-<h5>diceMean</h5>
-<table id="diceMean" style="font-family:monospace;">
-	<tr>
-		<th>In</th>
-		<th>Out</th>
-	</tr>
-</table>
-</div>
-
-<div class="testResults">
-<h5>diceDeviation</h5>
-<table id="diceStdDeviation" style="font-family:monospace;">
-	<tr>
-		<th>In</th>
-		<th>Out</th>
-	</tr>
-</table>
-</div>
-
-<div class="testResults">
-<h5>nbToDice</h5>
-<table id="nbToDice" style="font-family:monospace;">
-	<tr>
-		<th>In</th>
-		<th>Out</th>
-	</tr>
-</table>
-</div>
+<body onload='testAll()'>
 </body>

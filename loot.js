@@ -201,7 +201,7 @@ function nbToDice(max, deviation)
 	{
 		i=avail.length-1
 		var cmb=[]
-		while (i>0)
+		while (i>=0)
 		{
 			var s=sumArray(cmb)+avail[i]
 			if (s <= max+1)
@@ -221,7 +221,7 @@ function nbToDice(max, deviation)
 		avail.pop()
 	}
 	
-	console.log(combos)
+	//console.log(combos)
 	
 	
 	chosenCombo = []
@@ -313,8 +313,14 @@ for (var w in goodMods)
 }
 
 
-
-
+/**
+ * given a weapon and modifier, 
+ *
+ */
+function finalizeWeapon(weapon, mod)
+{
+	//TODO deport a part of getItems here
+}
 
 /*
  * returns an array of weapons
