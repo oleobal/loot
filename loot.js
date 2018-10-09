@@ -18,7 +18,7 @@ function sumArray(a)
 {
 	if (a.length==0)
 		return 0
-	if (a.length==0)
+	if (a.length==1)
 		return a[0]
 	
 	var sum=0
@@ -117,33 +117,38 @@ function diceMean(dice)
 }
 
 
+
 /*
  * recursive function
  * expects an array describing dice
- * and the mean of the total array
  * 
- * returns (in an array)
- * - sum of rolls
- * - number of rolls
+ * returns an array of sum of rolls
+ * once for each combination
  */ 
-function computeDiceRolls(dice, mean)
+function computeDiceRolls(dice)
 {
-	if (dice.length == 0)
-		return [0,0]
-		
 	var roll = 1
+	var result = []
 	
-	var buf = computeDiceRolls(dice.slice(1), mean)
-	var r = [0,0]
+	if (dice.length == 1)
+	{
+		while (roll<=dice[0])
+		{
+			result.push(roll)
+			roll++
+		}
+		return result
+	}
+	
+	var source = computeDiceRolls(dice.slice(1))
 	while (roll<=dice[0])
 	{
-		
-		r[0]+=Math.pow(roll-mean, 2)+buf[0]
-		r[1]+=1+buf[1]
+		for (i in source)
+			result.push(roll+source[i])
 		roll++
 	}
 	
-	return r
+	return result
 }
 
 /*
@@ -157,8 +162,15 @@ function diceStdDeviation(dice)
 	// part of me thinks there could be a better way
 	// at least in some cases, it's obvious..
 	
-	var s = computeDiceRolls(dice, diceMean(dice))
-	return Math.sqrt(s[0]/s[1])
+	var set = computeDiceRolls(dice)
+	var mean = diceMean(dice)
+	
+	var sum = 0
+	for (var i in set)
+	{
+		sum+=Math.pow(set[i]-mean, 2)
+	}
+	return Math.sqrt(sum/set.length)
 }
 
 
