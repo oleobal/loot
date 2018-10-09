@@ -3,7 +3,7 @@
 	<meta charset="utf-8"/>
 	<script src="loot.js"></script>
 	<script>
-	function addResult(inp, out, tableid)
+	function addResult(inp, out, tableid, correct)
 	{
 		var table = document.getElementById(tableid)
 		
@@ -14,6 +14,13 @@
 		d1.innerHTML=inp
 		r.appendChild(d1)
 		var d2 = document.createElement("td")
+		if (typeof correct !== "undefined")
+		{
+			if (out.toString() == correct.toString()) // dumb I know
+				d2.className = "correct"
+			else
+				d2.className = "incorrect"
+		}
 		d2.innerHTML=out
 		r.appendChild(d2)
 		
@@ -24,18 +31,21 @@
 	{
 		// diceStrToArr
 		var diceStrToArrInput=["1d8", "2d4", "1d8 + 3d4", "1d16+2d4+5d6"]
+		var diceStrToArrCorr=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
 		for (var i in diceStrToArrInput)
-			addResult(diceStrToArrInput[i], diceStrToArr(diceStrToArrInput[i]), "diceStrToArr")
+			addResult(diceStrToArrInput[i], diceStrToArr(diceStrToArrInput[i]), "diceStrToArr", diceStrToArrCorr[i])
 			
 		// diceMean
 		var diceMeanInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
+		var diceMeanCorr=[4.5, 5, 12, 31]
 		for (var i in diceMeanInput)
-			addResult(diceMeanInput[i], diceMean(diceMeanInput[i]), "diceMean")
+			addResult(diceMeanInput[i], diceMean(diceMeanInput[i]), "diceMean", diceMeanCorr[i])
 			
 		// diceStdDeviation
 		var diceStdDeviationInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
+		var diceStdDeviationCorr=[Math.sqrt(5.25), Math.sqrt(2.5), Math.sqrt(9), Math.sqrt(115/3)] // unsure of last one
 		for (var i in diceStdDeviationInput)
-			addResult(diceStdDeviationInput[i], diceStdDeviation(diceStdDeviationInput[i]), "diceStdDeviation")
+			addResult(diceStdDeviationInput[i], diceStdDeviation(diceStdDeviationInput[i]), "diceStdDeviation", diceStdDeviationCorr[i])
 	}
 	</script>
 	<style>
@@ -48,6 +58,12 @@
 		border-style:none solid none none;
 		border-width:1px;
 		*/
+	}
+	.correct {
+		color: #080
+	}
+	.incorrect {
+		color: #800
 	}
 	</style>
 </head>

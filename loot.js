@@ -430,7 +430,21 @@ function nbToDice(max, deviation)
 	console.log(combos)
 	
 	
-	// TODO calculate each combo's deviation and compare it to target
+	chosenCombo = []
+	chosenComboDev = -1000
+	
+	for (var i in combos)
+	{
+		// TODO improve heuristic to also include max compared to target
+		// Right now a 10.4 dmg masterwork mace gets 1d8 instead of 1d10
+		var dev = diceStdDeviation(combos[i])
+		if (Math.abs(deviation-dev) < Math.abs(deviation-chosenComboDev))
+		{
+			chosenCombo = combos[i]
+			chosenComboDev = dev
+		}
+	}
+	
 	
 	count={
 		"2" :0,
@@ -441,9 +455,9 @@ function nbToDice(max, deviation)
 		"12":0,
 		"20":0
 	}
-	for (var i in combos[combos.length-1]) // change to whichever combo is picked
+	for (var i in chosenCombo) // change to whichever combo is picked
 	{
-		count[combos[combos.length-1][i].toString()]+=1
+		count[chosenCombo[i].toString()]+=1
 	}
 	out=""
 	for (var i in count)
