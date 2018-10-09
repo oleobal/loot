@@ -1,0 +1,95 @@
+<head>
+	<title>Test</title>
+	<meta charset="utf-8"/>
+	<script src="loot.js"></script>
+	<script>
+	function addResult(inp, out, tableid)
+	{
+		var table = document.getElementById(tableid)
+		
+		var r = document.createElement("tr")
+		if (table.childElementCount%2 == 1)
+			r.className="gray"
+		var d1 = document.createElement("td")
+		d1.innerHTML=inp
+		r.appendChild(d1)
+		var d2 = document.createElement("td")
+		d2.innerHTML=out
+		r.appendChild(d2)
+		
+		table.appendChild(r)
+	}
+	
+	function test()
+	{
+		// diceStrToArr
+		var diceStrToArrInput=["1d8", "2d4", "1d8 + 3d4", "1d16+2d4+5d6"]
+		for (var i in diceStrToArrInput)
+			addResult(diceStrToArrInput[i], diceStrToArr(diceStrToArrInput[i]), "diceStrToArr")
+			
+		// diceMean
+		var diceMeanInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
+		for (var i in diceMeanInput)
+			addResult(diceMeanInput[i], diceMean(diceMeanInput[i]), "diceMean")
+			
+		// diceStdDeviation
+		var diceStdDeviationInput=[[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]]
+		for (var i in diceStdDeviationInput)
+			addResult(diceStdDeviationInput[i], diceStdDeviation(diceStdDeviationInput[i]), "diceStdDeviation")
+	}
+	</script>
+	<style>
+	.gray {
+		background-color:#EEE;
+	}
+	.testResults {
+		display: inline-block;
+		/*
+		border-style:none solid none none;
+		border-width:1px;
+		*/
+	}
+	</style>
+</head>
+<body onload='test()'>
+	
+<div class="testResults">
+<h5>diceStrToArr</h5>
+<table id="diceStrToArr" style="font-family:monospace;">
+	<tr>
+		<th>In</th>
+		<th>Out</th>
+	</tr>
+</table>
+</div>
+
+<div class="testResults">
+<h5>diceMean</h5>
+<table id="diceMean" style="font-family:monospace;">
+	<tr>
+		<th>In</th>
+		<th>Out</th>
+	</tr>
+</table>
+</div>
+
+<div class="testResults">
+<h5>diceDeviation</h5>
+<table id="diceStdDeviation" style="font-family:monospace;">
+	<tr>
+		<th>In</th>
+		<th>Out</th>
+	</tr>
+</table>
+</div>
+
+<div class="testResults">
+<h5>nbToDice</h5>
+<table id="nbToDice" style="font-family:monospace;">
+	<tr>
+		<th>In</th>
+		<th>Out</th>
+	</tr>
+</table>
+</div>
+</body>

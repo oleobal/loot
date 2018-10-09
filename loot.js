@@ -266,6 +266,119 @@ function getGaussValue(mean, deviation)
 }
 
 
+/*
+ * takes a string of dice, of the form
+ * <x1>d<y1>+...+<xi>d<yi>
+ * 
+ * returns an array with each xi in it yiu times
+ */
+function diceStrToArr(dice)
+{
+	dice=dice.replace(" ", "")
+	dice=dice.split("+")
+
+	var result = []
+	
+	for (var i in dice)
+	{
+		var n = parseInt(dice[i].split("d")[0])
+		var d = parseInt(dice[i].split("d")[1])
+		
+		var j = 0
+		while (j < n)
+		{
+			result.push(d)
+			j++
+		}
+	}
+	
+	return result
+}
+
+/*
+ * Given an array of dice
+ * Returns the mean for those dice
+ */
+function diceMean(dice)
+{
+	const preCompValues={
+			 2:1.5,
+			 4:2.5,
+			 6:3.5,
+			 8:4.5,
+			10:5.5,
+			12:6.5,
+			20:10.5
+		}
+	var totMean=0
+	for (var i in dice)
+	{
+		
+		// precomputed values to avoid too much inefficiency
+		if (dice[i] in preCompValues)
+		{
+			totMean+=preCompValues[dice[i]]
+			continue
+		}
+		
+		var thisDieMean=0
+		var j = 1
+		while (j<=dice[i])
+		{
+			thisDieMean+=j
+			j++
+		}
+		thisDieMean/=dice[i]
+		totMean+=thisDieMean
+	}
+	return totMean
+}
+
+
+/*
+ * recursive function
+ * expects an array describing dice
+ * and the mean of the total array
+ * 
+ * returns (in an array)
+ * - sum of rolls
+ * - number of rolls
+ */ 
+function computeDiceRolls(dice, mean)
+{
+	if (dice.length == 0)
+		return [0,0]
+		
+	var roll = 1
+	
+	var buf = computeDiceRolls(dice.slice(1), mean)
+	var r = [0,0]
+	while (roll<=dice[0])
+	{
+		
+		r[0]+=Math.pow(roll-mean, 2)+buf[0]
+		r[1]+=1+buf[1]
+		roll++
+	}
+	
+	return r
+}
+
+/*
+ * Given an array of dice
+ * Returns the standard deviation for those dice
+ */
+function diceStdDeviation(dice)
+{
+	
+	// compute every single combination
+	// part of me thinks there could be a better way
+	// at least in some cases, it's obvious..
+	
+	var s = computeDiceRolls(dice, diceMean(dice))
+	return Math.sqrt(s[0]/s[1])
+}
+
 
 /*
  * approximates a dice combination to reach the given max with the
