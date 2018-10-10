@@ -1,0 +1,67 @@
+<head>
+	<title>Complete list</title>
+	<meta charset="utf-8"/>
+	<script src="weapons.js"></script>
+	<script src="utility.js"></script>
+	<script src="loot.js"></script>
+	<script>
+	function displayWeapons(chest)
+	{
+		// table
+		var t=document.getElementById("weaponsTable")
+		var perWIndex=0
+		for (var w in chest)
+		{
+			var tr=document.createElement("tr")
+			tr.className="weaponRow"
+			var attrs=["name", "cat",  "atk",   "par",   "dmg",   "val",   "hands",  "desc"]
+			var align=["left", "left", "right", "right", "right", "right", "center", "left"]
+			if (!chest[w].appliedModifier)
+			{
+				var perWIndex=0
+				var color = getLightRGBfromString(chest[w]["cat"].toString())
+				//tr.style.borderTop="1px solid black;"
+				t.appendChild(document.createElement("tr")) // separator
+				tr.style.backgroundColor=color
+			}
+			else if (perWIndex%2 == 0)
+				tr.className+=" gray"
+			
+			for (var n in attrs)
+			{
+				var td = document.createElement("td")
+				td.innerHTML=chest[w][attrs[n]]
+				td.style.textAlign=align[n]
+				if (attrs[n] === "cat")
+					td.style.backgroundColor=color
+				tr.appendChild(td)
+			}
+			perWIndex++
+			
+			t.appendChild(tr)
+		}
+	}
+	</script>
+	<style>
+	.gray {
+		background-color:#EEE;
+	}
+	</style>
+</head>
+<body onload='displayWeapons(getAllCombinations())'>
+<table id="weaponsTable" style="">
+	<tr>
+		<th style="min-width:10em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >ATK</th>
+		<th style="min-width:2em;" >PAR</th>
+		<th style="min-width:2em;" >DMG</th>
+		<th style="min-width:3em;" >Value</th>
+		<th style="min-width:2em;" >Hands</th>
+		<th style="width:100%;"    >Notes</th>
+	</tr>
+</table>
+
+<p id="debug" style="font-family:monospace;">
+</p>
+</body>

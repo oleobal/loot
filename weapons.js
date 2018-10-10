@@ -119,25 +119,29 @@ var weapons=[
 
 var badMods=[
 	{
-		"name":"",
-		"atk":0,
-		"par":0,
-		"dmg":1,
-		"val":1,
-		"desc":"",
-		"materials":null,
-		"cats":null,
+		// This is a "no modifier" modifier
+		"name":"", // added (+ a space) at the start of the name
+		"atk":0, // added
+		"par":0, // added
+		"dmg":1, // multiplied
+		"dmgspread":1, // multiplied
+		"val":1, // multiplied
+		"desc":"", // added (+ a space) at the end of the desc
+		"materials":null, // which materials this can be applied to
+		"cats":null, // which categories this can be applied to
 		"commonness":[100, 0, 1000]
+		// at which frequency this appears, which values this can be applied to
 	},
 
 	{
 		"name":"rusty",
 		"atk":-1,
 		"par":-1,
-		"dmg":0.8, // fraction
-		"val":0.7, // fraction
+		"dmg":0.8,
+		"dmgspread":1,
+		"val":0.7,
 		"desc":"",
-		"materials":["steel", "iron"], // which materials this can be applied to
+		"materials":["steel", "iron"],
 		"cats":null,
 		"commonness":[20, 0, 1000]
 	},
@@ -147,9 +151,23 @@ var badMods=[
 		"atk":-1,
 		"par":-1,
 		"dmg":1,
+		"dmgspread":1.5,
 		"val":0.7,
 		"desc":"",
 		"materials":["steel", "iron"],
+		"cats":null,
+		"commonness":[15, 0, 1000]
+	},
+	
+	{
+		"name":"chipped",
+		"atk":0,
+		"par":-1,
+		"dmg":1,
+		"dmgspread":1.5,
+		"val":0.8,
+		"desc":"",
+		"materials":null,
 		"cats":null,
 		"commonness":[15, 0, 1000]
 	},
@@ -159,11 +177,12 @@ var badMods=[
 		"atk":0,
 		"par":0,
 		"dmg":0.8,
+		"dmgspread":1,
 		"val":0.9,
 		"desc":"",
 		"materials":["steel", "iron"],
 		"cats":["Swords", "Axes", "Sabres", "Daggers"],
-		"commonness":[25, 0, 1000]
+		"commonness":[25, 0, 35]
 	},
 ]
 
@@ -173,6 +192,7 @@ var goodMods=[
 		"atk":0,
 		"par":0,
 		"dmg":1,
+		"dmgspread":1,
 		"val":1,
 		"desc":"",
 		"materials":null,
@@ -185,6 +205,7 @@ var goodMods=[
 		"atk":1,
 		"par":1,
 		"dmg":1,
+		"dmgspread":0.8,
 		"val":2,
 		"desc":"",
 		"materials":["steel"],
@@ -197,6 +218,7 @@ var goodMods=[
 		"atk":2,
 		"par":1,
 		"dmg":1.3,
+		"dmgspread":1,
 		"val":4,
 		"desc":"",
 		"materials":["steel"],
@@ -209,6 +231,7 @@ var goodMods=[
 		"atk":-1,
 		"par":-1,
 		"dmg":0.8,
+		"dmgspread":1,
 		"val":4,
 		"desc":"+4 DMG against undead",
 		"materials":["steel"],

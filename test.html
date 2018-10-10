@@ -2,6 +2,7 @@
 	<title>Test</title>
 	<meta charset="utf-8"/>
 	<script src="weapons.js"></script>
+	<script src="utility.js"></script>
 	<script src="loot.js"></script>
 	<script>
 	function addResult(inp, out, tableid, correct)
@@ -46,6 +47,8 @@
 			d.className="testResults"
 			var h = document.createElement("h5")
 			h.innerHTML=func.name
+			h.style.backgroundColor=getLightRGBfromString(func.name)
+			
 			d.appendChild(h)
 			var t = document.createElement("table")
 			t.style.fontFamily="monospace"

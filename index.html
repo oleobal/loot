@@ -2,6 +2,7 @@
 	<title>Loot generator</title>
 	<meta charset="utf-8"/>
 	<script src="weapons.js"></script>
+	<script src="utility.js"></script>
 	<script src="loot.js"></script>
 	<script>
 	function displayWeapons(chest)
@@ -45,18 +46,18 @@
 	}
 	</style>
 </head>
-<body onload='displayWeapons(getItems(5, 50))'>
+<body onload='displayWeapons(getRandomItems(5, 50))'>
 <table id="weaponsTable">
-		<tr>
-			<th style="min-width:10em;">Name</th>
-			<th style="min-width:10em;">Classes</th>
-			<th style="min-width:2em;" >ATK</th>
-			<th style="min-width:2em;" >PAR</th>
-			<th style="min-width:2em;" >DMG</th>
-			<th style="min-width:3em;" >Value</th>
-			<th style="min-width:2em;" >Hands</th>
-			<th style="width:100%;"    >Notes</th>
-		</tr>
+	<tr>
+		<th style="min-width:10em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >ATK</th>
+		<th style="min-width:2em;" >PAR</th>
+		<th style="min-width:2em;" >DMG</th>
+		<th style="min-width:3em;" >Value</th>
+		<th style="min-width:2em;" >Hands</th>
+		<th style="width:100%;"    >Notes</th>
+	</tr>
 </table>
 
 <p id="debug" style="font-family:monospace;">

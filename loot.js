@@ -1,52 +1,9 @@
 /**
  * This files contains functions for generating equipment
- * Do import weapons.js before this file !
+ * Do import utility.js and weapons.js before this file !
  * 
  * 
  */
-
-/*
- * returns linear interpolation from a to b at i
- * (0<i<1)
- */
-function interp(a,b,i)
-{
-	return a+(b-a)*i
-}
-
-function sumArray(a)
-{
-	if (a.length==0)
-		return 0
-	if (a.length==1)
-		return a[0]
-	
-	var sum=0
-	for (var i in a)
-		sum+=a[i]
-	return sum
-}
-
-// uniform
-// max exclusive
-function getRandom(min, max)
-{
-	var min = Math.ceil(min)
-	var max = Math.floor(max)
-	return Math.floor(Math.random()*(max-min)) + min
-}
-
-// probably shit
-function getGaussValue(mean, deviation)
-{
-	var u=0, v=0
-	while(u===0) u = Math.random()
-	while(v===0) u = Math.random()
-	let num = Math.sqrt(-2.0*Math.log(u))*Math.cos(2.0*Math.PI * v)
-	
-	return mean + num * deviation
-}
-
 
 /*
  * takes a string of dice, of the form
@@ -263,7 +220,7 @@ function nbToDice(max, deviation)
 			out+=count[i]+"d"+i
 		}
 	}
-	console.log("In: "+max+", "+deviation+", Out: "+out)
+	//console.log("In: "+max+", "+deviation+", Out: "+out)
 	return out
 }
 
@@ -315,66 +272,57 @@ for (var w in goodMods)
 
 /**
  * given a weapon and modifier, 
- *
+ * returns a copy of that weapon with the mod applied
+ * also adds a "appliedModifier" field (string or null)
  */
 function finalizeWeapon(weapon, mod)
 {
-	//TODO deport a part of getItems here
+	// this is for "final weapon", but I can't help but
+	// pronounce it "firmware"
+	fw=Object.assign({}, weapon)
+	
+	fw.appliedModifier=null
+	if (mod != null && mod.name != "")
+	{
+		fw.name=mod.name+" "+fw.name
+		fw.atk+=mod.atk
+		fw.par+=mod.par
+		fw.dmg*=mod.dmg
+		fw.dmgspread*=mod.dmgspread
+		fw.val*=mod.val
+		fw.desc+=" "+mod.desc
+		fw.appliedModifier=mod.name
+	}
+		
+	
+	fw.dmg=nbToDice(fw.dmg, fw.dmgspread)
+	fw.name=fw.name.charAt(0).toUpperCase()+fw.name.slice(1)
+		
+	return fw
 }
 
 /*
  * returns an array of weapons
  * according to val spread
  */
-function getItems(nbItems, meanval)
+function getRandomItems(nbItems, meanval)
 {
 	chest=[]
 	var i=0
 	while (i<nbItems)
 	{
-		// this is for "final weapon", but I can't help but
-		// pronounce it "firmware"
-		fw={}
-		
 		w=weapons[weaponPie[getRandom(0,weaponsSum)]]
 		
-		fw.name=w.name
-		fw.cat=w.cat
-		fw.atk=w.atk
-		fw.par=w.par
-		fw.dmg=w.dmg
-		fw.val=w.val
-		fw.hands=w.hands
-		fw.dmgspread=w.dmgspread
-		fw.materials=w.materials
-		fw.commonness = w.commonness
-		
 		// modifiers
-		// TODO add checks
-		var m={"name":""}
-		if (fw.val > meanval)
-		{
+		// TODO add checks (value, category, material)
+		var m=null
+		if (w.val > meanval)
 			m=badMods[badModsPie[getRandom(0,badModsSum)]]
-		}
-		else if (fw.val < meanval)
-		{
+		else if (w.val < meanval)
 			m=goodMods[goodModsPie[getRandom(0,goodModsSum)]]
-		}
-		if (m.name != "")
-		{
-			fw.name=m.name+" "+fw.name
-			fw.atk+=m.atk
-			fw.par+=m.par
-			fw.dmg*=m.dmg
-			fw.val*=m.val
-			fw.desc+=" "+m.desc
-		}
-		
-		fw.dmg=nbToDice(fw.dmg, fw.dmgspread)
-		fw.name=fw.name.charAt(0).toUpperCase()+fw.name.slice(1)
+		var fw = finalizeWeapon(w, m)
 		
 		chest.push(fw)
-		
 		i++
 	}
 		
@@ -389,3 +337,19 @@ function getItems(nbItems, meanval)
 }
 
 
+/**
+ * return an array of all possible weapon combinations
+ */
+function getAllCombinations()
+{
+	var result=[]
+	var mods = goodMods.concat(badMods.slice(1))
+	// slice because else we get the neutral mod twice
+	for (var i in weapons)
+	{
+		for (var j in mods)
+			result.push(finalizeWeapon(weapons[i], mods[j]))
+	}
+
+	return result
+}
