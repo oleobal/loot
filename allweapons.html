@@ -43,7 +43,7 @@
 				if (!chest[w].appliedModifier && attrs[n]=="name")
 				{
 					var a = document.createElement("a")
-					a.href = window.location.host+window.location.pathname+"#"+chest[w]["name"].replace(" ", "_").toLowerCase()
+					a.href = window.location.pathname+"#"+chest[w]["name"].replace(" ", "_").toLowerCase()
 					a.innerHTML=chest[w]["name"]
 					a.id=chest[w]["name"].replace(" ", "_").toLowerCase()
 					td.appendChild(a)
