@@ -284,14 +284,53 @@ function finalizeWeapon(weapon, mod)
 	fw.appliedModifier=null
 	if (mod != null && mod.name != "")
 	{
+		// category check
+		if (mod.cats!=null)
+		{
+			var ok=false
+			for (var i in weapon.cat)
+			{
+				if (mod.cats.indexOf(weapon.cat[i])>=0)
+				{
+					ok=true
+					break
+				}
+			}
+			if (!ok)
+				throw "Not the right category "+mod.name+" "+weapon.name
+		}
+		// material check
+		if (mod.materials!=null)
+		{
+			var ok=false
+			var mats = Object.keys(weapon.materials)
+			for (var i in mats)
+			{
+				if (mod.materials.indexOf(mats[i])>=0)
+				{
+					ok=true
+					break
+				}
+			}
+			if (!ok)
+				throw "Not the right material "+mod.name+" "+weapon.name
+		}
+		
 		fw.name=mod.name+" "+fw.name
 		fw.atk+=mod.atk
 		fw.par+=mod.par
 		fw.dmg*=mod.dmg
 		fw.dmgspread*=mod.dmgspread
-		fw.val*=mod.val
+		fw.val=Math.round(fw.val*mod.val)
 		fw.desc+=" "+mod.desc
 		fw.appliedModifier=mod.name
+		
+		// value check comes after the modifier is applied
+		if (fw.val < mod.commonness[1])
+			throw "Value too low ("+fw.val+">"+mod.commonness[1]+") "+mod.name+" "+weapon.name
+		if (fw.val > mod.commonness[2])
+			throw "Value too high ("+fw.val+">"+mod.commonness[2]+") "+mod.name+" "+weapon.name
+		
 	}
 		
 	
@@ -314,13 +353,19 @@ function getRandomItems(nbItems, meanval)
 		w=weapons[weaponPie[getRandom(0,weaponsSum)]]
 		
 		// modifiers
-		// TODO add checks (value, category, material)
-		var m=null
-		if (w.val > meanval)
-			m=badMods[badModsPie[getRandom(0,badModsSum)]]
-		else if (w.val < meanval)
-			m=goodMods[goodModsPie[getRandom(0,goodModsSum)]]
-		var fw = finalizeWeapon(w, m)
+		try
+		{
+			var m=null
+			if (w.val > meanval)
+				m=badMods[badModsPie[getRandom(0,badModsSum)]]
+			else if (w.val < meanval)
+				m=goodMods[goodModsPie[getRandom(0,goodModsSum)]]
+			var fw = finalizeWeapon(w, m)
+		}
+		catch (err)
+		{
+			var fw = finalizeWeapon(w, null)
+		}
 		
 		chest.push(fw)
 		i++
@@ -348,7 +393,16 @@ function getAllCombinations()
 	for (var i in weapons)
 	{
 		for (var j in mods)
-			result.push(finalizeWeapon(weapons[i], mods[j]))
+		{
+			try
+			{
+					result.push(finalizeWeapon(weapons[i], mods[j]))
+			}
+			catch (err)
+			{
+				console.log(err)
+			}
+		}
 	}
 
 	return result

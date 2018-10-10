@@ -10,18 +10,28 @@
 		// table
 		var t=document.getElementById("weaponsTable")
 		var perWIndex=0
+		var curCat = ""
 		for (var w in chest)
 		{
 			var tr=document.createElement("tr")
 			tr.className="weaponRow"
 			var attrs=["name", "cat",  "atk",   "par",   "dmg",   "val",   "hands",  "desc"]
 			var align=["left", "left", "right", "right", "right", "right", "center", "left"]
+			
+			if (curCat != chest[w]["cat"].toString())
+			{
+				curCat = chest[w]["cat"].toString()
+				var sep = document.createElement("tr")
+				sep.style.height = "1em"
+				t.appendChild(sep)
+			}
+			
 			if (!chest[w].appliedModifier)
 			{
 				var perWIndex=0
 				var color = getLightRGBfromString(chest[w]["cat"].toString())
 				//tr.style.borderTop="1px solid black;"
-				t.appendChild(document.createElement("tr")) // separator
+				t.appendChild(document.createElement("tr"))
 				tr.style.backgroundColor=color
 			}
 			else if (perWIndex%2 == 0)
@@ -30,7 +40,21 @@
 			for (var n in attrs)
 			{
 				var td = document.createElement("td")
-				td.innerHTML=chest[w][attrs[n]]
+				if (!chest[w].appliedModifier && attrs[n]=="name")
+				{
+					var a = document.createElement("a")
+					a.href = window.location.host+window.location.pathname+"#"+chest[w]["name"].replace(" ", "_").toLowerCase()
+					a.innerHTML=chest[w]["name"]
+					a.id=chest[w]["name"].replace(" ", "_").toLowerCase()
+					td.appendChild(a)
+				}
+				else if (attrs[n]=="dmg")
+				{
+					td.innerHTML=chest[w][attrs[n]].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
+					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
+				}
+				else
+					td.innerHTML=chest[w][attrs[n]]
 				td.style.textAlign=align[n]
 				if (attrs[n] === "cat")
 					td.style.backgroundColor=color
@@ -41,17 +65,179 @@
 			t.appendChild(tr)
 		}
 	}
+	
+	function addPieComparator(a, b)
+	{
+		return b.per-a.per
+	}
+	
+	function addPie(chest, tableid)
+	{
+		//this does not use the 'pies' because reading them is not easy
+		
+		
+		var probSum=0
+		var items = []
+		for (var i in chest)
+		{
+			probSum+=chest[i].commonness[0]
+			items.push({name:chest[i].name, cat:chest[i].cat.toString(), per:undefined})
+		}
+		for (var i in items)
+			items[i].per=(chest[i].commonness[0]/probSum)*100
+			
+		// PER CLASS
+		var ptotal=0
+		table=document.getElementById(tableid)
+		for (var i in items)
+		{
+			var tr = document.createElement("tr")
+			tr.style.backgroundColor=getLightRGBfromString(items[i].cat.toString())
+			var tdn = document.createElement("td")
+			tdn.innerHTML = items[i].name
+			tr.appendChild(tdn)
+			var tdc = document.createElement("td")
+			tdc.innerHTML = items[i].cat
+			tr.appendChild(tdc)
+			var tdp = document.createElement("td")
+			tdp.innerHTML=items[i].per.toFixed(2)+"%"
+			ptotal+=items[i].per
+			tr.appendChild(tdp)
+			table.appendChild(tr)
+		}
+		var ptotaltr = document.createElement("tr")
+		var tdn = document.createElement("td")
+		tdn.innerHTML="Total"
+		ptotaltr.appendChild(tdn)
+		ptotaltr.appendChild(document.createElement("td"))
+		var tdt = document.createElement("td")
+		tdt.innerHTML=ptotal.toFixed(2)
+		ptotaltr.appendChild(tdt)
+		table.appendChild(ptotaltr)
+		
+		// SORTED PER PERCENTAGE
+		
+		items.sort(addPieComparator)
+		table=document.getElementById(tableid+"PercentageSort")
+		var ptotal=0
+		for (var i in items)
+		{
+			var tr = document.createElement("tr")
+			tr.style.backgroundColor=getLightRGBfromString(items[i].cat.toString())
+			var tdn = document.createElement("td")
+			tdn.innerHTML = items[i].name
+			tr.appendChild(tdn)
+			var tdc = document.createElement("td")
+			tdc.innerHTML = items[i].cat
+			tr.appendChild(tdc)
+			var tdp = document.createElement("td")
+			tdp.innerHTML=items[i].per.toFixed(2)+"%"
+			ptotal+=items[i].per
+			tr.appendChild(tdp)
+			table.appendChild(tr)
+		}
+		var ptotaltr = document.createElement("tr")
+		var tdn = document.createElement("td")
+		tdn.innerHTML="Total"
+		ptotaltr.appendChild(tdn)
+		ptotaltr.appendChild(document.createElement("td"))
+		var tdt = document.createElement("td")
+		tdt.innerHTML=ptotal.toFixed(2)
+		ptotaltr.appendChild(tdt)
+		table.appendChild(ptotaltr)
+		
+		
+		
+		// PER-CLASS PERCENTAGE
+		
+		var classes = {}
+		
+		table=document.getElementById(tableid+"Classes")
+		for (var i in items)
+		{
+			var s = items[i].cat.toString()
+			if (classes[s] == undefined)
+				classes[s]={cat:s, per:items[i].per}
+			else
+				classes[s].per+=items[i].per
+		}
+		
+		var cats = []
+		for (var i in classes)
+		{
+			cats.push(classes[i])
+		}
+		cats.sort(addPieComparator)
+		
+		var ptotal=0
+		for (var i in cats)
+		{
+			var tr = document.createElement("tr")
+			tr.style.backgroundColor=getLightRGBfromString(cats[i].cat.toString())
+			var tdn = document.createElement("td")
+			tdn.innerHTML = cats[i].cat
+			tr.appendChild(tdn)
+			var tdp = document.createElement("td")
+			tdp.innerHTML=cats[i].per.toFixed(2)+"%"
+			ptotal+=cats[i].per
+			tr.appendChild(tdp)
+			table.appendChild(tr)
+		}
+		var ptotaltr = document.createElement("tr")
+		var tdn = document.createElement("td")
+		tdn.innerHTML="Total"
+		ptotaltr.appendChild(tdn)
+		var tdt = document.createElement("td")
+		tdt.innerHTML=ptotal.toFixed(2)
+		ptotaltr.appendChild(tdt)
+		table.appendChild(ptotaltr)
+		
+	}
+	
+	function displayAll()
+	{
+		addPie(weapons, "weaponsPie")
+		displayWeapons(getAllCombinations())
+	}
 	</script>
 	<style>
 	.gray {
 		background-color:#EEE;
 	}
+	a:link {
+	color: #00C;
+	}
+	a:visited {
+		color: #00C;
+	}
 	</style>
 </head>
-<body onload='displayWeapons(getAllCombinations())'>
+<body onload='displayAll()'>
+
+<table id="weaponsPie" style="display:inline-block;">
+	<tr>
+		<th style="min-width:12em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >Percentage</th>
+	</tr>
+</table> 
+<table id="weaponsPiePercentageSort" style="display:inline-block;">
+	<tr>
+		<th style="min-width:12em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >Percentage</th>
+	</tr>
+</table> 
+<table id="weaponsPieClasses" style="display:inline-block;">
+	<tr>
+		<th style="min-width:10em;">Classe</th>
+		<th style="min-width:2em;" >Percentage</th>
+	</tr>
+</table> 
+
 <table id="weaponsTable" style="">
 	<tr>
-		<th style="min-width:10em;">Name</th>
+		<th style="min-width:12em;">Name</th>
 		<th style="min-width:10em;">Classes</th>
 		<th style="min-width:2em;" >ATK</th>
 		<th style="min-width:2em;" >PAR</th>
