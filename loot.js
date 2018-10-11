@@ -341,43 +341,41 @@ function finalizeWeapon(weapon, mod)
 }
 
 /*
- * returns an array of weapons
- * according to val spread
+ * returns an array of nbItems weapons
+ * each of them will be 0.5*meanval<value<1.5*meanval
+ *
  */
-function getRandomItems(nbItems, meanval)
+function getRandomWeapons(nbItems, meanval)
 {
 	chest=[]
 	var i=0
 	while (i<nbItems)
 	{
-		w=weapons[weaponPie[getRandom(0,weaponsSum)]]
-		
-		// modifiers
-		try
+		var w = {val:-1000}
+		var safety=0
+		while ((w.val < 0.5*meanval || w.val > 1.5*meanval) && safety<100)
 		{
-			var m=null
-			if (w.val > meanval)
-				m=badMods[badModsPie[getRandom(0,badModsSum)]]
-			else if (w.val < meanval)
-				m=goodMods[goodModsPie[getRandom(0,goodModsSum)]]
-			var fw = finalizeWeapon(w, m)
+			safety++
+			w=weapons[weaponPie[getRandom(0,weaponsSum)]]
+			
+			// modifiers
+			try
+			{
+				var m=null
+				if (w.val > meanval)
+					m=badMods[badModsPie[getRandom(0,badModsSum)]]
+				else if (w.val < meanval)
+					m=goodMods[goodModsPie[getRandom(0,goodModsSum)]]
+				var fw = finalizeWeapon(w, m)
+			}
+			catch (err)
+			{
+				var fw = finalizeWeapon(w, null)
+			}
 		}
-		catch (err)
-		{
-			var fw = finalizeWeapon(w, null)
-		}
-		
 		chest.push(fw)
 		i++
 	}
-		
-	/*
-	for (var weap in cats)
-	{
-		w=cats[weap])
-		
-	}
-	*/
 	return chest
 }
 
@@ -385,7 +383,7 @@ function getRandomItems(nbItems, meanval)
 /**
  * return an array of all possible weapon combinations
  */
-function getAllCombinations()
+function getAllWeaponCombinations()
 {
 	var result=[]
 	var mods = goodMods.concat(badMods.slice(1))

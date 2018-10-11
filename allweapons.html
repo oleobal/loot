@@ -15,8 +15,8 @@
 		{
 			var tr=document.createElement("tr")
 			tr.className="weaponRow"
-			var attrs=["name", "cat",  "atk",   "par",   "dmg",   "val",   "hands",  "desc"]
-			var align=["left", "left", "right", "right", "right", "right", "center", "left"]
+			var attrs=["name", "cat",  "atk",   "par",   "dmg",   "hands",  "val",   "desc"]
+			var align=["left", "left", "right", "right", "right", "center", "right", "left"]
 			
 			if (curCat != chest[w]["cat"].toString())
 			{
@@ -55,6 +55,7 @@
 				}
 				else
 					td.innerHTML=chest[w][attrs[n]]
+				
 				td.style.textAlign=align[n]
 				if (attrs[n] === "cat")
 					td.style.backgroundColor=color
@@ -197,7 +198,7 @@
 	function displayAll()
 	{
 		addPie(weapons, "weaponsPie")
-		displayWeapons(getAllCombinations())
+		displayWeapons(getAllWeaponCombinations())
 	}
 	</script>
 	<style>
@@ -210,27 +211,31 @@
 	a:visited {
 		color: #00C;
 	}
+	td {
+		padding-right: 0.5em;
+		padding-left: 0.5em;
+	}
 	</style>
 </head>
 <body onload='displayAll()'>
 
-<table id="weaponsPie" style="display:inline-block;">
+<table id="weaponsPie" style="display:inline-block; vertical-align:top;">
 	<tr>
 		<th style="min-width:12em;">Name</th>
 		<th style="min-width:10em;">Classes</th>
 		<th style="min-width:2em;" >Percentage</th>
 	</tr>
 </table> 
-<table id="weaponsPiePercentageSort" style="display:inline-block;">
+<table id="weaponsPiePercentageSort" style="display:inline-block; vertical-align:top;">
 	<tr>
 		<th style="min-width:12em;">Name</th>
 		<th style="min-width:10em;">Classes</th>
 		<th style="min-width:2em;" >Percentage</th>
 	</tr>
 </table> 
-<table id="weaponsPieClasses" style="display:inline-block;">
+<table id="weaponsPieClasses" style="display:inline-block; vertical-align:top;">
 	<tr>
-		<th style="min-width:10em;">Classe</th>
+		<th style="min-width:10em;">Classes</th>
 		<th style="min-width:2em;" >Percentage</th>
 	</tr>
 </table> 
@@ -242,8 +247,8 @@
 		<th style="min-width:2em;" >ATK</th>
 		<th style="min-width:2em;" >PAR</th>
 		<th style="min-width:2em;" >DMG</th>
-		<th style="min-width:3em;" >Value</th>
 		<th style="min-width:2em;" >Hands</th>
+		<th style="min-width:3em;" >Value</th>
 		<th style="width:100%;"    >Notes</th>
 	</tr>
 </table>

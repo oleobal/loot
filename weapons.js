@@ -190,7 +190,7 @@ var weapons=[
 	{
 		"name":"messer",
 		"cat":["Sabres"],
-		"desc":"Legally, it's but a knife, see. A sort of civilan falchion.",
+		"desc":"Legally, it's but a knife, see. A sort of civilian falchion.",
 		"atk": 1,
 		"par": 1,
 		"dmg": 5,
@@ -330,7 +330,7 @@ var weapons=[
 	},
 	
 	{
-		"name":"Flanged mace",
+		"name":"flanged mace",
 		"cat":["Maces"],
 		"desc":"Those are called flanges.. They're more reliable than spikes.",
 		"atk": 5,
@@ -461,7 +461,7 @@ var weapons=[
 	// POLEARMS
 	
 	{
-		"name":"Pike",
+		"name":"pike",
 		"cat":["Polearms"],
 		"desc":"The ever-present pike ! Great for battle in group formation.",
 		"atk": 2,
@@ -476,7 +476,7 @@ var weapons=[
 	},
 	
 	{
-		"name":"Sharp stick",
+		"name":"sharp stick",
 		"cat":["Polearms"],
 		"desc":"Sometimes, the simple tools do their task the best.",
 		"atk": 0,
@@ -491,7 +491,7 @@ var weapons=[
 	},
 	
 	{
-		"name":"War scythe",
+		"name":"war scythe",
 		"cat":["Polearms"],
 		"desc":"More of a peasant's weapon. A scythe with the blade upwards.",
 		"atk": 0,
@@ -703,3 +703,10 @@ var goodMods=[
 	},
 	
 ]
+
+for (var i in weapons)
+	weapons[i].type="weapon"
+for (var i in goodMods)
+	goodMods[i].type="weapon"
+for (var i in badMods)
+	badMods[i].type="weapon"

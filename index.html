@@ -4,24 +4,77 @@
 	<script src="weapons.js"></script>
 	<script src="utility.js"></script>
 	<script src="loot.js"></script>
+	<script src="chest.js"></script>
 	<script>
+	/**
+	 * just weapons
+	 */
 	function displayWeapons(chest)
 	{
 		// table
 		var t=document.getElementById("weaponsTable")
 		
+		if (chest.length==0)
+		{
+			var tr=document.createElement("tr")
+			var td = document.createElement("td")
+			td.innerHTML="No weapons"
+			td.colSpan=9
+			tr.appendChild(td)
+			tr.className="gray"
+			t.appendChild(tr)
+			return
+		}
+		
+		var wpCount = {}
+		var totalVal = 0
+		var totalWeight = 0
+		
+		// first pass
+		var i = 0
+		while (i<chest.length)
+		{
+			totalVal+=chest[i].val
+			totalWeight+=chest[i].weight
+			if (typeof(wpCount[chest[i].name]) == "undefined")
+			{
+				wpCount[chest[i].name] = 1
+				i++
+			}
+			else
+			{
+				wpCount[chest[i].name]++
+				chest.splice(i,1)
+			}
+		}
+		
+		
 		for (var w in chest)
 		{
 			var tr=document.createElement("tr")
 			tr.className="weaponRow"
-			attrs=["name", "cat",  "atk",   "par",   "dmg",   "val",   "hands",  "desc"]
-			align=["left", "left", "right", "right", "right", "right", "center", "left"]
+			attrs=["name", "cat",  "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"]
+			align=["left", "left", "right", "right", "right", "center", "right",  "right", "left"]
+			if (wpCount[chest[w].name] > 1)
+			{
+				chest[w].weight = "<b style=\"color:#C00\">"+wpCount[chest[w].name]*chest[w].weight +"</b> <br>("+chest[w].weight+")"
+				chest[w].val = "<b style=\"color:#C00\">"+wpCount[chest[w].name]*chest[w].val +"</b> <br>("+chest[w].val+")"
+				chest[w].name = "<b style=\"color:#C00\">"+wpCount[chest[w].name]+"x</b> "+chest[w].name
+			}
 			for (var n in attrs)
 			{
 				var td = document.createElement("td")
-				td.innerHTML=chest[w][attrs[n]]
+				if (attrs[n]=="dmg")
+				{
+					td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
+					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
+				}
+				else
+					td.innerHTML=chest[w][attrs[n]]
+					
 				td.style.textAlign=align[n]
 				tr.appendChild(td)
+				
 			}
 			
 			if (w%2 == 0)
@@ -29,37 +82,325 @@
 			t.appendChild(tr)
 		}
 		
-		// debug
-		document.getElementById("debug").innerHTML=""
-		for (var w in chest)
+		var tr=document.createElement("tr")
+		var tdt = document.createElement("td")
+		tdt.innerHTML="Total (weapons)"
+		tdt.colSpan=6
+		tr.appendChild(tdt)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=totalWeight
+		tdw.id="totalWeaponsWeight"
+		tdw.style.textAlign="right"
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=totalVal
+		tdv.id="totalWeaponsVal"
+		tdv.style.textAlign="right"
+		tr.appendChild(tdv)
+		tr.appendChild(document.createElement("td"))
+		tr.style.backgroundColor="#DDF"
+		tr.style.fontWeight="bold"
+		t.appendChild(tr)
+		
+	}
+	
+	/**
+	 * all items
+	 */
+	function displayItems(chest)
+	{
+		var t=document.getElementById("itemsTable")
+		var wps=[]
+		var totalVal=0
+		var totalWeight=0
+		var ic = 0
+		for (var i in chest)
 		{
-			var p = document.createElement('p')
-			p.innerHTML=JSON.stringify(chest[w],2)
-			document.getElementById("debug").appendChild(p)
+			if (chest[i].type==="weapon")
+				wps.push(chest[i])
+			else
+			{
+				var tr=document.createElement("tr")
+				var tdn = document.createElement("td")
+				tdn.innerHTML=chest[i].name
+				tr.appendChild(tdn)
+				var tdt = document.createElement("td")
+				tdt.innerHTML=chest[i].type
+				tr.appendChild(tdt)
+				var tdw = document.createElement("td")
+				tdw.innerHTML=chest[i].weight
+				tdw.style.textAlign="right"
+				tr.appendChild(tdw)
+				var tdv = document.createElement("td")
+				tdv.innerHTML=chest[i].val
+				tdv.style.textAlign="right"
+				tr.appendChild(tdv)
+				var tdd = document.createElement("td")
+				tdd.innerHTML=chest[i].desc
+				tr.appendChild(tdd)
+				if (ic%2==0)
+					tr.className="gray"
+				t.appendChild(tr)
+				totalVal+=chest[i].val
+				totalWeight+=chest[i].weight
+				ic++
+			}
+		}
+		displayWeapons(wps)
+		
+		if (ic===0)
+		{
+			var tr=document.createElement("tr")
+			var td = document.createElement("td")
+			td.innerHTML="No other items"
+			td.colSpan=4
+			tr.appendChild(td)
+			tr.className="gray"
+			t.appendChild(tr)
+			return
 		}
 		
+		// total
+		var tr=document.createElement("tr")
+		var tdt = document.createElement("td")
+		tdt.innerHTML="Total (items)"
+		tdt.colSpan=2
+		tr.appendChild(tdt)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=totalWeight
+		tdw.id="totalItemsWeight"
+		tdw.style.textAlign="right"
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=totalVal
+		tdv.id="totalItemsVal"
+		tdv.style.textAlign="right"
+		tr.appendChild(tdv)
+		tr.appendChild(document.createElement("td"))
+		tr.style.backgroundColor="#DDF"
+		tr.style.fontWeight="bold"
+		t.appendChild(tr)
+		
+		
+		// debug
+		if (false)
+		{
+			document.getElementById("debug").innerHTML=""
+			for (var w in chest)
+			{
+				var p = document.createElement('p')
+				p.innerHTML=JSON.stringify(chest[w],2)
+				document.getElementById("debug").appendChild(p)
+			}
+		}
+	}
+	
+	function displayGrandTotal()
+	{
+		var t = document.getElementById("weaponsTable")
+		try
+		{ var w = parseFloat(document.getElementById("totalWeaponsWeight").innerHTML) }
+		catch (err)
+		{ var w = 0 }
+		try 
+		{ w+= parseFloat(document.getElementById("totalItemsWeight").innerHTML) }
+		catch (err)
+		{ }
+		try
+		{ var v = parseFloat(document.getElementById("totalWeaponsVal").innerHTML) }
+		catch (err)
+		{ var v = 0 }
+		try 
+		{ var v = parseFloat(document.getElementById("totalWeaponsVal").innerHTML) }
+		catch (err)
+		{ }
+		
+		var tr=document.createElement("tr")
+		var sep = document.createElement("tr")
+		sep.style.height = "3em"
+		t.appendChild(sep)
+		var tdt = document.createElement("td")
+		tdt.innerHTML="Grand total"
+		tdt.colSpan=6
+		tr.appendChild(tdt)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=w
+		tdw.id="totalWeight"
+		tdw.style.textAlign="right"
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=v
+		tdv.id="totalVal"
+		tdv.style.textAlign="right"
+		tr.appendChild(tdv)
+		tr.style.backgroundColor="#FDD"
+		tr.style.fontWeight="bold"
+		t.appendChild(tr)
+	}
+	
+	function updateResults()
+	{
+		wipeResults()
+	
+		var c = document.getElementsByName('choice')
+		for (var i in c)
+		{
+			if (c[i].checked)
+			{
+				var choice=c[i].value
+				break
+			}
+		}
+		
+		var v = parseInt(document.getElementById('itemsvalue').value)
+		
+		context = {}
+		
+		var o = document.getElementsByName('itemsowner')
+		for (var i in o)
+		{
+			if (o[i].checked)
+			{
+				context.owner=o[i].value
+				break
+			}
+		}
+		
+		
+		if (choice==="chest")
+			displayItems(getChestContents(v, context))
+		else if (choice==="wprack")
+			displayItems(getWeaponRackContents(v, context))
+			
+		displayGrandTotal()
+	}
+	
+	function wipeResults()
+	{
+				document.getElementById("results").innerHTML=`
+	<h3>Items</h3>
+	<table id="itemsTable">
+		<tr>
+			<th style="min-width:12em;">Name</th>
+			<th style="min-width:29em;">Type</th>
+			<th style="min-width:5em;">Weight</th>
+			<th style="min-width:4em;">Value</th>
+			<th style="width:100%;"   >Notes</th>
+		</tr>
+	</table>
+	
+	<h3>Weapons</h3>
+	<table id="weaponsTable">
+		<tr>
+			<th style="min-width:12em;">Name</th>
+			<th style="min-width:10em;">Classes</th>
+			<th style="min-width:4em;" >ATK</th>
+			<th style="min-width:4em;" >PAR</th>
+			<th style="min-width:5em;" >DMG</th>
+			<th style="min-width:5em;" >Hands</th>
+			<th style="min-width:5em;" >Weight</th>
+			<th style="min-width:4em;" >Value</th>
+			<th style="width:100%;"    >Notes</th>
+		</tr>
+	</table>
+	
+	<table id="totalTable">
+		<!--
+		<tr>
+			<th style="min-width:35em;">Name</th>
+			<th style="min-width:2em;">Weight</th>
+			<th style="min-width:3em;">Value</th>
+			<th style="width:100%;"   >Notes</th>
+		</tr>
+		-->
+	</table>
+
+	<p id="debug" style="font-family:monospace;">
+	</p>`;
 	}
 	</script>
 	<style>
+	body {
+		font-family:sans-serif;
+	}
+	
+	th {
+
+	}
+	
 	.gray {
 		background-color:#EEE;
 	}
+	
+	td {
+		padding-right: 0.5em;
+		padding-left: 0.5em;
+	}
+	.menufield {
+		height:5em;
+		display:inline-block;
+		vertical-align:top;
+	}
 	</style>
 </head>
-<body onload='displayWeapons(getRandomItems(5, 50))'>
-<table id="weaponsTable">
-	<tr>
-		<th style="min-width:12em;">Name</th>
-		<th style="min-width:10em;">Classes</th>
-		<th style="min-width:2em;" >ATK</th>
-		<th style="min-width:2em;" >PAR</th>
-		<th style="min-width:2em;" >DMG</th>
-		<th style="min-width:3em;" >Value</th>
-		<th style="min-width:2em;" >Hands</th>
-		<th style="width:100%;"    >Notes</th>
-	</tr>
-</table>
+<body onload='updateResults();'>
 
-<p id="debug" style="font-family:monospace;">
-</p>
+<!-- not in a form because of auto reload on submit -->
+<fieldset style="width:12em;" class="menufield">
+	<legend>Getting the inventory for..</legend>
+
+	<div>
+		<input type="radio" name="choice" value="chest" checked />
+		<label>A chest</label>
+	</div>
+
+	<div>
+		<input type="radio" name="choice" value="wprack" checked />
+		<label>A weapon rack</label>
+	</div>
+
+	<div>
+		<input type="radio" name="choice" value="store" disabled />
+		<label for="store">A store</label>
+	</div>
+
+</fieldset>
+<fieldset style="width:9em;" class="menufield">
+	<legend>Of value..</legend>
+	<input id="itemsvalue" list="itemsvaluelist" value="50" style="width:4em" required/>
+	<datalist id="itemsvaluelist">
+		<option value="20">
+		<option value="50">
+		<option value="100">
+	</datalist>
+	Gold pieces<br>
+	(Approximate)
+</fieldset>
+
+</fieldset>
+<fieldset style="width:6em;" class="menufield">
+	<legend>From..</legend>
+
+	<div>
+		<input type="radio" name="itemsowner" value="peasants" checked />
+		<label>Peasants</label>
+	</div>
+
+	<div>
+		<input type="radio" name="itemsowner" value="soldiers" checked />
+		<label>Soldiers</label>
+	</div>
+
+	<div>
+		<input type="radio" name="itemsowner" value="nobles" />
+		<label for="store">Nobles</label>
+	</div>
+</fieldset>
+
+<button onclick="updateResults()" style="vertical-align:bottom;">Go</button>
+
+
+<div id="results">
+<!-- see JS wipeResults() -->
+</div>
 </body>
