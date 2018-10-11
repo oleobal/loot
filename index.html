@@ -211,7 +211,7 @@
 		catch (err)
 		{ var v = 0 }
 		try 
-		{ var v = parseFloat(document.getElementById("totalWeaponsVal").innerHTML) }
+		{ v += parseFloat(document.getElementById("totalItemsVal").innerHTML) }
 		catch (err)
 		{ }
 		
@@ -346,7 +346,7 @@
 <body onload='updateResults();'>
 
 <!-- not in a form because of auto reload on submit -->
-<fieldset style="width:12em;" class="menufield">
+<fieldset style="width:14em;" class="menufield">
 	<legend>Getting the inventory for..</legend>
 
 	<div>
@@ -355,7 +355,7 @@
 	</div>
 
 	<div>
-		<input type="radio" name="choice" value="wprack" checked />
+		<input type="radio" name="choice" value="wprack" />
 		<label>A weapon rack</label>
 	</div>
 
@@ -365,7 +365,7 @@
 	</div>
 
 </fieldset>
-<fieldset style="width:9em;" class="menufield">
+<fieldset style="width:10em;" class="menufield">
 	<legend>Of value..</legend>
 	<input id="itemsvalue" list="itemsvaluelist" value="50" style="width:4em" required/>
 	<datalist id="itemsvaluelist">
@@ -378,11 +378,11 @@
 </fieldset>
 
 </fieldset>
-<fieldset style="width:6em;" class="menufield">
+<fieldset style="width:7em;" class="menufield">
 	<legend>From..</legend>
 
 	<div>
-		<input type="radio" name="itemsowner" value="peasants" checked />
+		<input type="radio" name="itemsowner" value="peasants" />
 		<label>Peasants</label>
 	</div>
 
