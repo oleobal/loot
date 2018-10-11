@@ -344,7 +344,106 @@ var weapons=[
 		"commonness":[10, 10, 1000]
 	},
 	
+
+	// SHIELDS
+
+	{
+		"name":"round shield",
+		"cat":["Shields"],
+		"desc":"You wouln't think of fighting without one ? Everyone has one !",
+		"atk": -1,
+		"par":  4,
+		"dmg":  2,
+		"val": 15,
+		"hands":1,
+		"weight":3,
+		"dmgspread":1,
+		"materials":{"wood":[100, 0, 1000]},
+		"commonness":[80, 0, 1000]
+	},
+
+	{
+		"name":"square shield",
+		"cat":["Shields"],
+		"desc":"Unwieldy ? Maybe.. But what protection ! And at what cost !",
+		"atk": -2,
+		"par":  5,
+		"dmg":  2,
+		"val": 25,
+		"hands":1,
+		"weight":4,
+		"dmgspread":1,
+		"materials":{"wood":[100, 0, 1000], "steel":[20, 30, 1000]},
+		"commonness":[30, 0, 1000]
+	},
 	
+
+	{
+		"name":"kite shield",
+		"cat":["Shields"],
+		"desc":"My own grandfather used one like this in his time. Timeless !",
+		"atk": -2,
+		"par":  6,
+		"dmg":  2,
+		"val": 35,
+		"hands":1,
+		"weight":4,
+		"dmgspread":1,
+		"materials":{"wood":[100, 0, 1000], "steel":[20, 30, 1000]},
+		"commonness":[20, 0, 1000]
+	},
+
+	{
+		"name":"écu",
+		"cat":["Shields"],
+		"desc":"A knight's, truly. What glory, what destiny behind it !",
+		"atk": -1,
+		"par":  6,
+		"dmg":  2,
+		"val": 50,
+		"hands":1,
+		"weight":3,
+		"dmgspread":1,
+		"materials":{"wood":[100, 0, 1000], "steel":[20, 30, 1000]},
+		"commonness":[30, 0, 1000]
+	},
+
+
+
+	// SPECIALS
+
+
+	{
+		"name":"falcata",
+		"cat":["Swords", "Axes"],
+		"desc":"See, messire : choppier than a sword, pointier than an axe !",
+		"atk":  4,
+		"par":  1,
+		"dmg":  8,
+		"val": 90,
+		"hands":1,
+		"weight":3,
+		"dmgspread":3,
+		"materials":{"steel":[100, 0, 1000]},
+		"commonness":[1, 0, 1000]
+	},
+
+	{
+		"name":"backsword",
+		"cat":["Swords", "Sabres"],
+		"desc":"Well, yes, you can use like this as well. And look at this price !",
+		"atk":  2,
+		"par":  2,
+		"dmg":  5,
+		"val": 25,
+		"hands":1,
+		"weight":1,
+		"dmgspread":3,
+		"materials":{"steel":[100, 0, 1000], "iron":[20, 0, 24]},
+		"commonness":[15, 0, 1000]
+	},
+
+
 	// ========== TWO HANDED ==========
 	
 	// GREATSWORDS
