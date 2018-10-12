@@ -345,11 +345,16 @@ function finalizeWeapon(weapon, mod)
 /**
  * returns an object with a getRandomWeapons(nbItems, meanval) method
  */
-function RandomWeaponSource(weapons, goodMods, badMods)
+function RandomWeaponSource(weaponsobj)
 {
 	var r = {}
-	var goodMods = goodMods
-	var badMods = badMods
+	var weapons = weaponsobj.items
+	var goodMods = weaponsobj.goodMods
+	var badMods =  weaponsobj.badMods
+	
+	r.weapons = weapons
+	r.goodMods = goodMods
+	r.badMods = badMods
 	
 	// weapon probabilities sum (for dart throwing)
 	// TODO fake random for shops that would stock a few of each category
@@ -393,7 +398,7 @@ function RandomWeaponSource(weapons, goodMods, badMods)
 	}
 
 
-	
+
 	/*
 	 * returns an array of nbItems weapons
 	 * each of them will be 0.5*meanval<value<1.5*meanval
@@ -424,6 +429,7 @@ function RandomWeaponSource(weapons, goodMods, badMods)
 				}
 				catch (err)
 				{
+					console.log(err)
 					var fw = finalizeWeapon(w, null)
 				}
 			}

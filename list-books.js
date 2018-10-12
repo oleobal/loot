@@ -67,30 +67,30 @@ items : [
 
 
 badMods : [
-{
-	"name":"",
-	"val":1,
-	"desc":"",
-	"commonness":[100, 0, 1000]
-}
+	{
+		"name":"",
+		"val":1,
+		"desc":"",
+		"commonness":[100, 0, 1000]
+	}
 ],
 
 goodMods : [
-{
-	"name":"",
-	"val":1,
-	"desc":"",
-	"commonness":[100, 0, 1000]
-},
-{
-	"name":"illuminated",
-	"val":2,
-	"desc":"The illustration is quite something.",
-	"commonness":[20, 0, 1000]
-},
+	{
+		"name":"",
+		"val":1,
+		"desc":"",
+		"commonness":[100, 0, 1000]
+	},
+	{
+		"name":"illuminated",
+		"val":2,
+		"desc":"The illustration is quite something.",
+		"commonness":[20, 0, 1000]
+	},
 ],
 
-objects : {
+subjectTypes : {
 	titleadj: [
 		{
 			name:"Comital",
@@ -162,10 +162,27 @@ objects : {
 			commonness:5
 		},
 	]
-}
-
-
-}
 	
+}
+
+
+}
+
 for (var i in books.items)
 	books.items[i].type="Book"
+
+// automatically populate subjects
+// and give each of them a 'sub' attribute {subjectType:name}
+books.subjects = []
+var types = Object.keys(books.subjectTypes)
+for (var t in types)
+{
+	for (var i in books.subjectTypes[types[t]])
+	{
+		
+		var o = Object.assign({}, books.subjectTypes[types[t]][i])
+		o.sub = {[types[t]]: o.name}
+		books.subjects.push(o)
+		books.subjectTypes[types[t]].sub = {[types[t]]:o.name}
+	}
+}

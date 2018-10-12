@@ -95,6 +95,8 @@ function getFormatFields(s)
  * and a dictionary with corresponding values.
  * for instance :
  * format("{na} apples, {nb} bananas", {na:2, nb:4}) == "2 apples, 4 bananas"
+ *
+ * Will throw an exception is a subtitution is not in the provided dictionary
  */
 function format(s, pars)
 {
@@ -111,7 +113,10 @@ function format(s, pars)
 				n+=s[i]
 				i++
 			}
-			result+=pars[n]
+			if (pars[n])
+				result+=pars[n]
+			else
+				throw "No substitution provided for "+n
 		}
 		else
 		{

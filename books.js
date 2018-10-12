@@ -4,13 +4,14 @@
  *  - list-books.js
  */
 
-function finalizeBook(book, object, mod)
+function finalizeBook(book, subject, mod)
 {
 	fb=Object.assign({}, book)
-	fb.name=format(book.name, {})
+	fb.name=format(book.name, subject.sub)
 	//TODO
-	fb.name+=" ("+mod.name+")"
-	fb.val*=object.val
+	if (mod && mod.name != "")
+		fb.name+=" ("+mod.name+")"
+	fb.val*=subject.val
 	fb.val*=mod.val
 	
 	return fb
@@ -23,28 +24,22 @@ function getAllBookCombinations(booksobj)
 {
 	var result=[]
 	var mods = booksobj.goodMods.concat(booksobj.badMods.slice(1))
+	console.log(booksobj.items.length, mods.length, booksobj.subjects.length)
 	
 	for (var i in booksobj.items)
 	{
 		for (var j in mods)
 		{
-			// TODO make something more generic
-			for (k in booksobj.objects.titleadj)
-			{
-			for (l in booksobj.objects.people)
-			{
-			for (m in booksobj.objects.sceneries)
+			for (k in booksobj.subjects)
 			{
 				try
 				{
-					result.push(finalizeBook(booksobj.items[i], {}, mods[j]))
+					result.push(finalizeBook(booksobj.items[i], booksobj.subjects[k], mods[j]))
 				}
 				catch (err)
 				{
 					console.log(err)
 				}
-			}
-			}
 			}
 		}
 	}
