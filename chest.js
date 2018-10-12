@@ -57,3 +57,19 @@ function getWeaponRackContents(value, context, randomWeaponSource)
 	
 	return randomWeaponSource.getRandomWeapons(nbwps, val)
 }
+
+function calculateTotalValue(chest)
+{
+	var total=0
+	for (var i in chest)
+		total+=chest[i].val
+	return total
+}
+
+function calculateTotalWeight(chest)
+{
+	var total=0
+	for (var i in chest)
+		total+=chest[i].weight
+	return total
+}
