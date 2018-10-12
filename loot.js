@@ -284,13 +284,14 @@ function finalizeWeapon(weapon, mod)
 	fw.appliedModifier=null
 	if (mod != null && mod.name != "")
 	{
+		var c = weapon.cat.concat(weapon.hiddencat)
 		// MUST category check
 		if (mod.catmust)
 		{
 			var ok=false
-			for (var i in weapon.cat)
+			for (var i in c)
 			{
-				if (mod.catmust.indexOf(weapon.cat[i])>=0)
+				if (mod.catmust.indexOf(c[i])>=0)
 				{
 					ok=true
 					break
@@ -303,9 +304,9 @@ function finalizeWeapon(weapon, mod)
 		if (mod.catcant)
 		{
 			var ok=true
-			for (var i in weapon.cat)
+			for (var i in c)
 			{
-				if (mod.catcant.indexOf(weapon.cat[i])>=0)
+				if (mod.catcant.indexOf(c[i])>=0)
 				{
 					ok=false
 					break
@@ -347,6 +348,11 @@ function finalizeWeapon(weapon, mod)
 			if (!ok)
 				throw "Excluded material - "+mod.name+" "+weapon.name
 		}
+		
+		// TODO those checks do the job but do not correspond to specifications
+		// a weapon with 2 materials can be excluded even if a modifier only
+		// excludes one
+		// also value for material is not checked
 		
 		// Specifically excluded
 		if (mod.wpcant)

@@ -1,16 +1,16 @@
 /*
 format :
 {
-	"Name of category": {
-		"names":{
-			"singular name in minuscules":[rarity (natural), minimum value (natural), maximum value (natural)]
-			},
+	{
+		"name":<name of weapon in minuscules>,
+		"cat":[list of category names, capitalized],
+		"hiddencat":[], (same as cat, optional, used by the system but not displayed to the user)
 		"atk": typical attack (relative),
 		"par": typical parry (relative),
 		"dmg": typical maximum damage (natural) ; calculations will use dmg/2 as mean,
-		"val": typical value,
-		"hands": number of hands needed,
-		"weight":typical weight in kilograms (positive real multiple of 0.5),
+		"val": typical value in gold pieces (natural),
+		"hands": natural, number of hands needed (typically 1 or 2),
+		"weight":typical weight in kilograms (positive real, multiple of 0.5),
 		"dmgspread": variance (scale),
 		"materials":{"material name":[rarity (natural), minimum value (natural), maximum value (natural)]}
 	},
@@ -677,11 +677,13 @@ var badMods=[
 		"dmg":1, // multiplied
 		"dmgspread":1, // multiplied
 		"val":1, // multiplied
+		// the result for each of those multipliers is rounded
 		"desc":"", // added (+ a space) at the end of the desc
 		"matermust":null, // which materials this can be applied to
 		"matercant":null, // which materials this can't be applied to
 		"catmust":null, // which categories this can be applied to
 		"catcant":null, // which categories this can't be applied to
+		// categories considered include hidden categories (weapon.hiddencat)
 		"wpcant":null, // weapon names to specifically exclude
 		// for these last ones, null == no restrictions
 		// they can also be left undefined
@@ -835,7 +837,7 @@ var goodMods=[
 		"par":0.7,
 		"dmg":0.8,
 		"dmgspread":1,
-		"val":4,
+		"val":3.5,
 		"desc":"Made of silver, it deals +4 DMG against undead.",
 		"matermust":["steel"],
 		"catmust":null,
@@ -878,9 +880,17 @@ var goodMods=[
 	
 ]
 
+// Add a few things to all of them
+
 for (var i in weapons)
 	weapons[i].type="weapon"
 for (var i in goodMods)
 	goodMods[i].type="weapon"
 for (var i in badMods)
 	badMods[i].type="weapon"
+for (var i in weapons)
+{
+	if (!weapon[i].hiddencat)
+		weapon[i].hiddencat=[]
+	weapon[i].hiddencat.push(weapon[i].hands+"-handed")
+}
