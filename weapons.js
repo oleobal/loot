@@ -479,7 +479,7 @@ var weapons=[
 	},
 	
 	{
-		"name":"doppelhander",
+		"name":"zweihander",
 		"cat":["Great swords"],
 		"desc":"See, you can grab the blade here, for different techniques.",
 		"atk": 3,
@@ -493,6 +493,20 @@ var weapons=[
 		"commonness":[25, 10, 1000]
 	},
 	
+	{
+		"name":"estoc",
+		"cat":["Great swords"],
+		"desc":"Just thrusting, yes, but what power behind each thrust !",
+		"atk": 4,
+		"par": 5,
+		"dmg": 10,
+		"val": 110,
+		"hands":2,
+		"weight":3,
+		"dmgspread":2.7,
+		"materials":{"steel":[100, 0, 1000]},
+		"commonness":[10, 0, 1000]
+	},
 	
 	// GREAT AXES
 	
@@ -655,14 +669,22 @@ var badMods=[
 	{
 		// This is a "no modifier" modifier
 		"name":"", // added (+ a space) at the start of the name
-		"atk":0, // added
-		"par":0, // added
+		"atk":1, // multiplied
+		"par":1, // multiplied
+		// ATK and PAR are  multiplied but with special rules, since they can
+		// be applied to negative stats.
+		// a value >1 will always make the weapon better, and <1 always worse
 		"dmg":1, // multiplied
 		"dmgspread":1, // multiplied
 		"val":1, // multiplied
 		"desc":"", // added (+ a space) at the end of the desc
-		"materials":null, // which materials this can be applied to
-		"cats":null, // which categories this can be applied to
+		"matermust":null, // which materials this can be applied to
+		"matercant":null, // which materials this can't be applied to
+		"catmust":null, // which categories this can be applied to
+		"catcant":null, // which categories this can't be applied to
+		"wpcant":null, // weapon names to specifically exclude
+		// for these last ones, null == no restrictions
+		// they can also be left undefined
 		"commonness":[100, 0, 1000]
 		// at which frequency this appears, which values this can be applied to
 		// the value check is made AFTER the modifier is applied
@@ -670,135 +692,188 @@ var badMods=[
 
 	{
 		"name":"rusty",
-		"atk":-1,
-		"par":-1,
+		"atk":0.8,
+		"par":0.8,
 		"dmg":0.8,
 		"dmgspread":1,
 		"val":0.7,
 		"desc":"Hasn't been taken care of much, but I reckon it's enough.",
-		"materials":["steel", "iron"],
-		"cats":null,
+		"matermust":["steel", "iron"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[20, 0, 1000]
 	},
 	
 	{
 		"name":"bent",
-		"atk":-1,
-		"par":-1,
+		"atk":0.8,
+		"par":0.8,
 		"dmg":1,
 		"dmgspread":1.5,
 		"val":0.75,
 		"desc":"A bit unbalanced, yes, but holding it like this works.",
-		"materials":["steel", "iron"],
-		"cats":null,
+		"matermust":["steel", "iron"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[15, 0, 1000]
 	},
 	
 	{
 		"name":"chipped",
-		"atk":0,
-		"par":-1,
+		"atk":1,
+		"par":0.8,
 		"dmg":1,
 		"dmgspread":1.5,
 		"val":0.8,
 		"desc":"Slight battle damage here and there, but still in good shape !",
-		"materials":null,
-		"cats":null,
+		"matermust":null,
+		"matercant":["wood"], // now obviously wood can be chipped..
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[15, 0, 1000]
 	},
 	
 	{
 		"name":"crude",
-		"atk":0,
-		"par":0,
+		"atk":1,
+		"par":1,
 		"dmg":0.8,
 		"dmgspread":2,
 		"val":0.9,
 		"desc":"This one was made by some apprentice, I believe.",
-		"materials":["steel", "iron"],
-		"cats":null,
+		"matermust":["steel", "iron"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[25, 0, 50]
 	},
 	
-		{
+	{
 		"name":"half a",
-		"atk":-3,
-		"par":-1,
+		"atk":0.3,
+		"par":0.7,
 		"dmg":0.5,
 		"dmgspread":2,
 		"val":0.3,
 		"desc":"Only half the blade remains with the handle on that one.",
-		"materials":["steel", "iron"],
-		"cats":["Daggers", "Swords"],
+		"matermust":["steel", "iron"],
+		"catmust":["Daggers", "Swords"],
+		"catcant":["Axes"],
+		"wpcant":null,
 		"commonness":[25, 0, 50]
+	},
+	
+	{
+		"name":"beaten",
+		"atk":1,
+		"par":0.7,
+		"dmg":1,
+		"dmgspread":1,
+		"val":0.8,
+		"desc":"Judging by its looks, this one sure made itself useful !",
+		"matermust":null,
+		"matercant":null,
+		"catmust":["Shields"],
+		"catcant":null,
+		"wpcant":null,
+		"commonness":[25, 0, 100]
 	},
 ]
 
 var goodMods=[
 	{
 		"name":"",
-		"atk":0,
-		"par":0,
+		"atk":1,
+		"par":1,
 		"dmg":1,
 		"dmgspread":1,
 		"val":1,
 		"desc":"",
-		"materials":null,
-		"cats":null,
+		"matermust":null,
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[100, 0, 1000]
 	},
 	
 	{
 		"name":"fine",
-		"atk":1,
-		"par":1,
+		"atk":1.3,
+		"par":1.3,
 		"dmg":1,
 		"dmgspread":0.8,
 		"val":2,
 		"desc":"And it's hard to get better quality than this !",
-		"materials":["steel"],
-		"cats":null,
+		"matermust":["steel"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[10, 20, 1000]
 	},
 	
 	{
 		"name":"masterwork",
-		"atk":2,
-		"par":1,
+		"atk":1.6,
+		"par":1.6,
 		"dmg":1.3,
 		"dmgspread":1,
 		"val":4,
 		"desc":"And admire the piece of art that it is !",
-		"materials":["steel"],
-		"cats":null,
+		"matermust":["steel"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[5, 50, 1000]
 	},
 	
 	{
 		"name":"silver",
-		"atk":-1,
-		"par":-1,
+		"atk":0.7,
+		"par":0.7,
 		"dmg":0.8,
 		"dmgspread":1,
 		"val":4,
 		"desc":"Made of silver, it deals +4 DMG against undead.",
-		"materials":["steel"],
-		"cats":null,
+		"matermust":["steel"],
+		"catmust":null,
+		"catcant":null,
+		"wpcant":null,
 		"commonness":[5, 50, 1000]
 	},
 	
 	
 	{
 		"name":"flamberged",
-		"atk":0,
-		"par":3,
+		"atk":1,
+		"par":1.6,
 		"dmg":0.8,
 		"dmgspread":1,
 		"val":4,
 		"desc":"And not only is the flaming gorgeous, it also helps parrying !",
-		"materials":["steel"],
-		"cats":["Swords", "Great swords"],
+		"matermust":["steel"],
+		"catmust":["Swords", "Great swords"],
+		"catcant":["Axes", "Sabres"],
+		"wpcant":["estoc"],
 		"commonness":[5, 200, 1000]
+	},
+	
+	{
+		"name":"painted",
+		"atk":1,
+		"par":1,
+		"dmg":1,
+		"dmgspread":1,
+		"val":1,
+		"desc":"And I must say, the decoration on this one is quite nice.",
+		"matermust":null,
+		"matercant":null,
+		"catmust":["Shields"],
+		"catcant":null,
+		"wpcant":null,
+		"commonness":[5, 0, 1000]
 	},
 	
 ]

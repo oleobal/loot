@@ -284,41 +284,80 @@ function finalizeWeapon(weapon, mod)
 	fw.appliedModifier=null
 	if (mod != null && mod.name != "")
 	{
-		// category check
-		if (mod.cats!=null)
+		// MUST category check
+		if (mod.catmust)
 		{
 			var ok=false
 			for (var i in weapon.cat)
 			{
-				if (mod.cats.indexOf(weapon.cat[i])>=0)
+				if (mod.catmust.indexOf(weapon.cat[i])>=0)
 				{
 					ok=true
 					break
 				}
 			}
 			if (!ok)
-				throw "Not the right category "+mod.name+" "+weapon.name
+				throw "Not the right category - "+mod.name+" "+weapon.name
 		}
-		// material check
-		if (mod.materials!=null)
+		// CAN'T category check
+		if (mod.catcant)
+		{
+			var ok=true
+			for (var i in weapon.cat)
+			{
+				if (mod.catcant.indexOf(weapon.cat[i])>=0)
+				{
+					ok=false
+					break
+				}
+			}
+			if (!ok)
+				throw "In excluded category - "+mod.name+" "+weapon.name
+		}
+		// MUST material check
+		if (mod.matermust)
 		{
 			var ok=false
 			var mats = Object.keys(weapon.materials)
 			for (var i in mats)
 			{
-				if (mod.materials.indexOf(mats[i])>=0)
+				if (mod.matermust.indexOf(mats[i])>=0)
 				{
 					ok=true
 					break
 				}
 			}
 			if (!ok)
-				throw "Not the right material "+mod.name+" "+weapon.name
+				throw "Not the right material - "+mod.name+" "+weapon.name
+		}
+		
+		// CAN'T material check
+		if (mod.matercant)
+		{
+			var ok=true
+			var mats = Object.keys(weapon.materials)
+			for (var i in mats)
+			{
+				if (mod.matercant.indexOf(mats[i])>=0)
+				{
+					ok=false
+					break
+				}
+			}
+			if (!ok)
+				throw "Excluded material - "+mod.name+" "+weapon.name
+		}
+		
+		// Specifically excluded
+		if (mod.wpcant)
+		{
+			if (mod.wpcant.indexOf(weapon.name) >= 0)
+				throw "Excluded weapon - "+mod.name+" "+weapon.name
 		}
 		
 		fw.name=mod.name+" "+fw.name
-		fw.atk+=mod.atk
-		fw.par+=mod.par
+		fw.atk=Math.round(fw.atk+(Math.abs(fw.atk)*(mod.atk-1)))
+		fw.par=Math.round(fw.par+(Math.abs(fw.par)*(mod.par-1)))
 		fw.dmg*=mod.dmg
 		fw.dmgspread*=mod.dmgspread
 		fw.val=Math.round(fw.val*mod.val)
@@ -327,9 +366,9 @@ function finalizeWeapon(weapon, mod)
 		
 		// value check comes after the modifier is applied
 		if (fw.val < mod.commonness[1])
-			throw "Value too low ("+fw.val+">"+mod.commonness[1]+") "+mod.name+" "+weapon.name
+			throw "Value too low ("+fw.val+">"+mod.commonness[1]+") - "+mod.name+" "+weapon.name
 		if (fw.val > mod.commonness[2])
-			throw "Value too high ("+fw.val+">"+mod.commonness[2]+") "+mod.name+" "+weapon.name
+			throw "Value too high ("+fw.val+">"+mod.commonness[2]+") - "+mod.name+" "+weapon.name
 		
 	}
 		
