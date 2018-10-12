@@ -4,29 +4,43 @@ format :
 	{
 		"name":<name of weapon in minuscules>,
 		"cat":[list of category names, capitalized],
-		"hiddencat":[], (same as cat, optional, used by the system but not displayed to the user)
+		"hiddencat":[],
+		(same as cat, optional, used by the system but not displayed to user)
 		"atk": typical attack (real, rounded after mods),
 		"par": typical parry (real, rounded after mods),
 		(I recommend not using 0, and using -0.4 to 0.4 instead)
-		"dmg": typical maximum damage (natural) ; calculations will use dmg/2 as mean,
+		"dmg": typical maximum damage (natural)
 		"val": typical value in gold pieces (natural),
 		"hands": natural, number of hands needed (typically 1 or 2),
 		"weight":typical weight in kilograms (positive real, multiple of 0.5),
 		"dmgspread": variance (scale),
-		"materials":{"material name":[rarity (natural), minimum value (natural), maximum value (natural)]}
+		"materials":{"material name":[rarity (natural), 
+		             minimum value (natural),
+					 maximum value (natural)]}
 	},
 }
 
-"typical" values describe the kind of weapon an adventurer "ought" to get, that's neither too cheap nor too expensive for its class.
+"typical" values describe the kind of weapon an adventurer "ought" to get,
+that's neither too cheap nor too expensive for its class.
 
-rarity (for names and materials) is an arbitrary unit, that describe the size of the pie for that name/material
-minimum and maximum values is the range (inclusive) at which this name/material can appear
+rarity (for names and materials) is an arbitrary unit,
+that describe the size of the pie for that name/material
+
+minimum and maximum values is the range (inclusive) at which this name/material
+can appear
 
 dmg and dmgspread are plugged in a gaussian function :
 
 e^(-(x-(dmg/2)^2/(2*dmgspread^2))/(sqrt(2*pi)*dmgspread)
 
 which is then (through magic) turned into dice rolls
+
+managing categories (classes) can be awkward, because weapon classes were made
+with skill in mind, not physical characteristics. So for instance a bladed and
+an unbladed weapon could be in the same category because they are used the
+same way, but physically one can be, say, dull and the other cannot.
+
+But I believe it works ok like this. It can be worked in with hidden categories.
 */
 
 var weapons=[
@@ -39,7 +53,7 @@ var weapons=[
 		"atk": 2,
 		"par": -3,
 		"dmg": 4,
-		"val": 15,
+		"val": 10,
 		"hands":1,
 		"weight":0.5,
 		"dmgspread":1,
@@ -51,7 +65,7 @@ var weapons=[
 		"name":"kitchen knife",
 		"cat":["Daggers"],
 		"desc": "Knives are ever useful ! Who knows what could happen ?",
-		"atk": 0,
+		"atk": 0.4,
 		"par": -3,
 		"dmg": 3,
 		"val": 2,
@@ -67,7 +81,7 @@ var weapons=[
 		"cat":["Daggers"],
 		"desc": "See the stout quillons for use in the off-hand ?",
 		"atk": 1,
-		"par": 0,
+		"par": -0.4,
 		"dmg": 4,
 		"val": 30,
 		"hands":1,
@@ -359,7 +373,7 @@ var weapons=[
 		"hands":1,
 		"weight":3,
 		"dmgspread":1,
-		"materials":{"wood":[100, 0, 1000]},
+		"materials":{"wood":[100, 0, 1000], "iron":[100, 10, 1000] },
 		"commonness":[80, 0, 1000]
 	},
 
@@ -607,8 +621,8 @@ var weapons=[
 	{
 		"name":"war scythe",
 		"cat":["Polearms"],
-		"desc":"More of a peasant's weapon. A scythe with the blade upwards.",
-		"atk": 0,
+		"desc":"More of a peasant's weapon. A scythe blade upwards on a pole.",
+		"atk": -0.4,
 		"par": -3,
 		"dmg": 6,
 		"val": 5,
@@ -718,22 +732,22 @@ var badMods=[
 		"desc":"A bit unbalanced, yes, but holding it like this works.",
 		"matermust":["steel", "iron"],
 		"catmust":null,
-		"catcant":null,
+		"catcant":["Shields"],
 		"wpcant":null,
 		"commonness":[15, 0, 1000]
 	},
 	
 	{
 		"name":"chipped",
-		"atk":1,
-		"par":0.8,
+		"atk":0.8,
+		"par":1,
 		"dmg":1,
 		"dmgspread":1.5,
 		"val":0.8,
 		"desc":"Slight battle damage here and there, but still in good shape !",
 		"matermust":null,
 		"matercant":["wood"], // now obviously wood can be chipped..
-		"catmust":null,
+		"catmust":["Bladed"],
 		"catcant":null,
 		"wpcant":null,
 		"commonness":[15, 0, 1000]
@@ -742,7 +756,7 @@ var badMods=[
 	{
 		"name":"crude",
 		"atk":1,
-		"par":1,
+		"par":0.8,
 		"dmg":0.8,
 		"dmgspread":2,
 		"val":0.9,
@@ -891,7 +905,17 @@ for (var i in badMods)
 	badMods[i].type="weapon"
 for (var i in weapons)
 {
+	// meta-categories
+	
 	if (!weapons[i].hiddencat)
 		weapons[i].hiddencat=[]
+	
 	weapons[i].hiddencat.push(weapons[i].hands+"-handed")
+	
+	let bladedWeapons = ["Swords", "Daggers", "Sabres", "Great swords", "Axes", "Great axes", "Polearms"]
+	
+	if (weapons[i].cat.some(r=> bladedWeapons.indexOf(r) >= 0))
+	{
+		weapons[i].hiddencat.push("Bladed")
+	}
 }
