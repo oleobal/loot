@@ -1,0 +1,22 @@
+<head>
+	<title>Book list</title>
+	<meta charset="utf-8"/>
+	<script src="utility.js"></script>
+	<script src="list-books.js"></script>
+	<script src="books.js"></script>
+	<script>
+	function displayAll()
+	{
+		var d = document.getElementById("debug")
+		var c = getAllBookCombinations(books)
+		for (i in c)
+		{
+			d.innerHTML+= JSON.stringify(c[i],2)+"<br>"
+		}
+	}
+	</script>
+</head>
+<body onload="displayAll()">
+<p id="debug" style="font-family:monospace;">
+</p>
+</body>

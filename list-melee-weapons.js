@@ -43,7 +43,7 @@ same way, but physically one can be, say, dull and the other cannot.
 But I believe it works ok like this. It can be worked in with hidden categories.
 */
 var melee = {
-weapons:[
+items:[
 	// DAGGERS
 	
 	{
@@ -898,25 +898,25 @@ goodMods:[
 }
 // Add a few things to all of them
 
-for (var i in melee.weapons)
-	melee.weapons[i].type="weapon"
+for (var i in melee.items)
+	melee.items[i].type="Weapon"
 for (var i in melee.goodMods)
-	melee.goodMods[i].type="weapon"
+	melee.goodMods[i].type="Weapon"
 for (var i in melee.badMods)
-	melee.badMods[i].type="weapon"
-for (var i in melee.weapons)
+	melee.badMods[i].type="Weapon"
+for (var i in melee.items)
 {
 	// meta-categories
 	
-	if (!melee.weapons[i].hiddencat)
-		melee.weapons[i].hiddencat=[]
+	if (!melee.items[i].hiddencat)
+		melee.items[i].hiddencat=[]
 	
-	melee.weapons[i].hiddencat.push(melee.weapons[i].hands+"-handed")
+	melee.items[i].hiddencat.push(melee.items[i].hands+"-handed")
 	
 	let bladedWeapons = ["Swords", "Daggers", "Sabres", "Great swords", "Axes", "Great axes", "Polearms"]
 	
-	if (melee.weapons[i].cat.some(r=> bladedWeapons.indexOf(r) >= 0))
+	if (melee.items[i].cat.some(r=> bladedWeapons.indexOf(r) >= 0))
 	{
-		melee.weapons[i].hiddencat.push("Bladed")
+		melee.items[i].hiddencat.push("Bladed")
 	}
 }

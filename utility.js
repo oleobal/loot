@@ -58,3 +58,67 @@ function getLightRGBfromString(str)
 	
 	return "#"+color[0]+color[1]+color[2]
 }
+
+
+/**
+ * takes a string formatted like for format(s, pars)
+ * returns an array of the fields in it (as strings)
+ * for instance :
+ * getFormatFields("{na} apples, {nb} bananas") == ["na","nb"]
+ */
+function getFormatFields(s)
+{
+	var result= []
+	var i = 0
+	while (i<s.length)
+	{
+		if (s[i] == "{")
+		{
+			i++
+			var n = ""
+			while (s[i] != "}" && i<s.length)
+			{
+				console.log(s[i], i)
+				n+=s[i]
+				i++
+			}
+			result.push(n)
+		}
+		i++
+	}
+	
+	return result
+}
+
+/**
+ * takes a string that may have fields formatted as braces with names,
+ * and a dictionary with corresponding values.
+ * for instance :
+ * format("{na} apples, {nb} bananas", {na:2, nb:4}) == "2 apples, 4 bananas"
+ */
+function format(s, pars)
+{
+	var result= ""
+	var i = 0
+	while (i<s.length)
+	{
+		if (s[i] == "{")
+		{
+			i++
+			var n = ""
+			while (s[i] != "}" && i<s.length)
+			{
+				n+=s[i]
+				i++
+			}
+			result+=pars[n]
+		}
+		else
+		{
+			result+=s[i]
+		}
+		i++
+	}
+	
+	return result
+}

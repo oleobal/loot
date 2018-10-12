@@ -116,7 +116,7 @@
 		var ic = 0
 		for (var i in chest)
 		{
-			if (chest[i].type==="weapon")
+			if (chest[i].type==="Weapon")
 				wps.push(chest[i])
 			else
 			{
@@ -271,7 +271,7 @@
 		
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
 		
-		var weaponR = RandomWeaponSource(melee.weapons, melee.goodMods, melee.badMods)
+		var weaponR = RandomWeaponSource(melee.items, melee.goodMods, melee.badMods)
 		
 		var rolledv = -10000
 		var safety = 0

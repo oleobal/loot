@@ -1,7 +1,9 @@
 /**
  * Contains things to generate actual lists from parameters
- * 
- * Do import loot.js before this file !
+ * Import before this file :
+ *  - utility.js
+ *  - weapons.js
+ *  - other-items.js
  */
 
 
