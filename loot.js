@@ -377,7 +377,8 @@ function finalizeWeapon(weapon, mod)
 			throw "Value too high ("+fw.val+">"+mod.commonness[2]+") - "+mod.name+" "+weapon.name
 		
 	}
-		
+	fw.atk = Math.round(fw.atk)
+	fw.par = Math.round(fw.par)
 	
 	fw.dmg=nbToDice(fw.dmg, fw.dmgspread)
 	fw.name=fw.name.charAt(0).toUpperCase()+fw.name.slice(1)

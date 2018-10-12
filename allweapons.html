@@ -43,9 +43,9 @@
 				if (!chest[w].appliedModifier && attrs[n]=="name")
 				{
 					var a = document.createElement("a")
-					a.href = window.location.pathname+"#"+chest[w]["name"].replace(" ", "_").toLowerCase()
+					a.href = window.location.pathname+"#"+chest[w]["name"].replace(/\ /g, "_").toLowerCase()
 					a.innerHTML=chest[w]["name"]
-					a.id=chest[w]["name"].replace(" ", "_").toLowerCase()
+					a.id=chest[w]["name"].replace(/\ /g, "_").toLowerCase()
 					td.appendChild(a)
 				}
 				else if (attrs[n]=="dmg")

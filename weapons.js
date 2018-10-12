@@ -5,8 +5,9 @@ format :
 		"name":<name of weapon in minuscules>,
 		"cat":[list of category names, capitalized],
 		"hiddencat":[], (same as cat, optional, used by the system but not displayed to the user)
-		"atk": typical attack (relative),
-		"par": typical parry (relative),
+		"atk": typical attack (real, rounded after mods),
+		"par": typical parry (real, rounded after mods),
+		(I recommend not using 0, and using -0.4 to 0.4 instead)
 		"dmg": typical maximum damage (natural) ; calculations will use dmg/2 as mean,
 		"val": typical value in gold pieces (natural),
 		"hands": natural, number of hands needed (typically 1 or 2),
@@ -514,10 +515,10 @@ var weapons=[
 		"name":"great war axe",
 		"cat":["Great axes"],
 		"desc":"Only someone like you would have the great skill required !",
-		"atk": 2,
-		"par": -4,
+		"atk": 0.4,
+		"par": -6,
 		"dmg": 16,
-		"val": 45,
+		"val": 55,
 		"hands":2,
 		"weight":5,
 		"dmgspread":3.25,
@@ -595,7 +596,7 @@ var weapons=[
 		"atk": 0,
 		"par": -3,
 		"dmg": 6,
-		"val": 10,
+		"val": 2,
 		"hands":2,
 		"weight":3,
 		"dmgspread":3,
@@ -822,7 +823,7 @@ var goodMods=[
 		"par":1.6,
 		"dmg":1.3,
 		"dmgspread":1,
-		"val":4,
+		"val":4.5,
 		"desc":"And admire the piece of art that it is !",
 		"matermust":["steel"],
 		"catmust":null,
@@ -890,7 +891,7 @@ for (var i in badMods)
 	badMods[i].type="weapon"
 for (var i in weapons)
 {
-	if (!weapon[i].hiddencat)
-		weapon[i].hiddencat=[]
-	weapon[i].hiddencat.push(weapon[i].hands+"-handed")
+	if (!weapons[i].hiddencat)
+		weapons[i].hiddencat=[]
+	weapons[i].hiddencat.push(weapons[i].hands+"-handed")
 }
