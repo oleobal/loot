@@ -1,9 +1,9 @@
 <head>
 	<title>Complete list</title>
 	<meta charset="utf-8"/>
-	<script src="weapons.js"></script>
 	<script src="utility.js"></script>
-	<script src="loot.js"></script>
+	<script src="list-melee-weapons.js"></script>
+	<script src="weapons.js"></script>
 	<script>
 	function displayWeapons(chest)
 	{
@@ -197,8 +197,8 @@
 	
 	function displayAll()
 	{
-		addPie(weapons, "weaponsPie")
-		displayWeapons(getAllWeaponCombinations())
+		addPie(melee.weapons, "weaponsPie")
+		displayWeapons(getAllWeaponCombinations(melee.weapons, melee.goodMods.concat(melee.badMods.slice(1))))
 	}
 	</script>
 	<style>

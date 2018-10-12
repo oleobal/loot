@@ -9,7 +9,7 @@
  * Contents include weapons, gold, and precious items
  * 
  */
-function getChestContents(value, context)
+function getChestContents(value, context, randomWeaponSource)
 {
 	// decide what part of the total value to allocate to what
 	if (context && context.owner=="soldiers")
@@ -23,7 +23,7 @@ function getChestContents(value, context)
 	//console.log(wpval, itval, gdval, nbwps)
 	
 	
-	var chest=getWeaponRackContents(wpval, context)
+	var chest=getWeaponRackContents(wpval, context, randomWeaponSource)
 	
 	// TODO better
 	chest.push({type:"other", val:itval, weight:1, name:"Precious book", desc:"A book."})
@@ -36,7 +36,7 @@ function getChestContents(value, context)
 /**
  * same as getChestContents, but just weapons
  */
-function getWeaponRackContents(value, context)
+function getWeaponRackContents(value, context, randomWeaponSource)
 {
 	var val=30
 	var nbwps = Math.max(1,Math.round(value/val))
@@ -55,5 +55,5 @@ function getWeaponRackContents(value, context)
 	}
 		
 	
-	return getRandomWeapons(nbwps, val)
+	return randomWeaponSource.getRandomWeapons(nbwps, val)
 }
