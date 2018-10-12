@@ -839,7 +839,7 @@ var goodMods=[
 		"desc":"Made of silver, it deals +4 DMG against undead.",
 		"matermust":["steel"],
 		"catmust":null,
-		"catcant":null,
+		"catcant":["Shields"],
 		"wpcant":null,
 		"commonness":[5, 50, 1000]
 	},
