@@ -429,7 +429,7 @@ function RandomWeaponSource(weaponsobj)
 				}
 				catch (err)
 				{
-					console.log(err)
+					console.log("getRandomWeapons: "+err)
 					var fw = finalizeWeapon(w, null)
 				}
 			}

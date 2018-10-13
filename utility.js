@@ -9,11 +9,21 @@
  */
 function interp(a,b,i)
 {
+	if (typeof(a) !== "number")
+		throw a+" (a) is not a number"
+	if (typeof(b) !== "number")
+		throw b+" (b) is not a number"
+	if (typeof(i) !== "number")
+		throw i+" (c) is not a number"
+	
 	return a+(b-a)*i
 }
 
 function sumArray(a)
 {
+	if (typeof(a) !== "object")
+		throw a+" is not an object"
+	
 	if (a.length==0)
 		return 0
 	if (a.length==1)
@@ -29,6 +39,11 @@ function sumArray(a)
 // max exclusive
 function getRandom(min, max)
 {
+	if (typeof(min) !== "number")
+		throw min+" (min) is not a number"
+	if (typeof(max) !== "number")
+		throw max+" (max) is not a number"
+	
 	var min = Math.ceil(min)
 	var max = Math.floor(max)
 	return Math.floor(Math.random()*(max-min)) + min
@@ -76,12 +91,18 @@ function getFormatFields(s)
 		{
 			i++
 			var n = ""
-			while (s[i] != "}" && i<s.length)
+			while (s[i] != "}" && s[i] != "," && i<s.length)
 			{
-				console.log(s[i], i)
 				n+=s[i]
 				i++
 			}
+			if (s[i] == ",")
+			{
+				i++
+				while (s[i] != "}" && i<s.length)
+					i++
+			}
+			
 			result.push(n)
 		}
 		i++
@@ -95,6 +116,9 @@ function getFormatFields(s)
  * and a dictionary with corresponding values.
  * for instance :
  * format("{na} apples, {nb} bananas", {na:2, nb:4}) == "2 apples, 4 bananas"
+ * flags can be added in brackets, like this :
+ * {nba,c} will capitalize the substitute
+ * ('c' is currently the only flag)
  *
  * Will throw an exception is a subtitution is not in the provided dictionary
  */
@@ -108,15 +132,34 @@ function format(s, pars)
 		{
 			i++
 			var n = ""
-			while (s[i] != "}" && i<s.length)
+			var flags = ""
+			while (s[i] != "}" && s[i] != "," && i<s.length)
 			{
 				n+=s[i]
 				i++
 			}
+			if (s[i] == ",")
+			{
+				i++
+				while (s[i] != "}" && i<s.length)
+				{
+					flags+=s[i]
+					i++
+				}
+			}
+			
 			if (pars[n])
-				result+=pars[n]
+			{
+				var z = pars[n]
+				if (flags != "")
+				{
+					if (flags.indexOf("c") >= 0)
+						z = z.charAt(0).toUpperCase()+z.slice(1)
+				}
+				result+=z
+			}
 			else
-				throw "No substitution provided for "+n
+				throw "No substitution provided for "+n+" (s:"+s+",p:"+Object.keys(pars)+")"
 		}
 		else
 		{

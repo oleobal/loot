@@ -4,6 +4,8 @@
 	<script src="utility.js"></script>
 	<script src="list-melee-weapons.js"></script>
 	<script src="weapons.js"></script>
+	<script src="list-books.js"></script>
+	<script src="books.js"></script>
 	<script src="chest.js"></script>
 	<script>
 	/**
@@ -272,14 +274,15 @@
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
 		
 		var weaponR = RandomWeaponSource(melee)
-
+		var bookR = RandomBookSource(books)
+		
 		var rolledv = -10000
 		var safety = 0
 		var c = null
 		while (safety<100)
 		{
 			if (choice==="chest")
-				c = getChestContents(v, context, weaponR)
+				c = getChestContents(v, context, weaponR, bookR)
 			else if (choice==="wprack")
 				c=getWeaponRackContents(v, context, weaponR)
 				

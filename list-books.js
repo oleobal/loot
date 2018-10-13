@@ -8,21 +8,21 @@
 var books = {
 items : [
 	{
-		name:"{titleadj} Genealogies",
+		name:"{titleadj,c} Genealogies",
 		cat:["Politics"],
 		val:15,
 		desc:"An awkward and wordy genealogy.",
 		commonness:[5, 0, 1000]
 	},
 	{
-		name:"History of {titleadj} families",
+		name:"History of {titleadj,c} families",
 		cat:["Politics"],
 		val:20,
 		desc:"An interesting if lengthy genealogy.",
 		commonness:[5, 0, 1000]
 	},
 	{
-		name:"Lineages: A {titleadj} Genealogy",
+		name:"Lineages: A {titleadj,c} Genealogy",
 		cat:["Politics"],
 		val:25,
 		desc:"An insightful genealogy.",
@@ -47,18 +47,18 @@ items : [
 	
 	
 	{
-		name:"Surviving in the {sceneries}",
+		name:"Surviving in the {sceneries,c}",
 		cat:["Geography"],
 		val:10,
-		desc:"I've been in those, it's not like written in there.",
+		desc:"I've been in {sceneries}, it's not like written in there.",
 		commonness:[2, 0, 1000]
 	},
 	
 	{
-		name:"Across the {sceneries}",
+		name:"Across the {sceneries,c}",
 		cat:["Geography"],
 		val:25,
-		desc:"I don't think you can find better for those.",
+		desc:"I don't think you can find better for {sceneries}.",
 		commonness:[2, 0, 1000]
 	},
 ],
@@ -72,6 +72,12 @@ badMods : [
 		"val":1,
 		"desc":"",
 		"commonness":[100, 0, 1000]
+	},
+	{
+		"name":"with errors",
+		"val":0.8,
+		"desc":"Many errors were made when this one was copied.",
+		"commonness":[20, 0, 1000]
 	}
 ],
 
@@ -85,7 +91,7 @@ goodMods : [
 	{
 		"name":"illuminated",
 		"val":2,
-		"desc":"The illustration is quite something.",
+		"desc":"Beautiful illustrations.",
 		"commonness":[20, 0, 1000]
 	},
 ],
@@ -93,18 +99,18 @@ goodMods : [
 subjectTypes : {
 	titleadj: [
 		{
-			name:"Comital",
-			val:1,
+			name:"comital",
+			val:0.6,
 			commonness:10
 		},
 		{
-			name:"Ducal",
+			name:"ducal",
 			val:1,
 			commonness:5
 		},
 		{
-			name:"Royal",
-			val:1,
+			name:"royal",
+			val:1.2,
 			commonness:5
 		}
 	],
@@ -121,44 +127,39 @@ subjectTypes : {
 		},
 		{
 			name:"Nomads",
-			val:1,
+			val:1.2,
 			commonness:5
 		}
 	],
 	sceneries: [
 		{
-			name:"Seas",
+			name:"seas",
 			val:1,
 			commonness:10
 		},
 		{
-			name:"Mountains",
+			name:"mountains",
 			val:1,
 			commonness:10
 		},
 		{
-			name:"Plains",
+			name:"plains",
+			val:0.8,
+			commonness:10
+		},
+		{
+			name:"forests",
 			val:1,
 			commonness:10
 		},
 		{
-			name:"Forests",
-			val:1,
-			commonness:10
-		},
-		{
-			name:"Fields",
-			val:1,
-			commonness:10
-		},
-		{
-			name:"Swamps",
+			name:"swamps",
 			val:1,
 			commonness:5
 		},
 		{
-			name:"Steppes",
-			val:1,
+			name:"steppes",
+			val:1.2,
 			commonness:5
 		},
 	]
@@ -169,20 +170,24 @@ subjectTypes : {
 }
 
 for (var i in books.items)
+{
 	books.items[i].type="Book"
+	books.items[i].weight=0.5
+}
 
-// automatically populate subjects
-// and give each of them a 'sub' attribute {subjectType:name}
+// subjects
+// give each of them a 'sub' attribute {subjectType:name}
+// and a "type" attribute
+// and copy them in a big "subjects"
 books.subjects = []
 var types = Object.keys(books.subjectTypes)
 for (var t in types)
 {
 	for (var i in books.subjectTypes[types[t]])
 	{
-		
+		books.subjectTypes[types[t]][i].type = types[t]
+		books.subjectTypes[types[t]][i].sub = {[types[t]]:books.subjectTypes[types[t]][i].name}
 		var o = Object.assign({}, books.subjectTypes[types[t]][i])
-		o.sub = {[types[t]]: o.name}
 		books.subjects.push(o)
-		books.subjectTypes[types[t]].sub = {[types[t]]:o.name}
 	}
 }

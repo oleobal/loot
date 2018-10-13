@@ -3,7 +3,7 @@
  * Import before this file :
  *  - utility.js
  *  - weapons.js
- *  - other-items.js
+ *  - books.js
  */
 
 
@@ -11,7 +11,7 @@
  * Contents include weapons, gold, and precious items
  * 
  */
-function getChestContents(value, context, randomWeaponSource)
+function getChestContents(value, context, randomWeaponSource, randomBookSource)
 {
 	// decide what part of the total value to allocate to what
 	if (context && context.owner=="soldiers")
@@ -27,10 +27,12 @@ function getChestContents(value, context, randomWeaponSource)
 	
 	var chest=getWeaponRackContents(wpval, context, randomWeaponSource)
 	
-	// TODO better
-	chest.push({type:"other", val:itval, weight:1, name:"Precious book", desc:"A book."})
+	if (context && context.owner=="nobles")
+		chest = chest.concat(getLibraryContents(itval, context, randomBookSource))
+	else //TODO improve
+		chest.push({type:"Other", val:itval, weight:1, name:"Kitchen ustensils", desc:"Great for making quiche."})
 	
-	chest.push({type:"gold", val:gdval, weight:0, name:"Gold", desc:"A pouch of gold."})
+	chest.push({type:"Gold", val:gdval, weight:0, name:"Gold", desc:"A pouch of gold."})
 	
 	return chest
 }
@@ -58,6 +60,17 @@ function getWeaponRackContents(value, context, randomWeaponSource)
 		
 	
 	return randomWeaponSource.getRandomWeapons(nbwps, val)
+}
+
+/**
+ * same as getChestContents, but just books
+ */
+function getLibraryContents(value, context, randomBookSource)
+{
+	var val=Math.round(getRandom(15,25))
+	var nbbooks = Math.max(1,Math.round(value/val))
+	
+	return randomBookSource.getRandomBooks(nbbooks, val)
 }
 
 function calculateTotalValue(chest)

@@ -106,8 +106,8 @@
 		test(diceMean, [[8], [4,4], [8,4,4,4], [16,4,4,6,6,6,6,6]], 1, [4.5, 5, 12, 31])
 		test(diceStdDeviation, [[8], [4,4], [8,4,4,4]], 1, [Math.sqrt(5.25), Math.sqrt(2.5), Math.sqrt(9)]) // last one slowed down page loading, it's annoying
 		test(nbToDice, [[2,1],[6,1], [6,10], [12,1], [12,2], [12,2.25], [12,2.5], [12,3], [12,3.5]], 2)
-		test(getFormatFields, ["hello", "hello{z}", "{nba} apples, {nbb} bananas"], 1, [[], ["z"], ["nba", "nbb"]])
-		test(format, [["hello", {}], ["hello{z}", {z:"lol"}], ["{nba} apples, {nbb} bananas", {nba:2, nbb:4}]], 2, ["hello", "hellolol", "2 apples, 4 bananas"])
+		test(getFormatFields, ["hello", "hello{z}", "{nba} apples, {nbb} bananas", "{lol,c}swag"], 1, [[], ["z"], ["nba", "nbb"], ["lol"]])
+		test(format, [["hello", {}], ["hello{z}", {z:"lol"}], ["{nba} apples, {nbb} bananas", {nba:2, nbb:4}], ["{a,c}ello", {a:"h"}]], 2, ["hello", "hellolol", "2 apples, 4 bananas", "Hello"])
 	}
 	</script>
 	<style>
