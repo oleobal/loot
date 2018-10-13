@@ -99,7 +99,7 @@
 		tdv.id="totalWeaponsVal"
 		tdv.style.textAlign="right"
 		tr.appendChild(tdv)
-		tr.appendChild(document.createElement("td"))
+		//tr.appendChild(document.createElement("td"))
 		tr.style.backgroundColor="#DDF"
 		tr.style.fontWeight="bold"
 		t.appendChild(tr)
@@ -129,6 +129,10 @@
 				var tdt = document.createElement("td")
 				tdt.innerHTML=chest[i].type
 				tr.appendChild(tdt)
+				var tdc = document.createElement("td")
+				if (chest[i].cat)
+					tdc.innerHTML=chest[i].cat
+				tr.appendChild(tdc)
 				var tdw = document.createElement("td")
 				tdw.innerHTML=chest[i].weight
 				tdw.style.textAlign="right"
@@ -155,7 +159,7 @@
 			var tr=document.createElement("tr")
 			var td = document.createElement("td")
 			td.innerHTML="No other items"
-			td.colSpan=4
+			td.colSpan=5
 			tr.appendChild(td)
 			tr.className="gray"
 			t.appendChild(tr)
@@ -166,7 +170,7 @@
 		var tr=document.createElement("tr")
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Total (items)"
-		tdt.colSpan=2
+		tdt.colSpan=3
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=totalWeight
@@ -178,7 +182,7 @@
 		tdv.id="totalItemsVal"
 		tdv.style.textAlign="right"
 		tr.appendChild(tdv)
-		tr.appendChild(document.createElement("td"))
+		//tr.appendChild(document.createElement("td"))
 		tr.style.backgroundColor="#DDF"
 		tr.style.fontWeight="bold"
 		t.appendChild(tr)
@@ -285,6 +289,8 @@
 				c = getChestContents(v, context, weaponR, bookR)
 			else if (choice==="wprack")
 				c=getWeaponRackContents(v, context, weaponR)
+			else if (choice==="library")
+				c=getLibraryContents(v,context,bookR)
 				
 			rolledv = calculateTotalValue(c)
 			
@@ -306,8 +312,9 @@
 	<h3>Items</h3>
 	<table id="itemsTable">
 		<tr>
-			<th style="min-width:12em;">Name</th>
-			<th style="min-width:29em;">Type</th>
+			<th style="min-width:15em;">Name</th>
+			<th style="min-width:6em;">Type</th>
+			<th style="min-width:20em;">Classes</th>
 			<th style="min-width:5em;">Weight</th>
 			<th style="min-width:4em;">Value</th>
 			<th style="width:100%;"   >Notes</th>
@@ -371,24 +378,32 @@
 <body onload='updateResults();'>
 
 <!-- not in a form because of auto reload on submit -->
-<fieldset style="width:14em;" class="menufield">
+<fieldset style="width:17em;" class="menufield">
 	<legend>Getting the inventory for..</legend>
+	
+	<div style="display:inline-block">
+		<div title="Chests contain a mix of items.">
+			<input type="radio" name="choice" value="chest" id="choicechest" checked />
+			<label for="choicechest">A chest</label>
+		</div>
 
-	<div title="Chests contain various items, more or less precious">
-		<input type="radio" name="choice" value="chest" id="choicechest" checked />
-		<label for="choicechest">A chest</label>
+		<div title="Weapon racks only include weapons.">
+			<input type="radio" name="choice" value="wprack" id="choicewprack" />
+			<label for="choicewprack">A weapon rack</label>
+		</div>
 	</div>
-
-	<div title="Weapon racks only include weapons.">
-		<input type="radio" name="choice" value="wprack" id="choicewprack" />
-		<label for="choicewprack">A weapon rack</label>
+	<div style="display:inline-block">
+		<div title="Libraries only include books.">
+			<input type="radio" name="choice" value="library" id="choicelibrary" />
+			<label for="choicelibrary">A Library</label>
+		</div>
+		
+		<div title="Stores try to have a bit of everything and mark up their prices.">
+			<input type="checkbox" id="isStore" disabled> <label for="isStore">Store</label><br>
+		</div>
+		
 	</div>
-
-	<div title="Stores try to have a bit of everything and mark up their prices.">
-		<input type="radio" name="choice" value="store" id="choicestore" disabled />
-		<label for="choicestore">A store</label>
-	</div>
-
+		
 </fieldset>
 <fieldset style="width:10em;" class="menufield">
 	<legend>Of total value..</legend>

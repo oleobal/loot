@@ -10,21 +10,21 @@ items : [
 	{
 		name:"{titleadj,c} Genealogies",
 		cat:["Politics"],
-		val:15,
+		val:30,
 		desc:"An awkward and wordy genealogy.",
 		commonness:[5, 0, 1000]
 	},
 	{
 		name:"History of {titleadj,c} families",
 		cat:["Politics"],
-		val:20,
+		val:40,
 		desc:"An interesting if lengthy genealogy.",
 		commonness:[5, 0, 1000]
 	},
 	{
 		name:"Lineages: A {titleadj,c} Genealogy",
 		cat:["Politics"],
-		val:25,
+		val:50,
 		desc:"An insightful genealogy.",
 		commonness:[2, 0, 1000]
 	},
@@ -32,7 +32,7 @@ items : [
 	{
 		name:"Learn combat from the {people}",
 		cat:["Strategy"],
-		val:15,
+		val:30,
 		desc:"I'm not sure the writer mastered the subject, frankly.",
 		commonness:[5, 0, 1000]
 	},
@@ -40,7 +40,7 @@ items : [
 	{
 		name:"Strategies of the {people}",
 		cat:["Strategy"],
-		val:25,
+		val:50,
 		desc:"Great historical outlook and strategy primer in one.",
 		commonness:[2, 0, 1000]
 	},
@@ -49,17 +49,27 @@ items : [
 	{
 		name:"Surviving in the {sceneries,c}",
 		cat:["Geography"],
-		val:10,
-		desc:"I've been in {sceneries}, it's not like written in there.",
+		val:25,
+		desc:"I've been to {sceneries}, it's not like the author writes.",
 		commonness:[2, 0, 1000]
 	},
 	
 	{
 		name:"Across the {sceneries,c}",
 		cat:["Geography"],
-		val:25,
+		val:50,
 		desc:"I don't think you can find better for {sceneries}.",
 		commonness:[2, 0, 1000]
+	},
+	
+	
+	{
+		name:"Across the Stars",
+		cat:["Fiction", "Romance"],
+		val:30,
+		desc:"The song of a young knight in love with whom he can never be with.",
+		commonness:[2, 0,1000]
+		
 	},
 ],
 

@@ -396,7 +396,7 @@ items:[
 	{
 		"name":"kite shield",
 		"cat":["Shields"],
-		"desc":"My own grandfather used one like this in his time. Timeless !",
+		"desc":"My own grandfather used one like this in his day. Timeless !",
 		"atk": -2,
 		"par":  6,
 		"dmg":  2,

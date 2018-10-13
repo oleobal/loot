@@ -436,6 +436,7 @@ function RandomWeaponSource(weaponsobj)
 			chest.push(fw)
 			i++
 		}
+		console.log(chest.length)
 		return chest
 	}
 	

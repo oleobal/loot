@@ -67,7 +67,8 @@ function getWeaponRackContents(value, context, randomWeaponSource)
  */
 function getLibraryContents(value, context, randomBookSource)
 {
-	var val=Math.round(getRandom(15,25))
+	//todo skew towards combat and strategy if soldiers ? idk
+	var val=Math.round(getRandom(30,50))
 	var nbbooks = Math.max(1,Math.round(value/val))
 	
 	return randomBookSource.getRandomBooks(nbbooks, val)
