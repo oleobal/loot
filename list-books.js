@@ -69,7 +69,6 @@ items : [
 		val:30,
 		desc:"The song of a young knight in love with whom he can never be with.",
 		commonness:[2, 0,1000]
-		
 	},
 ],
 

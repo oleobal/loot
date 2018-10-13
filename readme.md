@@ -1,6 +1,6 @@
 ## Loot generator
 
-This repository is running [online here](tools.richeli.eu/loot).
+This repository is running [online here](http://tools.richeli.eu/loot).
 
 A loot generator for pen & paper RPGs. The main target is a homebrew system, and right now I am focusing on weapons almost exclusively.
 
