@@ -224,6 +224,41 @@ function nbToDice(max, deviation)
 	return out
 }
 
+/**
+ * Returns a small help text for weapon attributes (name, cat, atk..)
+ */
+function getWeaponHelpText(attribute)
+{
+	switch(attribute)
+	{
+		case "name":
+			return "Name of the weapon."
+		case "cat" :
+			return "Class(es) this weapon belongs to."
+		case "min" :
+			return "Start of this weapon's optimal range, meters."
+		case "max" :
+			return "End of this weapon's optimal range, meters."
+		case "atk" :
+			return "How good this weapon is at attacking."
+		case "par" :
+			return "How good this weapon is at parrying."
+		case "dmg" :
+			return "How much damage this weapon deals."
+		case "hands" :
+			return "How many hands are needed to wield this weapon."
+		case "weight" :
+			return "How much this weapon weights, kgrams."
+		case "val" :
+			return "How much this weapon costs, gold pieces."
+		case "desc" :
+			return "What the salesman thinks of this weapon."
+		default :
+			return "No info."
+	
+	}
+
+}
 
 /**
  * given a weapon and modifier, 
@@ -323,8 +358,11 @@ function finalizeWeapon(weapon, mod)
 		fw.atk=Math.round(fw.atk+(Math.abs(fw.atk)*(mod.atk-1)))
 		fw.par=Math.round(fw.par+(Math.abs(fw.par)*(mod.par-1)))
 		fw.dmg*=mod.dmg
-		fw.min*=mod.min
-		fw.max*=mod.max
+		if (typeof(mod.min) === "number" === typeof(mod.max))
+		{
+			fw.min*=mod.min
+			fw.max*=mod.max
+		}
 		fw.dmgspread*=mod.dmgspread
 		fw.val=Math.round(fw.val*mod.val)
 		fw.desc+=" "+mod.desc

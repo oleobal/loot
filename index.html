@@ -56,15 +56,20 @@
 		{
 			var tr=document.createElement("tr")
 			tr.className="weaponRow"
-			attrs=["name", "cat",  "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"]
-			align=["left", "left", "right", "right", "right", "center", "right",  "right", "left"]
+			var attrs=["name", "cat", "min", "max", "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"]
+			var align=["left", "left", "right", "right", "right", "right", "right", "center", "right",  "right", "left"]
+			var tooltips=[]
+			for (var n in attrs)
+				tooltips.push(getWeaponHelpText(attrs[n]))
+			
 			if (wpCount[chest[w].name] > 1)
 			{
 				chest[w].weight = "<b style=\"color:#C00\">"+wpCount[chest[w].name]*chest[w].weight +"</b> <br>("+chest[w].weight+")"
 				chest[w].val = "<b style=\"color:#C00\">"+wpCount[chest[w].name]*chest[w].val +"</b> <br>("+chest[w].val+")"
 				chest[w].name = "<b style=\"color:#C00\">"+wpCount[chest[w].name]+"x</b> "+chest[w].name
 			}
-			for (var n in attrs)
+			var n = 0
+			while (n < attrs.length)
 			{
 				var td = document.createElement("td")
 				if (attrs[n]=="dmg")
@@ -72,12 +77,25 @@
 					td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
 					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
 				}
+				
 				else
 					td.innerHTML=chest[w][attrs[n]]
-					
-				td.style.textAlign=align[n]
-				tr.appendChild(td)
 				
+				td.style.textAlign=align[n]
+				td.title=tooltips[n]
+				
+				// skip min and max if they are absent
+				while (typeof(chest[w][attrs[parseInt(n)+1]]) === "undefined" && parseInt(n)+1 < attrs.length)
+				{
+					//console.log(n, attrs[parseInt(n)], attrs[parseInt(n)+1])
+					// yup, that parseint is required. Else n=0 => string
+					// if using for (var n in attrs), that is
+					td.colSpan++
+					n++
+				}
+				
+				tr.appendChild(td)
+				n++
 			}
 			
 			if (w%2 == 0)
@@ -291,7 +309,7 @@
 			wall.goodMods.push(melee.goodMods[i])
 		for (var i in ranged.goodMods)
 			wall.goodMods.push(ranged.goodMods[i])
-		console.log(melee.items.length, ranged.items.length, wall.items)
+
 		var weaponR = RandomWeaponSource(wall)
 		var bookR = RandomBookSource(books)
 		
@@ -328,26 +346,28 @@
 	<table id="itemsTable">
 		<tr>
 			<th style="min-width:15em;">Name</th>
-			<th style="min-width:6em;">Type</th>
+			<th style="min-width:6em;" >Type</th>
 			<th style="min-width:20em;">Classes</th>
-			<th style="min-width:5em;">Weight</th>
-			<th style="min-width:4em;">Value</th>
-			<th style="width:100%;"   >Notes</th>
+			<th style="min-width:5em;" >Weight</th>
+			<th style="min-width:4em;" >Value</th>
+			<th style="width:100%;"    >Notes</th>
 		</tr>
 	</table>
 	
 	<h3>Weapons</h3>
 	<table id="weaponsTable">
 		<tr>
-			<th style="min-width:12em;">Name</th>
-			<th style="min-width:10em;">Classes</th>
-			<th style="min-width:4em;" >ATK</th>
-			<th style="min-width:4em;" >PAR</th>
-			<th style="min-width:5em;" >DMG</th>
-			<th style="min-width:5em;" >Hands</th>
-			<th style="min-width:5em;" >Weight</th>
-			<th style="min-width:4em;" >Value</th>
-			<th style="width:100%;"    >Notes</th>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:6em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('min')}"   >min</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('max')}"   >max</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
 	
