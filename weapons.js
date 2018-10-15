@@ -247,6 +247,10 @@ function getWeaponHelpText(attribute)
 			return "How much damage this weapon deals."
 		case "hands" :
 			return "How many hands are needed to wield this weapon."
+		case "prot" :
+			return "How much damage this armor can deflect or absorb."
+		case "dexmod" :
+			return "How much this armor impedes movement."
 		case "weight" :
 			return "How much this weapon weights, kgrams."
 		case "val" :
@@ -355,15 +359,21 @@ function finalizeWeapon(weapon, mod)
 		}
 		
 		fw.name=mod.name+" "+fw.name
-		fw.atk=Math.round(fw.atk+(Math.abs(fw.atk)*(mod.atk-1)))
-		fw.par=Math.round(fw.par+(Math.abs(fw.par)*(mod.par-1)))
-		fw.dmg*=mod.dmg
+		if (typeof(mod.atk) === "number")
+			fw.atk=Math.round(fw.atk+(Math.abs(fw.atk)*(mod.atk-1)))
+		if (typeof(mod.par) === "number")
+			fw.par=Math.round(fw.par+(Math.abs(fw.par)*(mod.par-1)))
+		if (typeof(mod.dmg) === "number")
+			fw.dmg*=mod.dmg
 		if (typeof(mod.min) === "number" === typeof(mod.max))
 		{
 			fw.min*=mod.min
 			fw.max*=mod.max
 		}
-		fw.dmgspread*=mod.dmgspread
+		if (typeof(mod.dmgspread) === "number")
+			fw.dmgspread*=mod.dmgspread
+		if (typeof(mod.dexmod) === "number")
+			fw.dexmod*=mod.dexmod
 		fw.val=Math.round(fw.val*mod.val)
 		fw.desc+=" "+mod.desc
 		fw.appliedModifier=mod.name

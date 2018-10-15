@@ -15,32 +15,27 @@
 	 */
 	function displayWeapons(chest)
 	{
-		// table
-		var t=document.getElementById("weaponsTable")
-		
-		if (chest.length==0)
-		{
-			var tr=document.createElement("tr")
-			var td = document.createElement("td")
-			td.innerHTML="No weapons"
-			td.colSpan=9
-			tr.appendChild(td)
-			tr.className="gray"
-			t.appendChild(tr)
-			return
-		}
+	
+		// first pass
 		
 		var wpCount = {}
 		var totalVal = 0
 		var totalWeight = 0
+		var nbOfType = {}
 		
-		// first pass
 		var i = 0
 		while (i<chest.length)
 		{
 			totalVal+=chest[i].val
 			totalWeight+=chest[i].weight
-			if (typeof(wpCount[chest[i].name]) == "undefined")
+			
+			if (typeof(nbOfType[chest[i].type]) === "undefined")
+				nbOfType[chest[i].type] = 1
+			else
+				nbOfType[chest[i].type] ++
+				
+			// deduplication
+			if (typeof(wpCount[chest[i].name]) === "undefined")
 			{
 				wpCount[chest[i].name] = 1
 				i++
@@ -53,15 +48,66 @@
 		}
 		
 		
+		
+		// per category
+		
+		var conf = {
+			"Melee Weapon":{
+				attrs:["name", "cat",  "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"],
+				align:["left", "left", "right", "right", "right", "center", "right",  "right", "left"],
+				id:"MeleeWeaponsTable",
+				tooltips:[]
+			},
+			"Ranged Weapon":{
+				attrs:["name", "cat",  "min",   "max",   "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"],
+				align:["left", "left", "right", "right", "right", "right", "right", "center", "right",  "right", "left"],
+				id:"RangedWeaponsTable",
+				tooltips:[]
+			},
+			"Armor":{
+				attrs:["name", "cat", "dexmod",  "dmg",   "weight", "val",   "desc"],
+				align:["left", "left", "right",  "right", "right",  "right", "left"],
+				id:"ArmorTable",
+				tooltips:[]
+			}
+		}
+		
+		for (var c in conf)
+		{
+			for (var n in conf[c].attrs)
+					conf[c].tooltips.push(getWeaponHelpText(conf[c].attrs[n]))
+		}
+		conf["Armor"].tooltips.dmg = getWeaponHelpText("prot")
+		
+		
+		
+		var zebraIndexOfType = {}
+		var types = Object.keys(conf)
+		for (var ty in types)
+		{
+			if (!nbOfType[types[ty]] || nbOfType[types[ty]] == 0)
+			{
+				var t=document.getElementById(conf[types[ty]].id)
+				var tr=document.createElement("tr")
+				var td = document.createElement("td")
+				td.innerHTML="No weapons"
+				td.colSpan=conf[types[ty]].attrs.length
+				tr.appendChild(td)
+				tr.className="gray"
+				t.appendChild(tr)
+			}
+			else
+				zebraIndexOfType[types[ty]] = 0
+		}
+		
+		
+		// adding elements
+		
 		for (var w in chest)
 		{
+			var t=document.getElementById(conf[chest[w].type].id)
 			var tr=document.createElement("tr")
 			tr.className="weaponRow"
-			var attrs=["name", "cat", "min", "max", "atk",   "par",   "dmg",   "hands",  "weight", "val",   "desc"]
-			var align=["left", "left", "right", "right", "right", "right", "right", "center", "right",  "right", "left"]
-			var tooltips=[]
-			for (var n in attrs)
-				tooltips.push(getWeaponHelpText(attrs[n]))
 			
 			if (wpCount[chest[w].name] > 1)
 			{
@@ -69,48 +115,25 @@
 				chest[w].val = "<b style=\"color:#C00\">"+wpCount[chest[w].name]*chest[w].val +"</b> <br>("+chest[w].val+")"
 				chest[w].name = "<b style=\"color:#C00\">"+wpCount[chest[w].name]+"x</b> "+chest[w].name
 			}
+			
 			var n = 0
-			while (n < attrs.length)
+			while (n < conf[chest[w].type].attrs.length)
 			{
 				var td = document.createElement("td")
-				if (attrs[n]=="dmg")
+				if (conf[chest[w].type].attrs[n]=="dmg")
 				{
 					td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
 					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
 				}
-				// 🗡 ⚔️ 🛡 ♠️ ♦️ ⛑ ⚜ 🔫
-				// Do not forget to add the variation selector 16 FE0F
-				// which specifies that the preceding character should be
-				// draw with its 'emoji' colorful representation, not its
-				// textual monochrome representation
-				else if (attrs[n]=="cat") 
-				{
-					var text=chest[w].cat.toString()
-					switch(chest[w].type)
-					{
-						case "Melee Weapon":
-							if (chest[w].cat.indexOf("Shields")>=0)
-								text="🛡"+String.fromCodePoint(0xFE0F)+" "+text;
-							else if (chest[w].cat.indexOf("Polearms")>=0)
-								text="⚜"+String.fromCodePoint(0xFE0F)+" "+text;
-							else
-								text="⚔️"+String.fromCodePoint(0xFE0F)+" "+text;
-							break;
-						case "Ranged Weapon":
-							text="🔫"+String.fromCodePoint(0xFE0F)+" "+text;break;
-						case "Armor":
-							text="⛑"+String.fromCodePoint(0xFE0F)+" "+text;break;
-					}
-					td.innerHTML=text
-				}
+
 				else
-					td.innerHTML=chest[w][attrs[n]]
+					td.innerHTML=chest[w][conf[chest[w].type].attrs[n]]
 				
-				td.style.textAlign=align[n]
-				td.title=tooltips[n]
+				td.style.textAlign=conf[chest[w].type].align[n]
+				td.title=conf[chest[w].type].tooltips[n]
 				
-				// skip min and max if they are absent
-				while (typeof(chest[w][attrs[parseInt(n)+1]]) === "undefined" && parseInt(n)+1 < attrs.length)
+				// skip following absent values
+				while (typeof(chest[w][conf[chest[w].type].attrs[parseInt(n)+1]]) === "undefined" && parseInt(n)+1 < conf[chest[w].type].attrs.length)
 				{
 					//console.log(n, attrs[parseInt(n)], attrs[parseInt(n)+1])
 					// yup, that parseint is required. Else n=0 => string
@@ -123,15 +146,17 @@
 				n++
 			}
 			
-			if (w%2 == 0)
+			if (zebraIndexOfType[chest[w].type]%2 == 0)
 				tr.className+=" gray"
+			zebraIndexOfType[chest[w].type]++
 			t.appendChild(tr)
 		}
 		
+		var t=document.getElementById(conf["Armor"].id)
 		var tr=document.createElement("tr")
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Total (weapons)"
-		tdt.colSpan=8
+		tdt.colSpan=4
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=totalWeight
@@ -205,7 +230,7 @@
 			var tr=document.createElement("tr")
 			var td = document.createElement("td")
 			td.innerHTML="No other items"
-			td.colSpan=5
+			td.colSpan=6
 			tr.appendChild(td)
 			tr.className="gray"
 			t.appendChild(tr)
@@ -252,7 +277,7 @@
 	 */
 	function displayGrandTotal()
 	{
-		var t = document.getElementById("weaponsTable")
+		var t = document.getElementById("ArmorTable")
 		try
 		{ var w = parseFloat(document.getElementById("totalWeaponsWeight").innerHTML) }
 		catch (err)
@@ -276,7 +301,7 @@
 		t.appendChild(sep)
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Grand total"
-		tdt.colSpan=8
+		tdt.colSpan=4
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=w
@@ -323,7 +348,7 @@
 		
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
 
-		var weaponR = RandomWeaponSource(melee, ranged, armors)
+		var weaponR = RandomWeaponSource(melee, ranged, armor)
 		var bookR = RandomBookSource(books)
 		
 		var rolledv = -10000
@@ -368,16 +393,40 @@
 	</table>
 	
 	<h3>Weapons</h3>
-	<table id="weaponsTable">
+	<table id="MeleeWeaponsTable">
+		<tr>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:17em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+		</tr>
+	</table>
+	<table id="RangedWeaponsTable">
 		<tr>
 			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
 			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('min')}"   >min</th>
+			<th style="min-width:3.5em;" title="${getWeaponHelpText('min')}" >min</th> <!-- FIXME ??? Why .5 -->
 			<th style="min-width:4em;" title="${getWeaponHelpText('max')}"   >max</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
 			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
 			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+		</tr>
+	</table>
+	<table id="ArmorTable">
+		<tr>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:16.25em;" title="${getWeaponHelpText('dexmod')}">DEX modifier</th> <!-- FIXME ??? Why .25 !!!! -->
+			<th style="min-width:10em;" title="${getWeaponHelpText('prot')}"   >PROT</th>
 			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
 			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
@@ -420,6 +469,13 @@
 		height:5em;
 		display:inline-block;
 		vertical-align:top;
+	}
+	
+	.emoji {
+		display:inline-block;
+		min-width:1.5em;
+		margin-right:0.2em;
+		text-align: center;
 	}
 	</style>
 </head>
