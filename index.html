@@ -77,7 +77,31 @@
 					td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
 					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
 				}
-				
+				// 🗡 ⚔️ 🛡 ♠️ ♦️ ⛑ ⚜ 🔫
+				// Do not forget to add the variation selector 16 FE0F
+				// which specifies that the preceding character should be
+				// draw with its 'emoji' colorful representation, not its
+				// textual monochrome representation
+				else if (attrs[n]=="cat") 
+				{
+					var text=chest[w].cat.toString()
+					switch(chest[w].type)
+					{
+						case "Melee Weapon":
+							if (chest[w].cat.indexOf("Shields")>=0)
+								text="🛡"+String.fromCodePoint(0xFE0F)+" "+text;
+							else if (chest[w].cat.indexOf("Polearms")>=0)
+								text="⚜"+String.fromCodePoint(0xFE0F)+" "+text;
+							else
+								text="⚔️"+String.fromCodePoint(0xFE0F)+" "+text;
+							break;
+						case "Ranged Weapon":
+							text="🔫"+String.fromCodePoint(0xFE0F)+" "+text;break;
+						case "Armor":
+							text="⛑ "+text;break;
+					}
+					td.innerHTML=text
+				}
 				else
 					td.innerHTML=chest[w][attrs[n]]
 				
@@ -106,7 +130,7 @@
 		var tr=document.createElement("tr")
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Total (weapons)"
-		tdt.colSpan=6
+		tdt.colSpan=8
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=totalWeight
@@ -249,7 +273,7 @@
 		t.appendChild(sep)
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Grand total"
-		tdt.colSpan=6
+		tdt.colSpan=8
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=w
@@ -345,9 +369,9 @@
 	<h3>Items</h3>
 	<table id="itemsTable">
 		<tr>
-			<th style="min-width:15em;">Name</th>
-			<th style="min-width:6em;" >Type</th>
-			<th style="min-width:20em;">Classes</th>
+			<th style="min-width:12em;">Name</th>
+			<th style="min-width:15em;" >Type</th>
+			<th style="min-width:21em;">Classes</th>
 			<th style="min-width:5em;" >Weight</th>
 			<th style="min-width:4em;" >Value</th>
 			<th style="width:100%;"    >Notes</th>
@@ -358,7 +382,7 @@
 	<table id="weaponsTable">
 		<tr>
 			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
-			<th style="min-width:6em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('min')}"   >min</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('max')}"   >max</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
