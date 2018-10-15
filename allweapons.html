@@ -3,6 +3,7 @@
 	<meta charset="utf-8"/>
 	<script src="utility.js"></script>
 	<script src="list-melee-weapons.js"></script>
+	<script src="list-ranged-weapons.js"></script>
 	<script src="weapons.js"></script>
 	<script>
 	function displayWeapons(chest)
@@ -197,8 +198,9 @@
 	
 	function displayAll()
 	{
-		addPie(melee.items, "weaponsPie")
+		addPie(melee.items.concat(ranged.items), "weaponsPie")
 		displayWeapons(getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1))))
+		displayWeapons(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
 	}
 	</script>
 	<style>

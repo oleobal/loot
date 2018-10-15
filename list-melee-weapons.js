@@ -828,7 +828,7 @@ goodMods:[
 		"catmust":null,
 		"catcant":null,
 		"wpcant":null,
-		"commonness":[10, 20, 1000]
+		"commonness":[10, 20, 5000]
 	},
 	
 	{
@@ -843,7 +843,7 @@ goodMods:[
 		"catmust":null,
 		"catcant":null,
 		"wpcant":null,
-		"commonness":[5, 50, 1000]
+		"commonness":[5, 50, 10000]
 	},
 	
 	{
@@ -899,11 +899,11 @@ goodMods:[
 // Add a few things to all of them
 
 for (var i in melee.items)
-	melee.items[i].type="Weapon"
+	melee.items[i].type="Melee Weapon"
 for (var i in melee.goodMods)
-	melee.goodMods[i].type="Weapon"
+	melee.goodMods[i].type="Melee Weapon"
 for (var i in melee.badMods)
-	melee.badMods[i].type="Weapon"
+	melee.badMods[i].type="Melee Weapon"
 for (var i in melee.items)
 {
 	// meta-categories

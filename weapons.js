@@ -1,6 +1,6 @@
 /**
  * This files contains functions for generating equipment
- * Do import utility.js and list-melee-weapons.js before this file !
+ * Import utility.js before.
  * 
  * 
  */
@@ -239,6 +239,9 @@ function finalizeWeapon(weapon, mod)
 	fw.appliedModifier=null
 	if (mod && mod.name != "")
 	{
+		if (mod.type != weapon.type)
+			throw "Not the same type - "+mod.name+" "+weapon.name
+		
 		var c = weapon.cat.concat(weapon.hiddencat)
 		// MUST category check
 		if (mod.catmust)
@@ -320,6 +323,8 @@ function finalizeWeapon(weapon, mod)
 		fw.atk=Math.round(fw.atk+(Math.abs(fw.atk)*(mod.atk-1)))
 		fw.par=Math.round(fw.par+(Math.abs(fw.par)*(mod.par-1)))
 		fw.dmg*=mod.dmg
+		fw.min*=mod.min
+		fw.max*=mod.max
 		fw.dmgspread*=mod.dmgspread
 		fw.val=Math.round(fw.val*mod.val)
 		fw.desc+=" "+mod.desc
@@ -418,25 +423,32 @@ function RandomWeaponSource(weaponsobj)
 				w=weapons[this.weaponPie[getRandom(0,this.weaponsSum)]]
 				
 				// modifiers
-				try
+				var modTries = 3
+				while (modTries > 0)
 				{
-					var m=null
-					if (w.val > meanval)
-						m=this.badMods[this.badModsPie[getRandom(0,this.badModsSum)]]
-					else if (w.val < meanval)
-						m=this.goodMods[this.goodModsPie[getRandom(0,this.goodModsSum)]]
-					var fw = finalizeWeapon(w, m)
-				}
-				catch (err)
-				{
-					console.log("getRandomWeapons: "+err)
-					var fw = finalizeWeapon(w, null)
+					try
+					{
+						//TODO add code to distinguish between types better
+						// IE not try to attribute ranged mods to melee weaps
+						var m=null
+						if (w.val > meanval)
+							m=this.badMods[this.badModsPie[getRandom(0,this.badModsSum)]]
+						else if (w.val < meanval)
+							m=this.goodMods[this.goodModsPie[getRandom(0,this.goodModsSum)]]
+						var fw = finalizeWeapon(w, m)
+						modTries = 0
+					}
+					catch (err)
+					{
+						console.log("getRandomWeapons ("+modTries+"):  "+err)
+						var fw = finalizeWeapon(w, null)
+					}
+					modTries--
 				}
 			}
 			chest.push(fw)
 			i++
 		}
-		console.log(chest.length)
 		return chest
 	}
 	
