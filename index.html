@@ -4,6 +4,7 @@
 	<script src="utility.js"></script>
 	<script src="list-melee-weapons.js"></script>
 	<script src="list-ranged-weapons.js"></script>
+	<script src="list-armors.js"></script>
 	<script src="weapons.js"></script>
 	<script src="list-books.js"></script>
 	<script src="books.js"></script>
@@ -98,7 +99,7 @@
 						case "Ranged Weapon":
 							text="🔫"+String.fromCodePoint(0xFE0F)+" "+text;break;
 						case "Armor":
-							text="⛑ "+text;break;
+							text="⛑"+String.fromCodePoint(0xFE0F)+" "+text;break;
 					}
 					td.innerHTML=text
 				}
@@ -161,7 +162,9 @@
 		var ic = 0
 		for (var i in chest)
 		{
-			if (chest[i].type==="Melee Weapon" || chest[i].type==="Ranged Weapon")
+			if (chest[i].type==="Melee Weapon"
+			 || chest[i].type==="Ranged Weapon"
+			 || chest[i].type==="Armor")
 				wps.push(chest[i])
 			else
 			{
@@ -319,22 +322,8 @@
 		}
 		
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
-		
-		var wall = {items:[], badMods:[], goodMods:[]}
-		for (var i in melee.items)
-			wall.items.push(melee.items[i])
-		for (var i in ranged.items)
-			wall.items.push(ranged.items[i])
-		for (var i in melee.badMods)
-			wall.badMods.push(melee.badMods[i])
-		for (var i in ranged.badMods)
-			wall.badMods.push(ranged.badMods[i])
-		for (var i in melee.goodMods)
-			wall.goodMods.push(melee.goodMods[i])
-		for (var i in ranged.goodMods)
-			wall.goodMods.push(ranged.goodMods[i])
 
-		var weaponR = RandomWeaponSource(wall)
+		var weaponR = RandomWeaponSource(melee, ranged, armors)
 		var bookR = RandomBookSource(books)
 		
 		var rolledv = -10000

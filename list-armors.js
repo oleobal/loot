@@ -4,11 +4,12 @@
  */
 
 var armors = {
-items = [
+items : [
 	{
 		name:"chainmail",
+		cat:["Light Armors"],
 		dmg:4,
-		dmgspread:2,
+		dmgspread:0.5,
 		val:60,
 		dexmod:-1,
 		desc:"A set of riveted chain mail that perfectly contours one's body.",
@@ -18,13 +19,13 @@ items = [
 	}
 ],
 
-badMods = [
+badMods : [
 	{
 		"name":"",
 		"dmg":1,
 		"dmgspread":1,
 		"val":1,
-		"dexmod":,
+		"dexmod":1,
 		"desc":"",
 		"matermust":null,
 		"catmust":null,
@@ -34,7 +35,7 @@ badMods = [
 	},
 ],
 
-goodMods = [
+goodMods : [
 	{
 		"name":"",
 		"dmg":1,
@@ -49,4 +50,19 @@ goodMods = [
 		"commonness":[100, 0, 1000]
 	},
 ],
+}
+
+
+for (var i in armors.items)
+	armors.items[i].type="Armor"
+for (var i in armors.goodMods)
+	armors.goodMods[i].type="Armor"
+for (var i in armors.badMods)
+	armors.badMods[i].type="Armor"
+for (var i in armors.items)
+{
+	// meta-categories
+	
+	if (!armors.items[i].hiddencat)
+		armors.items[i].hiddencat=[]
 }

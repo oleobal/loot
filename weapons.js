@@ -387,60 +387,60 @@ function finalizeWeapon(weapon, mod)
 
 /**
  * returns an object with a getRandomWeapons(nbItems, meanval) method
+ * expecting each object to have its own list of weapons, with relevant
+ * modifiers and everything
  */
-function RandomWeaponSource(weaponsobj)
+function RandomWeaponSource(...weaponsobj)
 {
+	
 	var r = {}
-	var weapons = weaponsobj.items
-	var goodMods = weaponsobj.goodMods
-	var badMods =  weaponsobj.badMods
 	
-	r.weapons = weapons
-	r.goodMods = goodMods
-	r.badMods = badMods
+	r.weapons = []
+	r.goodMods = []
+	r.badMods = []
+	// hang on couldn't I just use .length ? Am I stupid ?
+	// Stupid maybe, too lazy to refactor certainly
+	// TODO
+	r.weaponPie = []
+	r.badModsPie = []
+	r.goodModsPie = []
+	for (var o in weaponsobj)
+	{
+		r.weapons[o] = weaponsobj[o].items
+		r.goodMods[o] = weaponsobj[o].goodMods
+		r.badMods[o] = weaponsobj[o].badMods
+		// weapon probabilities sum (for dart throwing)
+		// TODO fake random for shops that would stock a few of each category
+		// TODO use better repartition
+		r.weaponPie[o]=[]
+		for (var w in r.weapons[o])
+		{
+			for (var i = 0 ; i < r.weapons[o][w]["commonness"][0] ; i++)
+				r.weaponPie[o].push(w)
+			// this does feel a bit stupid eh
+		}
+		r.badModsPie[o]=[]
+		for (var w in r.badMods[o])
+		{
+			for (var i = 0 ; i < r.badMods[o][w]["commonness"][0] ; i++)
+				r.badModsPie[o].push(w)
+		}
+		r.goodModsPie[o]=[]
+		for (var w in r.goodMods[o])
+		{
+			for (var i = 0 ; i < r.goodMods[o][w]["commonness"][0] ; i++)
+				r.goodModsPie[o].push(w)
+		}
+	}
 	
-	// weapon probabilities sum (for dart throwing)
-	// TODO fake random for shops that would stock a few of each category
-	// TODO use better repartition
-	r.weaponsSum=0
-	r.weaponPie=[]
-	for (var w in weapons)
+	// pie for which obj to target
+	r.weaponObjPie = []
+	for (var o in weaponsobj)
 	{
-		var i=r.weaponsSum
-		r.weaponsSum+=weapons[w]["commonness"][0]
-		while (i<r.weaponsSum)
-		{
-			r.weaponPie[i]=w
-			i++
-		}
-		// this does feel a bit stupid eh
+		for (var n in r.weaponPie[o])
+			r.weaponObjPie.push(o)
 	}
-	r.badModsSum=0
-	r.badModsPie=[]
-	for (var w in badMods)
-	{
-		var i=r.badModsSum
-		r.badModsSum+=badMods[w]["commonness"][0]
-		while (i<r.badModsSum)
-		{
-			r.badModsPie[i]=w
-			i++
-		}
-	}
-	r.goodModsSum=0
-	r.goodModsPie=[]
-	for (var w in goodMods)
-	{
-		var i=r.goodModsSum
-		r.goodModsSum+=goodMods[w]["commonness"][0]
-		while (i<r.goodModsSum)
-		{
-			r.goodModsPie[i]=w
-			i++
-		}
-	}
-
-
+	
 
 	/*
 	 * returns an array of nbItems weapons
@@ -449,16 +449,21 @@ function RandomWeaponSource(weaponsobj)
 	 */
 	r.getRandomWeapons = function(nbItems, meanval)
 	{
+		
+		
 		var chest=[]
 		var i=0
 		while (i<nbItems)
 		{
+			// first, decide which weapon set to target
+			var obji = this.weaponObjPie[getRandom(0,this.weaponObjPie.length)]
+		
 			var w = {val:-1000}
 			var safety=0
 			while ((w.val < 0.5*meanval || w.val > 1.5*meanval) && safety<100)
 			{
 				safety++
-				w=weapons[this.weaponPie[getRandom(0,this.weaponsSum)]]
+				w=r.weapons[obji][this.weaponPie[obji][getRandom(0,this.weaponPie[obji].length)]]
 				
 				// modifiers
 				var modTries = 3
@@ -470,9 +475,9 @@ function RandomWeaponSource(weaponsobj)
 						// IE not try to attribute ranged mods to melee weaps
 						var m=null
 						if (w.val > meanval)
-							m=this.badMods[this.badModsPie[getRandom(0,this.badModsSum)]]
+							m=this.badMods[obji][this.badModsPie[obji][getRandom(0,this.badModsPie[obji].length)]]
 						else if (w.val < meanval)
-							m=this.goodMods[this.goodModsPie[getRandom(0,this.goodModsSum)]]
+							m=this.goodMods[obji][this.goodModsPie[obji][getRandom(0,this.goodModsPie[obji].length)]]
 						var fw = finalizeWeapon(w, m)
 						modTries = 0
 					}
@@ -489,6 +494,8 @@ function RandomWeaponSource(weaponsobj)
 		}
 		return chest
 	}
+	
+	
 	
 	return r
 }
