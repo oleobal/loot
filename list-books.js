@@ -12,7 +12,7 @@ items : [
 		cat:["Politics"],
 		val:30,
 		desc:"An awkward and wordy genealogy.",
-		commonness:[5, 0, 1000]
+		commonness:[10, 0, 1000]
 	},
 	{
 		name:"History of {titleadj,c} families",
@@ -26,7 +26,7 @@ items : [
 		cat:["Politics"],
 		val:50,
 		desc:"An insightful genealogy.",
-		commonness:[2, 0, 1000]
+		commonness:[3, 0, 1000]
 	},
 	
 	{
@@ -34,7 +34,7 @@ items : [
 		cat:["Strategy"],
 		val:30,
 		desc:"I'm not sure the writer mastered the subject, frankly.",
-		commonness:[5, 0, 1000]
+		commonness:[10, 0, 1000]
 	},
 	
 	{
@@ -42,7 +42,7 @@ items : [
 		cat:["Strategy"],
 		val:50,
 		desc:"Great historical outlook and strategy primer in one.",
-		commonness:[2, 0, 1000]
+		commonness:[5, 0, 1000]
 	},
 	
 	
@@ -51,7 +51,7 @@ items : [
 		cat:["Geography"],
 		val:25,
 		desc:"I've been to {sceneries}, it's not like the author writes.",
-		commonness:[2, 0, 1000]
+		commonness:[7, 0, 1000]
 	},
 	
 	{
@@ -68,7 +68,7 @@ items : [
 		cat:["Fiction", "Romance"],
 		val:30,
 		desc:"The song of a young knight in love with whom he can never be with.",
-		commonness:[2, 0,1000]
+		commonness:[3, 0,1000]
 	},
 ],
 

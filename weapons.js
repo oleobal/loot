@@ -459,8 +459,6 @@ function RandomWeaponSource(...weaponsobj)
 	 */
 	r.getRandomWeapons = function(nbItems, meanval)
 	{
-		
-		
 		var chest=[]
 		var i=0
 		while (i<nbItems)

@@ -47,95 +47,93 @@ function finalizeBook(book, subjects, mod)
 }
 
 
-function RandomBookSource(booksobj, context)
+function RandomBookSource(...booksobj)
 {
 	var r={}
-	r.books=booksobj
-	r.items=booksobj.items
-	r.goodMods=booksobj.goodMods
-	r.badMods=booksobj.badMods
-	r.subjectTypes = booksobj.subjectTypes
-	r.context = context
+	r.books=[] //booksobj
+	r.items=[] //booksobj.items
+	r.goodMods=[] //booksobj.goodMods
+	r.badMods=[] //booksobj.badMods
+	r.subjectTypes = [] //booksobj.subjectTypes
 	
-	r.booksSum = 0
 	r.booksPie = []
-	for (var i in r.items)
+	r.badModsPie = []
+	r.goodModsPie = []
+	r.subjectsPies = []
+	r.booksObjPie=[]
+
+	for (var o in booksobj)
 	{
-		r.booksSum+=r.items[i].commonness[0]
-		var j = 0
-		while (j < r.items[i].commonness[0])
-		{
-			r.booksPie.push(i)
-			j++
-		}
-	}
-	r.badModsSum=0
-	r.badModsPie=[]
-	for (var i in r.badMods)
-	{
-		r.badModsSum+=r.badMods[i].commonness[0]
-		var j = 0
-		while (j < r.badMods[i].commonness[0])
-		{
-			r.badModsPie.push(i)
-			j++
-		}
-	}
-	r.goodModsSum=0
-	r.goodModsPie=[]
-	for (var i in r.goodMods)
-	{
-		r.goodModsSum+=r.goodMods[i].commonness[0]
-		var j = 0
-		while (j < r.goodMods[i].commonness[0])
-		{
-			r.goodModsPie.push(i)
-			j++
-		}
-	}
+		r.books.push(booksobj[o])
+		r.items.push(booksobj[o].items)
+		r.goodMods.push(booksobj[o].goodMods)
+		r.badMods.push(booksobj[o].badMods)
+		r.subjectTypes.push(booksobj[o].subjectTypes)
 	
-	r.subjectsPies={}
-	r.subjectsSums={}
-	var types = Object.keys(r.subjectTypes)
-	for (var i in types)
-	{
-		r.subjectsSums[types[i]] = 0
-		r.subjectsPies[types[i]] = []
-		for (var j in r.subjectTypes[types[i]])
+		
+		r.booksPie[o] = []
+		for (var i in r.items[o])
 		{
-			var k = 0
-			while (k<r.subjectTypes[types[i]][j].commonness)
-			{
-				r.subjectsPies[types[i]].push(j)
-				r.subjectsSums[types[i]]++
-				k++
-			}
+			for (var j = 0;j < r.items[o][i].commonness[0];j++)
+				r.booksPie[o].push(i)
+		}
+		for (var j=0;j<r.booksPie[o].length;j++)
+			r.booksObjPie.push(o)
+		
+		r.badModsPie[o]=[]
+		for (var i in r.badMods)
+		{
+			for (var j = 0;j < r.badMods[o][i].commonness[0];j++)
+				r.badModsPie[o].push(i)
+		}
+		r.goodModsPie[o]=[]
+		for (var i in r.goodMods[o])
+		{
+			for (var j=0;j < r.goodMods[o][i].commonness[0];j++)
+				r.goodModsPie[o].push(i)
 		}
 		
+		r.subjectsPies[o]={}
+		var types = Object.keys(r.subjectTypes[o])
+		for (var i in types)
+		{
+			r.subjectsPies[o][types[i]] = []
+			for (var j in r.subjectTypes[o][types[i]])
+			{
+				for (var k=0 ; k<r.subjectTypes[o][types[i]][j].commonness;k++)
+					r.subjectsPies[o][types[i]].push(j)
+			}
+			
+		}
+	
 	}
+	
+	
 	
 	
 	r.getRandomBooks = function(nbItems, meanval)
 	{
-		var chest = []
+		var chest=[]
 		var i=0
 		while (i<nbItems)
 		{
+			
+			var obji = this.booksObjPie[getRandom(0,this.booksObjPie.length)]
+			
 			var b = {val:-1000}
 			var safety=0
 			while ((b.val < 0.5*meanval || b.val > 1.5*meanval) && safety<100)
 			{
 				safety++
-				//console.log(b, this.items.length, this.booksSum, this.booksPie.length)
-				b=this.items[this.booksPie[getRandom(0,this.booksSum)]]
+				b=this.items[obji][this.booksPie[obji][getRandom(0,this.booksPie[obji].length)]]
 				// subject
 				// let's not bother with determining subject..
 				// I'll just put one of each in the substitution dict
 				var subs={}
-				var types = Object.keys(this.subjectTypes)
+				var types = Object.keys(this.subjectTypes[obji])
 				for (var t in types)
 				{
-					var sub = this.subjectTypes[types[t]][this.subjectsPies[types[t]][getRandom(0,this.subjectsSums[types[t]])]]
+					var sub = this.subjectTypes[obji][types[t]][this.subjectsPies[obji][types[t]][getRandom(0,this.subjectsPies[obji][types[t]].length)]]
 					
 					subs[types[t]]=sub
 				}
@@ -145,9 +143,9 @@ function RandomBookSource(booksobj, context)
 				{
 					var m=null
 					if (b.val > meanval)
-						m=this.badMods[this.badModsPie[getRandom(0,this.badModsSum)]]
+						m=this.badMods[obji][this.badModsPie[obji][getRandom(0,this.badModsPie[obji].length)]]
 					else if (b.val < meanval)
-						m=this.goodMods[this.goodModsPie[getRandom(0,this.goodModsSum)]]
+						m=this.goodMods[obji][this.goodModsPie[obji][getRandom(0,this.goodModsPie[obji].length)]]
 					var fb = finalizeBook(b, subs, m)
 				}
 				catch (err)
@@ -169,26 +167,29 @@ function RandomBookSource(booksobj, context)
 /**
  * return an array of all possible book combinations
  */
-function getAllBookCombinations(booksobj)
+function getAllBookCombinations(...booksobj)
 {
 	var result=[]
-	var mods = booksobj.goodMods.concat(booksobj.badMods.slice(1))
-	console.log(booksobj.items.length, mods.length, booksobj.subjects.length)
-	
-	for (var i in booksobj.items)
+	for (var o in booksobj)
 	{
-		// FIXME this does not support multiple subjects per book
-		for (k in booksobj.subjects)
+	
+		var mods = booksobj[o].goodMods.concat(booksobj[o].badMods.slice(1))
+		
+		for (var i in booksobj[o].items)
 		{
-			for (var j in mods)
+			// FIXME this does not support multiple subjects per book
+			for (k in booksobj[o].subjects)
 			{
-				try
+				for (var j in mods)
 				{
-					result.push(finalizeBook(booksobj.items[i], [booksobj.subjects[k]], mods[j]))
-				}
-				catch (err)
-				{
-					console.log(err)
+					try
+					{
+						result.push(finalizeBook(booksobj[o].items[i], [booksobj[o].subjects[k]], mods[j]))
+					}
+					catch (err)
+					{
+						console.log(err)
+					}
 				}
 			}
 		}
