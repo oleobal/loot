@@ -70,7 +70,7 @@ items:[
 	{
 	name:"crossbow",
 	cat:["Special"],
-	desc:"Loading it takes a standard action. The best technology has to offer !",
+	desc:"Damage does not get STR bonuses. Loading it takes a standard action.",
 	atk:10,
 	par:-8,
 	dmg:12,
@@ -149,7 +149,7 @@ badMods:[
 		"matermust":null,
 		"catmust":null,
 		"catcant":null,
-		"wpcant":null,
+		"wpcant":["sling"],
 		"commonness":[25, 0, 50]
 	},
 

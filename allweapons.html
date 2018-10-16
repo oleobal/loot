@@ -2,72 +2,12 @@
 	<title>Weapon list</title>
 	<meta charset="utf-8"/>
 	<script src="utility.js"></script>
+	<script src="web-utility.js"></script>
 	<script src="list-melee-weapons.js"></script>
 	<script src="list-ranged-weapons.js"></script>
 	<script src="list-armors.js"></script>
 	<script src="weapons.js"></script>
 	<script>
-	function displayWeapons(chest)
-	{
-		// table
-		var t=document.getElementById("weaponsTable")
-		var perWIndex=0
-		var curCat = ""
-		for (var w in chest)
-		{
-			var tr=document.createElement("tr")
-			tr.className="weaponRow"
-			var attrs=["name", "cat",  "atk",   "par",   "dmg",   "hands",  "val",   "desc"]
-			var align=["left", "left", "right", "right", "right", "center", "right", "left"]
-			
-			if (curCat != chest[w]["cat"].toString())
-			{
-				curCat = chest[w]["cat"].toString()
-				var sep = document.createElement("tr")
-				sep.style.height = "1em"
-				t.appendChild(sep)
-			}
-			
-			if (!chest[w].appliedModifier)
-			{
-				var perWIndex=0
-				var color = getLightRGBfromString(chest[w]["cat"].toString())
-				//tr.style.borderTop="1px solid black;"
-				t.appendChild(document.createElement("tr"))
-				tr.style.backgroundColor=color
-			}
-			else if (perWIndex%2 == 0)
-				tr.className+=" gray"
-			
-			for (var n in attrs)
-			{
-				var td = document.createElement("td")
-				if (!chest[w].appliedModifier && attrs[n]=="name")
-				{
-					var a = document.createElement("a")
-					a.href = window.location.pathname+"#"+chest[w]["name"].replace(/\ /g, "_").toLowerCase()
-					a.innerHTML=chest[w]["name"]
-					a.id=chest[w]["name"].replace(/\ /g, "_").toLowerCase()
-					td.appendChild(a)
-				}
-				else if (attrs[n]=="dmg")
-				{
-					td.innerHTML=chest[w][attrs[n]].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
-					td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
-				}
-				else
-					td.innerHTML=chest[w][attrs[n]]
-				
-				td.style.textAlign=align[n]
-				if (attrs[n] === "cat")
-					td.style.backgroundColor=color
-				tr.appendChild(td)
-			}
-			perWIndex++
-			
-			t.appendChild(tr)
-		}
-	}
 	
 	function addPieComparator(a, b)
 	{
@@ -97,7 +37,15 @@
 			var tr = document.createElement("tr")
 			tr.style.backgroundColor=getLightRGBfromString(items[i].cat.toString())
 			var tdn = document.createElement("td")
-			tdn.innerHTML = items[i].name
+			
+			// using the pie as an  index
+			
+			var a = document.createElement("a")
+			a.href = window.location.pathname+"#"+items[i].name.replace(/\ /g, "_").toLowerCase()
+			a.innerHTML=items[i].name
+			tdn.appendChild(a)
+			
+			//tdn.innerHTML = items[i].name
 			tr.appendChild(tdn)
 			var tdc = document.createElement("td")
 			tdc.innerHTML = items[i].cat
@@ -199,10 +147,12 @@
 	
 	function displayAll()
 	{
-		addPie(melee.items.concat(ranged.items), "weaponsPie")
-		displayWeapons(getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1))))
-		displayWeapons(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
-		displayWeapons(getAllWeaponCombinations(armor.items, armor.goodMods.concat(armor.badMods.slice(1))))
+		addPie(melee.items.concat(ranged.items).concat(armor.items), "weaponsPie")
+		var o = {colors:true, perweapon:true}
+		var c = getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1)))
+		c = c.concat(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
+		c = c.concat(getAllWeaponCombinations(armor.items, armor.goodMods.concat(armor.badMods.slice(1))))
+		displayWeapons(c,o)
 	}
 	</script>
 	<style>
@@ -244,7 +194,9 @@
 	</tr>
 </table> 
 
-<table id="weaponsTable" style="">
+<h3 id="melee"><a href="#melee">Melee Weapons</a></h3>
+
+<table id="MeleeWeaponsTable" style="">
 	<tr>
 		<th style="min-width:12em;">Name</th>
 		<th style="min-width:10em;">Classes</th>
@@ -252,6 +204,41 @@
 		<th style="min-width:2em;" >PAR</th>
 		<th style="min-width:2em;" >DMG</th>
 		<th style="min-width:2em;" >Hands</th>
+		<th style="min-width:5em;" >Weight</th>
+		<th style="min-width:3em;" >Value</th>
+		<th style="width:100%;"    >Notes</th>
+	</tr>
+</table>
+
+<h3 id="ranged"><a href="#ranged">Ranged weapons</a></h3>
+
+
+<table id="RangedWeaponsTable">
+	<tr>
+		<th style="min-width:12em;" >Name</th>
+		<th style="min-width:9em;"  >Classes</th>
+		<th style="min-width:3.5em;">min</th> <!-- FIXME ??? Why .5 -->
+		<th style="min-width:4em;"  >max</th>
+		<th style="min-width:4em;"  >ATK</th>
+		<th style="min-width:4em;"  >PAR</th>
+		<th style="min-width:5em;"  >DMG</th>
+		<th style="min-width:5em;"  >Hands</th>
+		<th style="min-width:5em;"  >Weight</th>
+		<th style="min-width:4em;"  >Value</th>
+		<th style="width:100%;"     >Notes</th>
+	</tr>
+</table>
+
+<h3 id="armor"><a href="#armor">Armor</a></h3>
+
+
+<table id="ArmorTable" style="">
+	<tr>
+		<th style="min-width:12em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:6em;" >DEX mod</th>
+		<th style="min-width:4em;" >PROT</th>
+		<th style="min-width:4em;" >Weight</th>
 		<th style="min-width:3em;" >Value</th>
 		<th style="width:100%;"    >Notes</th>
 	</tr>

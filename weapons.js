@@ -388,6 +388,9 @@ function finalizeWeapon(weapon, mod)
 	fw.atk = Math.round(fw.atk)
 	fw.par = Math.round(fw.par)
 	
+	if (typeof(fw.dexmod) === "number")
+		fw.dexmod=Math.round(fw.dexmod)
+			
 	fw.dmg=nbToDice(fw.dmg, fw.dmgspread)
 	fw.name=fw.name.charAt(0).toUpperCase()+fw.name.slice(1)
 		
