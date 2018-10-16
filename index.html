@@ -61,7 +61,7 @@
 				ic++
 			}
 		}
-		displayWeapons(wps, {total:true})
+		displayWeapons(wps, {total:true, colors:true})
 		
 		if (ic===0)
 		{
@@ -244,6 +244,7 @@
 			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
+	<div style="height:1em;"></div>
 	<table id="RangedWeaponsTable">
 		<tr>
 			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
@@ -259,12 +260,13 @@
 			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
+	<div style="height:1em;"></div>
 	<table id="ArmorTable">
 		<tr>
 			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
 			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
 			<th style="min-width:16.25em;" title="${getWeaponHelpText('dexmod')}">DEX modifier</th> <!-- FIXME ??? Why .25 !!!! -->
-			<th style="min-width:10em;" title="${getWeaponHelpText('prot')}"   >PROT</th>
+			<th style="min-width:10.25em;" title="${getWeaponHelpText('prot')}"   >PROT</th>
 			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
 			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
 			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
@@ -287,7 +289,7 @@
 	}
 	</script>
 	<style>
-	body {
+	fieldset {
 		font-family:sans-serif;
 	}
 	
@@ -384,7 +386,7 @@
 	</div>
 </fieldset>
 
-<button onclick="updateResults()" style="vertical-align:bottom;">Go</button>
+<button onclick="updateResults()" style="vertical-align:bottom;">Roll</button>
 
 
 <div id="results">

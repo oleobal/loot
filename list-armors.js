@@ -39,7 +39,7 @@ items : [
 		val:40,
 		dexmod:-1,
 		desc:"Metal scales are affixed to the fabric like so. It's easy to make.",
-		weight:5,
+		weight:10,
 		"materials":{"steel":[20,40,1000], "iron":[50,45,1000] ,"fabric":[100, 0, 1000]},
 		"commonness":[25, 0, 1000]
 	},
@@ -77,7 +77,7 @@ items : [
 		name:"laminar armor",
 		cat:["Heavy Armors"],
 		dmg:7,
-		dmgspread:1.5,
+		dmgspread:1.75,
 		val:70,
 		dexmod:-2,
 		desc:"Horizontal strips of metal. Some say outdated, I say effective !",

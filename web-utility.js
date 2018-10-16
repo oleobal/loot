@@ -119,13 +119,16 @@ function displayWeapons(chest, options)
 		tr.className="weaponRow"
 		
 		
-		if (options && options.perweapon && curCat != chest[w]["cat"].toString())
+		if (options && (options.perweapon || options.colors) && curCat != chest[w]["cat"].toString())
 		{
 			curCat = chest[w]["cat"].toString()
 			color = getLightRGBfromString(chest[w]["cat"].toString())
-			var sep = document.createElement("tr")
-			sep.style.height = "1em"
-			t.appendChild(sep)
+			if (options.perweapon)
+			{
+				var sep = document.createElement("tr")
+				sep.style.height = "1em"
+				t.appendChild(sep)
+			}
 		}
 		
 		if (wpCount[chest[w].name] > 1)
@@ -149,15 +152,29 @@ function displayWeapons(chest, options)
 			}
 			else if (options && options.colors && conf[chest[w].type].attrs[n]=="cat")
 			{
+				
 				td.style.backgroundColor=color
-				td.innerHTML=chest[w][conf[chest[w].type].attrs[n]]
+				
+				if (chest[w][conf[chest[w].type].attrs[n]].length>1)
+				{
+					for (var ca in chest[w].cat)
+					{
+					var sp = document.createElement("span")
+					sp.style.backgroundColor = getLightRGBfromString(chest[w].cat[ca])
+					sp.innerHTML = chest[w].cat[ca]
+					td.appendChild(sp)
+					if (ca < chest[w].cat.length-1)
+						td.innerHTML+=", "
+					}
+				}
+				else
+					td.innerHTML=chest[w][conf[chest[w].type].attrs[n]]
 			}
 			else if (conf[chest[w].type].attrs[n]=="dmg")
 			{
 				td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
 				td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
 			}
-
 			else
 				td.innerHTML=chest[w][conf[chest[w].type].attrs[n]]
 			

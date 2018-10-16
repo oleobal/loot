@@ -87,6 +87,7 @@ items:[
 	{
 	name:"M60",
 	cat:["Special"],
+	hiddencat:["Unique"],
 	desc:"A cold war gas-operated, rotating bolt machine gun. 10 rounds burst.",
 	atk:20,
 	par:-8,

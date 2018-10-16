@@ -280,6 +280,8 @@ function finalizeWeapon(weapon, mod)
 	{
 		if (mod.type != weapon.type)
 			throw "Not the same type - "+mod.name+" "+weapon.name
+		if (weapon.hiddencat.indexOf("Unique")>=0)
+			throw "Is a unique weapon - "+mod.name+" "+weapon.name
 		
 		var c = weapon.cat.concat(weapon.hiddencat)
 		// MUST category check

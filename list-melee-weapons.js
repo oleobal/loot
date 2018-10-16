@@ -5,7 +5,10 @@ format :
 		"name":<name of weapon in minuscules>,
 		"cat":[list of category names, capitalized],
 		"hiddencat":[],
-		(same as cat, optional, used by the system but not displayed to user)
+		(same as cat, optional, used by the system but not displayed to user.
+		bottom script adds a "1-handed" or "2-handed"
+		if "Unique" is in the hidden cats, it cannot recieve a modifier
+		)
 		"atk": typical attack (real, rounded after mods),
 		"par": typical parry (real, rounded after mods),
 		(I recommend not using 0, and using -0.4 to 0.4 instead)
@@ -17,6 +20,7 @@ format :
 		"materials":{"material name":[rarity (natural), 
 		             minimum value (natural),
 					 maximum value (natural)]}
+		"type": string (added by the bottom script, here to "Melee Weapon")
 	},
 }
 
@@ -457,6 +461,39 @@ items:[
 		"materials":{"steel":[100, 0, 1000], "iron":[20, 0, 24]},
 		"commonness":[15, 0, 1000]
 	},
+	
+	
+	{
+		"name":"buckler",
+		"cat":["Special"],
+		"desc":"A small shield, not the best against arrows but great in duel.",
+		"atk":  1,
+		"par":  5,
+		"dmg":  4,
+		"val": 25,
+		"hands":1,
+		"weight":0.5,
+		"dmgspread":2,
+		"materials":{"steel":[100, 0, 1000]},
+		"commonness":[5, 0, 1000]
+	},
+	
+	{
+		"name":"flail",
+		"cat":["Special"],
+		"desc":"Great to surprise enemies.. sometimes even yourself !",
+		"atk":  7,
+		"par": -7,
+		"dmg":  6,
+		"val": 55,
+		"hands":1,
+		"weight":0.5,
+		"dmgspread":2,
+		"materials":{"steel":[100, 0, 1000]},
+		"commonness":[5, 0, 1000]
+	},
+
+
 
 
 	// ========== TWO HANDED ==========
@@ -525,21 +562,7 @@ items:[
 	
 	// GREAT AXES
 	
-	{
-		"name":"great war axe",
-		"cat":["Great axes"],
-		"desc":"Only someone like you would have the great skill required !",
-		"atk": 0.4,
-		"par": -6,
-		"dmg": 16,
-		"val": 55,
-		"hands":2,
-		"weight":5,
-		"dmgspread":3.25,
-		"materials":{"steel":[100, 10, 1000], "iron":[100,0,20]},
-		"commonness":[5, 0, 1000]
-	},
-	
+
 	{
 		"name":"woodcutter",
 		"cat":["Great axes"],
@@ -570,21 +593,54 @@ items:[
 		"commonness":[10, 0, 1000]
 	},
 	
+	
+	// the fantasy... thing.. people use
+	{
+		"name":"great battle axe",
+		"cat":["Great axes"],
+		"desc":"Only you could wield this axe of gigantic proportions !",
+		"atk": 0.4,
+		"par": -5,
+		"dmg": 12,
+		"val": 60,
+		"hands":2,
+		"weight":5,
+		"dmgspread":3.25,
+		"materials":{"steel":[100, 5, 1000]},
+		"commonness":[1, 0, 1000]
+	},
+	// HOW DO YOU EVEN LIFT THIS
+	{
+		"name":"great war hammer",
+		"cat":["Great axes"],
+		"desc":"So heavy I can't lift it ! It's for a strong type like you !",
+		"atk": 1,
+		"par": -6,
+		"dmg": 16,
+		"val": 70,
+		"hands":2,
+		"weight":5,
+		"dmgspread":3.25,
+		"materials":{"steel":[100, 5, 1000]},
+		"commonness":[1, 0, 1000]
+	},
+	
+	// Special bardiche snowflake
+	
 	{
 		"name":"bardiche",
-		"cat":["Great axes"],
+		"cat":["Great axes", "Polearms"],
 		"desc":"The fright of your enemies sighting the executioner's tool !",
 		"atk": 1,
 		"par": -3,
-		"dmg": 12,
-		"val": 30,
+		"dmg": 10,
+		"val": 40,
 		"hands":2,
 		"weight":5,
 		"dmgspread":3.25,
 		"materials":{"steel":[100, 5, 1000], "iron":[50,0,10]},
 		"commonness":[10, 0, 1000]
 	},
-	
 	
 	// POLEARMS
 	
@@ -678,6 +734,24 @@ items:[
 		"commonness":[10, 0, 1000]
 	},
 	
+	
+	// SPECIALS (again)
+	// (two-handed, this time)
+	
+	{
+		"name":"quarterstaff",
+		"cat":["Special"],
+		"desc":"Well, it's a long stick. But some people are really into it.",
+		"atk": 0,
+		"par": -2,
+		"dmg": 4,
+		"val": 1,
+		"hands":2,
+		"weight":3,
+		"dmgspread":2.75,
+		"materials":{"wood":[100, 0, 1000]},
+		"commonness":[3, 0, 1000]
+	},
 ],
 
 badMods:[
@@ -842,7 +916,7 @@ goodMods:[
 		"matermust":["steel"],
 		"catmust":null,
 		"catcant":null,
-		"wpcant":null,
+		"wpcant":["flail"],
 		"commonness":[5, 50, 10000]
 	},
 	
