@@ -593,6 +593,21 @@ items:[
 		"commonness":[10, 0, 1000]
 	},
 	
+	{
+		"name":"maul",
+		"cat":["Great axes"],
+		"desc":"Drive stakes in the ground ? Bash skulls in ? Got you covered !",
+		"atk": 2,
+		"par": -4,
+		"dmg": 8,
+		"val": 20,
+		"hands":2,
+		"weight":5,
+		"dmgspread":3,
+		"materials":{"lead":[100, 0, 1000], "iron":[10,0,1000]},
+		// so apparently most would be made out of lead
+		"commonness":[10, 0, 1000]
+	},
 	
 	// the fantasy... thing.. people use
 	{
