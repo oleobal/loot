@@ -148,6 +148,7 @@
 	
 	function searchWeaponByName(name)
 	{
+		var name = name.toLowerCase()
 		var candidates = [
 			{obj:null, dist:1000},
 			{obj:null, dist:1000},
@@ -171,7 +172,19 @@
 		]
 		for (var i in c)
 		{
-			var ld = levenshtein(name, c[i].name, {sub:2, ins:0.5, del:0.1})
+			var cn = c[i].name.toLowerCase()
+			
+			var ld = levenshtein(name, cn, {sub:2, ins:0.5, del:0.1})
+			
+			
+			
+			// substr bonus, kind of a crutch but hey
+			if (name.length>3 && cn.indexOf(name)>=0)
+			{
+				ld-=name.length
+				//console.log("substr bonus", cn.length-name.length)
+			}
+			
 			if (ld/name.length < 1)
 			{
 				var j = candidates.length-1
@@ -252,9 +265,9 @@
 <div style="display:inline-block; vertical-align:top; width:10em;">
 <h3>Index</h3>
 <h3><a href="#melee">Melee Weapons</a></h3>
-<h3><a href="#ranged">Ranged weapons</a></h3>
+<h3><a href="#ranged">Ranged Weapons</a></h3>
 <h3><a href="#armor">Armor</a></h3>
-<h3><a href="#spawn">Spawn chances</a></h3>
+<h3><a href="#spawn">Spawn Chances</a></h3>
 </div>
 
 <div style="display:inline-block; vertical-align:top; min-width:30%;">
@@ -295,7 +308,7 @@ oninput="searchWeaponByName(getElementValue('wpSearchBar'))">
 	</tr>
 </table>
 
-<h3 id="ranged"><a href="#ranged">Ranged weapons</a></h3>
+<h3 id="ranged"><a href="#ranged">Ranged Weapons</a></h3>
 
 
 <table id="RangedWeaponsTable">
@@ -329,7 +342,7 @@ oninput="searchWeaponByName(getElementValue('wpSearchBar'))">
 	</tr>
 </table>
 
-<h3 id="spawn"><a href="#spawn">Spawn chances</a></h3>
+<h3 id="spawn"><a href="#spawn">Spawn Chances</a></h3>
 
 <table id="weaponsPiePercentageSort" style="display:inline-block; vertical-align:top;">
 	<tr>
