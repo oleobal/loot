@@ -24,7 +24,7 @@
 		for (var i in chest)
 		{
 			probSum+=chest[i].commonness[0]
-			items.push({name:chest[i].name, cat:chest[i].cat.toString(), per:undefined})
+			items.push({name:chest[i].name, cat:chest[i].cat.toString(), per:undefined, val:chest[i].val})
 		}
 		for (var i in items)
 			items[i].per=(chest[i].commonness[0]/probSum)*100
@@ -50,21 +50,11 @@
 			var tdc = document.createElement("td")
 			tdc.innerHTML = items[i].cat
 			tr.appendChild(tdc)
-			var tdp = document.createElement("td")
-			tdp.innerHTML=items[i].per.toFixed(2)+"%"
-			ptotal+=items[i].per
-			tr.appendChild(tdp)
+			var tdv = document.createElement("td")
+			tdv.innerHTML=items[i].val
+			tr.appendChild(tdv)
 			table.appendChild(tr)
 		}
-		var ptotaltr = document.createElement("tr")
-		var tdn = document.createElement("td")
-		tdn.innerHTML="Total"
-		ptotaltr.appendChild(tdn)
-		ptotaltr.appendChild(document.createElement("td"))
-		var tdt = document.createElement("td")
-		tdt.innerHTML=ptotal.toFixed(2)
-		ptotaltr.appendChild(tdt)
-		table.appendChild(ptotaltr)
 		
 		// SORTED PER PERCENTAGE
 		
@@ -145,14 +135,97 @@
 		
 	}
 	
+	var c = getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1)))
+	c = c.concat(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
+	c = c.concat(getAllWeaponCombinations(armor.items, armor.goodMods.concat(armor.badMods.slice(1))))
 	function displayAll()
 	{
 		addPie(melee.items.concat(ranged.items).concat(armor.items), "weaponsPie")
 		var o = {colors:true, perweapon:true}
-		var c = getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1)))
-		c = c.concat(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
-		c = c.concat(getAllWeaponCombinations(armor.items, armor.goodMods.concat(armor.badMods.slice(1))))
+		
 		displayWeapons(c,o)
+	}
+	
+	function searchWeaponByName(name)
+	{
+		var candidates = [
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000},
+			{obj:null, dist:1000}
+		]
+		for (var i in c)
+		{
+			var ld = levenshtein(name, c[i].name, {sub:2, ins:0.5, del:0.1})
+			if (ld/name.length < 1)
+			{
+				var j = candidates.length-1
+				while (j>=0)
+				{
+					if (ld<candidates[j].dist)
+					{
+						if (j==0 ||  candidates[j-1].dist<=ld)
+						{
+							for (var k=candidates.length-1; k>=j;k--)
+								candidates[k]=candidates[k-1]
+						
+							candidates[j]={obj:c[i], dist:ld}
+						}
+						else
+						{
+							j--
+							continue
+						}
+					}
+					else
+						break
+				}
+			}
+			
+		}
+		var table = document.getElementById("wpSearchResults")
+		while (table.lastChild) {
+			table.removeChild(table.lastChild);
+		}
+		for (var i in candidates)
+		{
+			if (candidates[i].obj == null)
+				break
+			var tr = document.createElement('tr')
+			tr.style.backgroundColor = getLightRGBfromString(candidates[i].obj.cat.toString())
+			var td = document.createElement('td')
+			td.innerHTML=candidates[i].obj.type
+			tr.appendChild(td)
+			td = document.createElement('td')
+			var a = document.createElement("a")
+			a.href = window.location.pathname+"#"+candidates[i].obj.baseItem.replace(/\ /g, "_").toLowerCase()
+			a.innerHTML=candidates[i].obj.name
+			td.appendChild(a)
+			tr.appendChild(td)
+			
+			table.appendChild(tr)
+		}
+		
+	}
+	
+	function getElementValue(id)
+	{
+		return document.getElementById(id).value
 	}
 	</script>
 	<style>
@@ -173,26 +246,38 @@
 </head>
 <body onload='displayAll()'>
 
-<table id="weaponsPie" style="display:inline-block; vertical-align:top;">
+
+
+
+<div style="display:inline-block; vertical-align:top; width:10em;">
+<h3>Index</h3>
+<h3><a href="#melee">Melee Weapons</a></h3>
+<h3><a href="#ranged">Ranged weapons</a></h3>
+<h3><a href="#armor">Armor</a></h3>
+<h3><a href="#spawn">Spawn chances</a></h3>
+</div>
+
+<div style="display:inline-block; vertical-align:top; min-width:30%;">
+<h3>Search</h3>
+<input type="text" id="wpSearchBar"
+style="width:100%"
+oninput="searchWeaponByName(getElementValue('wpSearchBar'))">
+<table id="wpSearchResults" style="width:100%">
+</table>
+</div>
+
+<div style="display:inline-block; vertical-align:top; horizontal-align:right;">
+<h3>Complete list</h3>
+<div style=" max-height:30em;overflow-y:scroll;">
+<table id="weaponsPie">
 	<tr>
 		<th style="min-width:12em;">Name</th>
 		<th style="min-width:10em;">Classes</th>
-		<th style="min-width:2em;" >Percentage</th>
+		<th style="min-width:2em;" >Base value</th>
 	</tr>
-</table> 
-<table id="weaponsPiePercentageSort" style="display:inline-block; vertical-align:top;">
-	<tr>
-		<th style="min-width:12em;">Name</th>
-		<th style="min-width:10em;">Classes</th>
-		<th style="min-width:2em;" >Percentage</th>
-	</tr>
-</table> 
-<table id="weaponsPieClasses" style="display:inline-block; vertical-align:top;">
-	<tr>
-		<th style="min-width:10em;">Classes</th>
-		<th style="min-width:2em;" >Percentage</th>
-	</tr>
-</table> 
+</table>
+</div>
+</div>
 
 <h3 id="melee"><a href="#melee">Melee Weapons</a></h3>
 
@@ -243,6 +328,22 @@
 		<th style="width:100%;"    >Notes</th>
 	</tr>
 </table>
+
+<h3 id="spawn"><a href="#spawn">Spawn chances</a></h3>
+
+<table id="weaponsPiePercentageSort" style="display:inline-block; vertical-align:top;">
+	<tr>
+		<th style="min-width:12em;">Name</th>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >Percentage</th>
+	</tr>
+</table> 
+<table id="weaponsPieClasses" style="display:inline-block; vertical-align:top;">
+	<tr>
+		<th style="min-width:10em;">Classes</th>
+		<th style="min-width:2em;" >Percentage</th>
+	</tr>
+</table> 
 
 <p id="debug" style="font-family:monospace;">
 </p>

@@ -268,6 +268,7 @@ function getWeaponHelpText(attribute)
  * given a weapon and modifier, 
  * returns a copy of that weapon with the mod applied
  * also adds a "appliedModifier" field (string or null)
+ * and a "baseItem" field (string)
  */
 function finalizeWeapon(weapon, mod)
 {
@@ -276,6 +277,7 @@ function finalizeWeapon(weapon, mod)
 	fw=Object.assign({}, weapon)
 	
 	fw.appliedModifier=null
+	fw.baseItem = fw.name
 	if (mod && mod.name != "")
 	{
 		if (mod.type != weapon.type)

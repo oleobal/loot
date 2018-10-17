@@ -8,10 +8,16 @@
  * subjects is a list of subjects
  * only applicable ones will be applied, others ignored
  * if two subjects compete for the same type, the latter one is kept
+ *
+ * also adds "appliedModifier" and "baseItem" fields
+ * (null and name)
  */
 function finalizeBook(book, subjects, mod)
 {
 	fb=Object.assign({}, book)
+	
+	fb.appliedModifier=null
+	fb.baseItem = fw.name
 	
 	var bookSubs = getFormatFields(book.name+" "+book.desc)
 	var subsToApply={}
@@ -40,6 +46,7 @@ function finalizeBook(book, subjects, mod)
 		fb.name+=" ("+mod.name+")"
 		fb.desc+=" "+mod.desc
 		fb.val*=mod.val
+		fw.appliedModifier=mod.name
 	}
 	
 	fb.val = Math.round(fb.val)

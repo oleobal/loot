@@ -233,5 +233,52 @@ function displayWeapons(chest, options)
 		tr.style.fontWeight="bold"
 		t.appendChild(tr)
 	}
-	
+}
+
+/**
+ * A levenshtein distance calculator
+ * from kigiri on Github, thanks
+ * (MIT licensed)
+ *
+ * cost should be an object {sub:x, ins:y, del:z},
+ * with 1,1,1 defaults if left undefined
+ */
+function levenshtein(a, b, cost)
+{
+  if (typeof(cost) === 'undefined')
+    var cost = {sub:1, ins:1, del:1}
+
+  if (a.length === 0) return b.length
+  if (b.length === 0) return a.length
+  let tmp, i, j, prev, val, row
+  // swap to save some memory O(min(a,b)) instead of O(a)
+  if (a.length > b.length) {
+    tmp = a
+    a = b
+    b = tmp
+  }
+
+  row = Array(a.length + 1)
+  // init the row
+  for (i = 0; i <= a.length; i++) {
+    row[i] = i
+  }
+
+  // fill in the rest
+  for (i = 1; i <= b.length; i++) {
+    prev = i
+    for (j = 1; j <= a.length; j++) {
+      if (b[i-1] === a[j-1]) {
+        val = row[j-1] // match
+      } else {
+        val = Math.min(row[j-1] + cost.sub, // substitution
+              Math.min(prev + cost.ins,     // insertion
+                       row[j] + cost.del))  // deletion
+      }
+      row[j - 1] = prev
+      prev = val
+    }
+    row[a.length] = prev
+  }
+  return row[a.length]
 }
