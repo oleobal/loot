@@ -13,7 +13,7 @@ items : [
 		commonness:[10, 0,1000]
 	},
 	{
-		name:"An Tntroduction to {domain,c}",
+		name:"An Introduction to {domain,c}",
 		cat:["Magic"],
 		val:80,
 		desc:"I'm no expert, but I think this is pretty good. Very clear.",

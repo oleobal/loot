@@ -98,7 +98,7 @@ function displayWeapons(chest, options)
 			var t=document.getElementById(conf[types[ty]].id)
 			var tr=document.createElement("tr")
 			var td = document.createElement("td")
-			td.innerHTML="<i>No weapons</i>"
+			td.innerHTML="<i>No "+types[ty].toLowerCase()+"s</i>"
 			td.colSpan=conf[types[ty]].attrs.length
 			tr.appendChild(td)
 			tr.className="gray"

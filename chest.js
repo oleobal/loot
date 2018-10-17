@@ -57,9 +57,18 @@ function getWeaponRackContents(value, context, randomWeaponSource)
 		var b = Math.round(value/val)+delta
 		var nbwps = Math.round(getRandom(a, b))
 	}
-		
 	
-	return randomWeaponSource.getRandomWeapons(nbwps, val)
+	var moonmult = 4
+	var moonshot = val*moonmult
+	var nbmoon = 0.025
+	if (context && context.owner === "soldiers")
+		nbmoon *= 2
+	else if (context && context.owner === "nobles")
+		nbmoon *= 4
+	nbmoon = Math.round(nbwps*nbmoon)
+	
+	var result = randomWeaponSource.getRandomWeapons(nbwps-nbmoon*moonmult, val)
+	return result.concat(randomWeaponSource.getRandomWeapons(nbmoon, moonshot))
 }
 
 /**
