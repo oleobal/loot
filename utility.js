@@ -170,3 +170,93 @@ function format(s, pars)
 	
 	return result
 }
+
+
+
+// For testing purposes
+// TODO remove from here
+var charthur = {
+	name:"Arthur",
+	hp:16,
+	abilities:{
+		"STR": 1,
+		"DEX": 2,
+		"STR": 3,
+		"INT": 4,
+		"WIS": 5,
+		"CHA": 5,
+		"CONS":4,
+		"WILL":3,
+		"LUCK":2,
+		"MANA":1,
+	},
+	skills:{
+		"Swords":1,
+		"Shields":2,
+		"Initiative":3
+	},
+	inventory:[
+		"Longsword",
+		"1d20 gold"
+	],
+	armor:{
+		name:"Early Plate Armor",
+		dexmod:-2,
+		prot:"1d2+1d8"
+	}
+}
+
+/**
+ * turns an object into a tabular table for latex
+ */
+function latexTableFromChar(ch)
+{
+	if (ch.hp)
+		var hp=ch.hp
+	else
+		var hp = 5+ch.abilities["CONS"]
+	result="\\fbox {"+"\n"
+	+"\\begin{tabular}{c|c|c}"+"\n"
+	+"\\multicolumn{2}{c|}{\\textbf{"+ch.name+"}} & \\textbf{"+hp+"} HP\\\\"+"\n"
+	+"    \\hline\\hline"+"\n"
+	+"    \\begin{tabular}[t]{r c}"+"\n"
+	+"        \\multicolumn{2}{c}{\\textit{Abilities}}\\\\"+"\n"
+	+"        \\hline"+"\n"
+	+"        STR &  "+ch.abilities["STR"]+"  \\\\"+"\n"
+	+"        DEX &  "+ch.abilities["DEX"]+"  \\\\"+"\n"
+	+"        INT &  "+ch.abilities["INT"]+"  \\\\"+"\n"
+	+"        WIS &  "+ch.abilities["WIS"]+"  \\\\"+"\n"
+	+"        CHA &  "+ch.abilities["CHA"]+"  \\\\"+"\n"
+	+"        \\cline{1-2}"                        +"\n"
+	+"        CONS &  "+ch.abilities["CONS"]+" \\\\"+"\n"
+	+"        WILL &  "+ch.abilities["WILL"]+" \\\\"+"\n"
+	+"        LUCK &  "+ch.abilities["LUCK"]+" \\\\"+"\n"
+	+"        MANA &  "+ch.abilities["MANA"]+" \\\\"+"\n"
+	+"    \\end{tabular}"+"\n"
+	+"    &"+"\n"
+	+"    \\begin{tabular}[t]{r c}"+"\n"
+	+"        \\multicolumn{2}{c}{\\textit{Skills}}\\\\"+"\n"
+	+"        \\hline"+"\n"
+	var s = Object.keys(ch.skills)
+	for (var i in s)
+	{
+		result+="        "+s[i] + "&" + ch.skills[s[i]] + "\\\\" + "\n"
+	}
+	result+="    \\end{tabular}"+"\n"
+	+"    &"+"\n"
+	+"    \\begin{tabular}[t]{l}"+"\n"
+	+"        \\multicolumn{1}{c}{\\textit{Inventory}}\\\\"+"\n"
+	+"        \\hline"+"\n"
+	for (var i in ch.inventory)
+	{
+		result+="        "+ch.inventory[i] + "\\\\" + "\n"
+	}
+	result+="    \\end{tabular}"+"\n"
+	+"    \\\\"+"\n"
+	+"    \\hline\\hline"+"\n"
+	+"    \\multicolumn{2}{c|}{\\textbf{"+ch.armor.name+"} ("+ch.armor.dexmod+" DEX)} & \\textit{PROT :} "+ch.armor.prot+"\\\\"+"\n"
+	+"\\end{tabular}"+"\n"
+	+"}"+"\n"
+
+	return result
+}
