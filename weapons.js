@@ -272,8 +272,7 @@ function getWeaponHelpText(attribute)
  */
 function finalizeWeapon(weapon, mod)
 {
-	// this is for "final weapon", but I can't help but
-	// pronounce it "firmware"
+	// this is for "final weapon", but I can't help but pronounce it "firmware"
 	fw=Object.assign({}, weapon)
 	
 	fw.appliedModifier=null
@@ -459,12 +458,18 @@ function RandomWeaponSource(...weaponsobj)
 	}
 	
 
-	/*
+	/**
 	 * returns an array of nbItems weapons
 	 * each of them will be 0.5*meanval<value<1.5*meanval
 	 *
+	 * constraints is a dictionary which can be left undefined
+	 * possible fields :
+	 *  catmust  : string array (must be one of these)
+	 *  catcant  : string array (can't be one of these)
+	 *  wpcant   : string array (can't be one of these)
+	 *  noempty  : boolean, will try not to return empty arrays if true
 	 */
-	r.getRandomWeapons = function(nbItems, meanval)
+	r.getRandomWeapons = function(nbItems, meanval, constraints)
 	{
 		var chest=[]
 		var i=0
@@ -475,10 +480,52 @@ function RandomWeaponSource(...weaponsobj)
 		
 			var w = {val:-1000}
 			var safety=0
-			while ((w.val < 0.5*meanval || w.val > 1.5*meanval) && safety<100)
+			while ((w.val < 0.5*meanval || w.val > 1.5*meanval) && safety<200)
 			{
 				safety++
 				w=r.weapons[obji][this.weaponPie[obji][getRandom(0,this.weaponPie[obji].length)]]
+				
+				// constraints compliance
+				// ok retrying until it works is stupid
+				if (constraints)
+				{
+					if (constraints.catmust)
+					{
+						var ok = false
+						for (i in w.cat)
+						{
+							if (constraints.catmust.indexOf(w.cat[i])>=0)
+							{
+								ok=true
+								break
+							}
+						}
+						if (!ok)
+							{w = {val:-1000};continue}
+					}
+					if (constraints.catcant)
+					{
+						var ok = true
+						for (i in w.cat)
+						{
+							if (constraints.catcant.indexOf(w.cat[i])>=0)
+							{
+								ok=false
+								break
+							}
+						}
+						if (!ok)
+							{w = {val:-1000};continue}
+					}
+					if (constraints.wpcant)
+					{
+						if (constraints.wpcant.indexOf(w.name)>=0)
+							{w = {val:-1000};continue}
+					}
+				}
+				
+				
+				var fw = finalizeWeapon(w, null)
 				
 				// modifiers
 				var modTries = 3
@@ -499,10 +546,10 @@ function RandomWeaponSource(...weaponsobj)
 					catch (err)
 					{
 						console.log("getRandomWeapons ("+modTries+"):  "+err)
-						var fw = finalizeWeapon(w, null)
 					}
 					modTries--
 				}
+				
 			}
 			chest.push(fw)
 			i++

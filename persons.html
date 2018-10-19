@@ -1,0 +1,58 @@
+<head>
+	<title>Loot generator</title>
+	<meta charset="utf-8"/>
+	<script src="utility.js"></script>
+	<script src="web-utility.js"></script>
+	<script src="list-melee-weapons.js"></script>
+	<script src="list-ranged-weapons.js"></script>
+	<script src="list-armors.js"></script>
+	<script src="weapons.js"></script>
+	<script src="list-books.js"></script>
+	<script src="list-books-magic.js"></script>
+	<script src="books.js"></script>
+	<script src="list-persons.js"></script>
+	<script src="persons.js"></script>
+	<script>
+	var gearSources = {
+		"Melee Weapon":RandomWeaponSource(melee),
+		"Ranged Weapon":RandomWeaponSource(ranged),
+		"Armor":RandomWeaponSource(armor)
+	}
+	
+	var a = finalizePerson(persons.items[0],null,gearSources)
+	
+	console.log(a)
+	</script>
+	<style>
+	fieldset {
+		font-family:sans-serif;
+	}
+	
+	th {
+
+	}
+	
+	.gray {
+		background-color:#EEE;
+	}
+	
+	td {
+		padding-right: 0.5em;
+		padding-left: 0.5em;
+	}
+	.menufield {
+		height:5em;
+		display:inline-block;
+		vertical-align:top;
+	}
+	</style>
+</head>
+<body onload='updateResults();'>
+
+<div id="results">
+<p style="font-size:150%;">This is a JavaScript app, so you'll need to enable JavaScript.<br>If you don't want to run it online, it's fine, the repository is <a href="https://github.com/oleobal/loot">here</a><p>
+<!-- see JS wipeResults() -->
+</div>
+<p id="debug" style="font-family:monospace;">
+</p>
+</body>
