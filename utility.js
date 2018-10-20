@@ -58,7 +58,7 @@ function simpleDictConcat(a,b)
 			res[bk[i]] = res[bk[i]].concat(b[bk[i]])
 		}
 	}
-	
+	return res
 }
 
 // uniform

@@ -4,6 +4,18 @@
  */
 
 /**
+ * Turns strings like "1d2+3d4"
+ * Into the same but with neat web formatting
+ */ 
+function getWebDiceDisplay(input)
+{
+	var res = input
+	res = res.replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
+	res = res.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
+	return res
+}
+ 
+/**
  * for displaying weapons in a table.
  * It expects there to be a table for each weapon type with appropriate ID
  * (eg MeleeWeaponsTable, RangedWeaponsTable, ArmorTable
@@ -172,8 +184,7 @@ function displayWeapons(chest, options)
 			}
 			else if (conf[chest[w].type].attrs[n]=="dmg")
 			{
-				td.innerHTML=chest[w]["dmg"].replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
-				td.innerHTML=td.innerHTML.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
+				td.innerHTML=getWebDiceDisplay(chest[w]["dmg"])
 			}
 			else
 				td.innerHTML=chest[w][conf[chest[w].type].attrs[n]]

@@ -5,6 +5,32 @@
 var humanoids = {
 items : [
 	{
+		name:"Commoner",
+		hp:undefined,
+		abilities:{
+			"STR":  0,
+			"DEX": -1,
+			"INT": -1,
+			"WIS":  0,
+			"CHA": -1,
+			"CONS":-1,
+			"WILL":-1,
+			"LUCK":-2,
+			"MANA":-1,
+		},
+		skills:{
+			"Daggers":1,
+			"Polearms":1,
+			"Bows":2,
+			"Hunting":2
+		},
+		inventory:[
+			{name:"Melee Weapon", val:2, constraints : {catmust:["Civilian"]}},
+			{name:"Gold", val:1},
+		],
+		armorVal:0
+	},
+	{
 		name:"Infantryman",
 		hp:undefined,
 		abilities:{
@@ -30,7 +56,7 @@ items : [
 		},
 		inventory:[
 			{name:"Melee Weapon", val:60, constraints : {catcant:["Shields"]}},
-			{name:"Melee Weapon", val:20},
+			{name:"Melee Weapon", val:20, constraints: {catcant:["2-handed"]}},
 			{name:"Gold", val:5},
 		],
 		armorVal:60

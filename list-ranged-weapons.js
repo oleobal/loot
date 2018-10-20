@@ -3,6 +3,7 @@ items:[
 	{
 	name:"hunting bow",
 	cat:["Bows"],
+	hiddencat:["Civilian"],
 	desc:"Great for hunting small game.",
 	atk:4,
 	par:-7,

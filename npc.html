@@ -40,6 +40,7 @@
 		tda.style.verticalAlign="top"
 		// abilities
 		var tab = document.createElement('table')
+		
 		var abi = Object.keys(npc.abilities)
 		for (var i in abi)
 		{
@@ -98,6 +99,7 @@
 			var tra = document.createElement('tr')
 			tra.title = item.toString()
 			td = document.createElement('td')
+			td.style.minWidth="9em"
 			td.innerHTML = item.name
 			tra.appendChild(td)
 			if (item.type.indexOf("Weapon")>=0)
@@ -106,7 +108,8 @@
 				var mods = 0
 				{
 					mods+=npc.abilities.DEX
-					mods+=npc.armor.dexmod
+					if (npc.armor)
+						mods+=npc.armor.dexmod
 					var wpSkill = 0
 					for (var j in ski)
 					{
@@ -120,12 +123,20 @@
 				else {var wpColor = "#000" }
 				td.innerHTML = item.atk+mods
 				td.title="ATK "+item.atk+" "+(mods>0?'+':'') + mods
+				if (item.hands==1)
+					td.title+="\n"+(item.atk+mods+1)+" if off-hand free"
 				td.style.color = wpColor
+				td.style.textAlign="right"
+				td.style.minWidth="1em"
 				tra.appendChild(td)
 				td = document.createElement('td')
 				td.innerHTML = item.par+mods
 				td.title="PAR "+item.par+" "+(mods>0?'+':'') + mods
+				if (item.hands==1)
+					td.title+="\n"+(item.par+mods+1)+" if off-hand free"
 				td.style.color = wpColor
+				td.style.textAlign="right"
+				td.style.minWidth="1em"
 				tra.appendChild(td)
 			}
 			else
@@ -136,6 +147,7 @@
 			td = document.createElement('td')
 			td.innerHTML=item.val
 			td.style.textAlign = "right"
+			td.style.minWidth="1.5em"
 			tra.appendChild(td)
 			tab.appendChild(tra)
 		}
@@ -158,7 +170,9 @@
 		tr.appendChild(td)
 		td = document.createElement('td')
 		td.colSpan=2
-		td.innerHTML = "<i>PROT&nbsp;:</i>"+armor.dmg
+		td.style.textAlign="right"
+		td.style.paddingRight="1em"
+		td.innerHTML = "<i>PROT&nbsp;:</i> <b>"+getWebDiceDisplay(armor.dmg)+"</b>"
 		tr.appendChild(td)
 		
 		table.appendChild(tr)
@@ -175,10 +189,8 @@
 			"Ranged Weapon":RandomWeaponSource(ranged),
 			"Armor":RandomWeaponSource(armor)
 		}
-		
-		var a = finalizeHumanoid(humanoids.items[0],null,gearSources)
-		displayNPC(a)
-		console.log(a)
+		for (var i in humanoids.items)
+			displayNPC(finalizeHumanoid(humanoids.items[i],null,gearSources))
 	}
 	</script>
 	<style>

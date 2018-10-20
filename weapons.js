@@ -486,6 +486,7 @@ function RandomWeaponSource(...weaponsobj)
 				safety++
 				w=r.weapons[obji][this.weaponPie[obji][getRandom(0,this.weaponPie[obji].length)]]
 				
+				var c = w.cat.concat(w.hiddencat)
 				// constraints compliance
 				// ok retrying until it works is stupid
 				if (constraints)
@@ -493,9 +494,9 @@ function RandomWeaponSource(...weaponsobj)
 					if (constraints.catmust)
 					{
 						var ok = false
-						for (i in w.cat)
+						for (i in c)
 						{
-							if (constraints.catmust.indexOf(w.cat[i])>=0)
+							if (constraints.catmust.indexOf(c[i])>=0)
 							{
 								ok=true
 								break
@@ -507,9 +508,9 @@ function RandomWeaponSource(...weaponsobj)
 					if (constraints.catcant)
 					{
 						var ok = true
-						for (i in w.cat)
+						for (i in c)
 						{
-							if (constraints.catcant.indexOf(w.cat[i])>=0)
+							if (constraints.catcant.indexOf(c[i])>=0)
 							{
 								ok=false
 								break

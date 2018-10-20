@@ -68,6 +68,7 @@ items:[
 	{
 		"name":"kitchen knife",
 		"cat":["Daggers"],
+		"hiddencat":["Civilian"],
 		"desc": "Knives are ever useful ! Who knows what could happen ?",
 		"atk": 0.4,
 		"par": -3,
@@ -321,6 +322,7 @@ items:[
 	{
 		"name":"club",
 		"cat":["Maces"],
+		"hiddencat":["Civilian"],
 		"desc":"Well, sometimes, simple things to the job.",
 		"atk": 0,
 		"par": -2,
@@ -566,6 +568,7 @@ items:[
 	{
 		"name":"woodcutter",
 		"cat":["Great axes"],
+		"hiddencat":["Civilian"],
 		"desc":"Indispensable when setting up camp !",
 		"atk": 1,
 		"par": -4,
@@ -581,6 +584,7 @@ items:[
 	{
 		"name":"pickaxe",
 		"cat":["Great axes"],
+		"hiddencat":["Civilian"],
 		"desc":"Best for digging, but you could also hurt someone quite badly.",
 		"atk": -1,
 		"par": -5,
@@ -677,6 +681,7 @@ items:[
 	{
 		"name":"sharp stick",
 		"cat":["Polearms"],
+		"hiddencat":["Civilian"],
 		"desc":"Sometimes, the simple tools do their task the best.",
 		"atk": 0,
 		"par": -3,
@@ -756,6 +761,7 @@ items:[
 	{
 		"name":"quarterstaff",
 		"cat":["Special"],
+		"hiddencat":["Civilian"],
 		"desc":"Well, it's a long stick. But some people are really into it.",
 		"atk": 0,
 		"par": -2,
