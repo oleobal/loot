@@ -264,6 +264,7 @@ function getWeaponHelpText(attribute)
 
 }
 
+
 /**
  * given a weapon and modifier, 
  * returns a copy of that weapon with the mod applied

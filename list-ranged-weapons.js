@@ -241,4 +241,13 @@ for (var i in ranged.items)
 		ranged.items[i].hiddencat=[]
 	
 	ranged.items[i].hiddencat.push(ranged.items[i].hands+"-handed")
+	
+	ranged.items[i].toString = function() {
+	return this.name+" ("+this.cat+")\n"
+		+ "ATK "+this.atk+" PAR "+this.par+"\n"
+		+ "MIN "+this.min+" MAX "+this.max+"\n"
+		+ "DMG "+this.dmg+"\n"
+		+ "HND "+this.hands+" VAL "+this.val+" W "+this.weight+"kg"
+
+	}
 }

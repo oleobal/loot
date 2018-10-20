@@ -993,6 +993,7 @@ for (var i in melee.goodMods)
 	melee.goodMods[i].type="Melee Weapon"
 for (var i in melee.badMods)
 	melee.badMods[i].type="Melee Weapon"
+
 for (var i in melee.items)
 {
 	// meta-categories
@@ -1008,4 +1009,12 @@ for (var i in melee.items)
 	{
 		melee.items[i].hiddencat.push("Bladed")
 	}
+	
+	melee.items[i].toString = function() {
+		return this.name+" ("+this.cat+")\n"
+			+ "ATK "+this.atk+" PAR "+this.par+"\n"
+			+ "DMG "+this.dmg+"\n"
+			+ "HND "+this.hands+" VAL "+this.val+" W "+this.weight+"kg"
+	
+		}
 }

@@ -228,4 +228,11 @@ for (var i in armor.items)
 	
 	if (!armor.items[i].hiddencat)
 		armor.items[i].hiddencat=[]
+	
+	armor.items[i].toString = function() {
+	return this.name+" ("+this.cat+")\n"
+		+ "DEX "+this.dexmod+" PROT "+this.dmg+"\n"
+		+ "VAL "+this.val+" W "+this.weight+"kg"
+
+	}
 }

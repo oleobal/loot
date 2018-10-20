@@ -35,6 +35,32 @@ function sumArray(a)
 	return sum
 }
 
+/**
+ * returns a concatenation of the two objects
+ * which are expected to contain arrays
+ */
+function simpleDictConcat(a,b)
+{
+	if (!b)
+		return a
+	if (!a)
+		return b
+	var res = Object.assign({},a)
+	var bk = Object.keys(b)
+	for (var i in bk)
+	{
+		if (!res[bk[i]])
+		{
+			res[bk[i]] =b[bk[i]]
+		}
+		else
+		{
+			res[bk[i]] = res[bk[i]].concat(b[bk[i]])
+		}
+	}
+	
+}
+
 // uniform
 // max exclusive
 function getRandom(min, max)
