@@ -12,7 +12,7 @@ items:[
 	max:50, // end of optimal range
 	val:5,
 	hands:2,
-	weight:2,
+	weight:1,
 	dmgspread:3,
 	"materials":{"wood":[100, 0, 1000]},
 	"commonness":[50, 0, 1000]
@@ -29,7 +29,7 @@ items:[
 	max:75,
 	val:35,
 	hands:2,
-	weight:5,
+	weight:2,
 	dmgspread:3,
 	"materials":{"wood":[100, 0, 1000]},
 	"commonness":[30, 0, 1000]

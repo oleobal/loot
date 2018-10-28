@@ -280,7 +280,7 @@ items:[
 		"val": 30,
 		"hands":1,
 		"weight":2,
-		"dmgspread":2,
+		"dmgspread":2.1,
 		"materials":{"steel":[100, 10, 1000]},
 		"commonness":[50, 10, 1000]
 	},
