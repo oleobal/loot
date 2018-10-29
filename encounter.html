@@ -18,6 +18,12 @@
 	<script src="humanoids.js"></script>
 	<script>
 	
+	// Ask for a prompt when trying to leave
+	window.addEventListener('beforeunload', function (e) {
+		e.preventDefault();
+		e.returnValue = '';
+	});
+	
 	/**
 	 * keep track of used IDs rather than parse them from the DOM every time
 	 * actual IDs are "part"+no, but this is just the numbers
@@ -30,15 +36,30 @@
 	function initialize()
 	{
 		document.getElementById('participants').innerHTML=""
-		addParticipant("Bob")
+		var p = getParticipant(1, "Bob")
+		document.getElementById('participants').appendChild(p)
 	}
+	
+	
 	
 	/**
 	 * reorder participants based on initiative
 	 */
 	function orderParticipants()
 	{
-		//TODO
+		var p = Array.from(document.getElementById("participants").childNodes)
+		p.sort(orderParticipantsCompare)
+		var parts = document.getElementById("participants")
+		parts.innerHTML = ""
+		for (var i in p)
+		{
+			parts.appendChild(p[i])
+		}
+		
+	}
+	function orderParticipantsCompare(a,b)
+	{
+		return b.childNodes[0].value - a.childNodes[0].value
 	}
 	
 	/**
@@ -49,67 +70,148 @@
 		//TODO
 	}
 	
+	function resetAllParticipantTentativeActions()
+	{
+		for (var i in participantIDs)
+		{
+			cancelParticipantRemoval(participantIDs[i])
+			cancelParticipantAddition(participantIDs[i])
+		}
+	}
 	
 	function tentativelyRemoveParticipant(partID)
 	{
-		//TODO
+		resetAllParticipantTentativeActions()
+		var p = document.getElementById("partRem"+partID)
+		p.innerHTML="<button style='width:25%' onclick='removeParticipant("+partID+")'>Confirm</button><button style='width:25%' onclick='cancelParticipantRemoval("+partID+")'>Cancel</button>"
 	}
 	
-	function tentativelyAddParticipantAfter(partID)
+	function cancelParticipantRemoval(partID)
 	{
-		//TODO
+		var p = document.getElementById("partRem"+partID)
+		p.innerHTML="<button id='buttPartRem"+partID+"' type='button' onclick='tentativelyRemoveParticipant("+partID+")'   style='width:50%'>Remove</button>"
 	}
 	
 	function removeParticipant(partID)
 	{
-		//TODO
+		if (participantIDs.length < 2)
+		{
+			alert("Cannot remove the last participant.")
+			cancelParticipantRemoval(partID)
+			return
+		}
+		document.getElementById("part"+partID).outerHTML=""
+		participantIDs.splice(participantIDs.indexOf(partID), 1)
 	}
 	
+	function tentativelyAddParticipantAfter(partID)
+	{
+		resetAllParticipantTentativeActions()
+		var p = document.getElementById("partAdd"+partID)
+		p.innerHTML="<button style='width:25%' onclick='addParticipantAfter("+partID+")'>Confirm</button><button style='width:25%' onclick='cancelParticipantAddition("+partID+")'>Cancel</button>"
+	}
+	
+	function cancelParticipantAddition(partID)
+	{
+		var p = document.getElementById("partAdd"+partID)
+		p.innerHTML="<button id='buttPartAdd"+partID+"' type='button' onclick='tentativelyAddParticipantAfter("+partID+")' style='width:50%'>Add after</button>"
+	}
+	
+	/**
+	 * add a nameless participant
+	 */
 	function addParticipantAfter(partID)
 	{
-		//TODO
+		var i = document.getElementById("partInit"+partID).value
+		var np = getParticipant(i, "")
+		document.getElementById("part"+partID).insertAdjacentElement("afterend",np)
+		cancelParticipantAddition(partID)
 	} 
 	
 	/**
-	 * add a participant to the list
+	 * just adds the "markedParticipant" class
+	 * (and removes that of the other ones)
 	 */
-	function addParticipant(name, afterid)
+	function markParticipant(partID)
+	{
+		var c = document.getElementsByClassName("markedParticipant")
+		for (var i = 0 ; i < c.length ; i++)
+		{
+			if (c[i].id == "part"+partID)
+			{
+				c[i].classList.remove("markedParticipant")
+				return
+			}
+			c[i].classList.remove("markedParticipant")
+			
+		}
+		document.getElementById("part"+partID).classList.add("markedParticipant")
+	}
+	
+	function manageHealthChange(partID)
+	{
+		if (document.getElementById("partHealth"+partID).value > 0)
+			document.getElementById("part"+partID).classList.remove("deadParticipant")
+			
+		else
+			document.getElementById("part"+partID).classList.add("deadParticipant")
+	}
+	
+	/**
+	 * return a HTML participant
+	 */
+	function getParticipant(initiative, name)
 	{
 		if (!name)
 			name=""
 		
 		if (participantIDs.length == 0)
-			partID=0
+			var partID=0
 		else
-			partID=participantIDs[participantIDs.length-1] + 1
+			var partID=participantIDs[participantIDs.length-1] + 1
+		participantIDs.push(partID)
 		
 		var p = document.createElement('div')
 		p.id = "part"+partID
-		p.style.borderStyle="solid"
-		p.innerHTML = `
-		<input  name="partName" id="partName${partID}" value="${name}" style="width:calc(100% - 4em - 1em)" required/>
-		<input  name="partInit" id="partInit${partID}" value="1" style="width:2em" required/>
-		<button name="partButt" id="partButt${partID}" type="button" onclick="displayDetailedParticipant(${partID})" style="width:2em;">&gt;</ button>
-		<br>
-		<button name="partAdd" id="partAdd${partID}" type="button" onclick="tentativelyAddParticipantAfter(${partID})" style="width:50%">Add after</ button>
-		<button name="partAdd" id="partAdd${partID}" type="button" onclick="tentativelyRemoveParticipant(${partID})" style="width:50%">Remove</ button>
+		p.classList.add("participant")
+		p.innerHTML = `<input type="number" onchange="orderParticipants()" id="partInit${partID}" value="${initiative}" title="Initiative score" style="width:3em" required/><input title="Name" name="partName" id="partName${partID}" value="${name}" style="width:calc(100% - 11em)"/><input oninput="manageHealthChange(${partID})" type="number" title="Health" id="partHealth${partID}" value="7" style="width:3em"/><button id="partButtMark${partID}" title="Mark this participant" type="button" onclick="markParticipant(${partID})" style="width:2.5em;">M</button><button name="partButt" id="partButt${partID}" title="Open detailed view" type="button" onclick="displayDetailedParticipant(${partID})" style="width:2.5em;">&gt;</button><br><span id="partAdd${partID}"><button id="buttPartAdd${partID}" title="Add a participant after this one" type="button" onclick="tentativelyAddParticipantAfter(${partID})" style="width:50%">Add after</button></span><span id="partRem${partID}"><button id="buttPartRem${partID}" title="Remove this participant" type="button" onclick="tentativelyRemoveParticipant(${partID})"   style="width:50%">Remove</button></span>
 		`
 		// TODO align the arrow button to the right
 		// TODO add confirmations to add and remove buttons, somehow
 		
-		// TODO append after given afterid, not end 
-		document.getElementById('participants').appendChild(p)
+		
+		return p
 	}
 	</script>
 	
 	<style>
+	body {
+		padding:0;
+		margin:0;
+	}
+	
+	.participant {
+		border-style:solid;
+		margin:1px 0 1px 0 ;
+		padding:0;
+	}
+	
+	.markedParticipant {
+		border-color:#00F;
+	}
+	
+	.deadParticipant {
+		border-style:dotted;
+		background-color:#FCC;
+	}
+	
 	</style>
 </head>
 <body onload='initialize()'>
 
 
 <div id="participants"
-style="display:inline-block; width:30%; max-width:20em; min-height:99%; max-height:99%; overflow-y:scroll;">
-<p style="font-size:150%;">This is a JavaScript app, so you'll need to enable JavaScript.<br>If you don't want to run it online, it's fine, the repository is <a href="https://github.com/oleobal/loot">here</a><p>
+style="display:inline-block; width:30%; max-width:23em; height:100%; min-height:100%; max-height:100%; overflow-y:scroll;">
+<p style="font-size:120%;">This is a JavaScript app, so you'll need to enable JavaScript.<br>If you don't want to run it online, it's fine, the repository is <a href="https://github.com/oleobal/loot">here</a><p>
 </div>
 </body>
