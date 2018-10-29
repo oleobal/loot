@@ -14,10 +14,10 @@
  */
 function finalizeBook(book, subjects, mod)
 {
-	fb=Object.assign({}, book)
+	var fb=Object.assign({}, book)
 	
 	fb.appliedModifier=null
-	fb.baseItem = fw.name
+	fb.baseItem = fb.name
 	
 	var bookSubs = getFormatFields(book.name+" "+book.desc)
 	var subsToApply={}
@@ -46,7 +46,9 @@ function finalizeBook(book, subjects, mod)
 		fb.name+=" ("+mod.name+")"
 		fb.desc+=" "+mod.desc
 		fb.val*=mod.val
-		fw.appliedModifier=mod.name
+		if (fb.uses && mod.uses)
+			fb.uses=Math.round(fb.uses*mod.uses)
+		fb.appliedModifier=mod.name
 	}
 	
 	fb.val = Math.round(fb.val)

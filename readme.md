@@ -1,8 +1,21 @@
-## Loot generator
+## RPG tools
 
 This repository is running [online here](http://fple.richeli.eu/loot).
 
-A loot generator for pen & paper RPGs. The main target is a homebrew system, FPLE, as of yet unreleased.
+A set of companion tools for pen & paper RPGs. The main target is a homebrew system, FPLE.
+
+As of now, it aims to include :
+ - A *loot generator* for complete equipment/items lists, treasure chest, stores..
+ - A *creature generator* for NPCs and monsters
+ - An *encounter manager* for combat
+
+These tools are mainly intended for game masters, to allow them to focus on what master and create richer worlds more easily. They are made under the belief that quality companion facilities are critical for players of FPLE to enjoy their time as much as possible.
+
+All the tools are client-side JavaScript. This provides ease of use (everyone has a browser) and flexibility (online or offline), at the cost of having to develop in JavaScript.
+
+## Loot generator
+
+The loot generator is used to both build complete lists of all possible items and generate inventories for treasure chests or stores.
 
 The `list-*` files define objects containing list of items, along with possible modifiers. These objects can then be passed to processing facilities ; as of now, there are only two : books.js and weapons.js (which manages melee, ranged and armor). A guiding principle throughout is that a single item name only maps to a single stat block. This way, a player can write down the name of an item, and its stats can be checked later on the item lists.
 
@@ -33,3 +46,13 @@ Items are defined by a large number of attributes, to each of which a modifier c
 `list-books.js` and `list-books-magic.js` are lists to be handled by `books.js`.
 
 Books have no need for the complex damage scaling, but they do instead have *subjects*, in addition to modifiers. A book will always be given a subject (if it needs one), and then possibly a modifier. This is done through string substitution in the titles and descriptions.
+
+## Creature generator
+
+The creature generator will be split it two, humanoids and monsters, with humanoids leveraging the equipment lists from the loot generator.
+
+Generating encounters (from a difficulty metric and an environment) is a possibility, but an uncertain one. Difficulty is hard to evaluate, with many game masters constantly reevaluating it (ie fudging rolls) ; in addition, encounters must make sense in the present situation. In practice, I believe presenting DMs with a list of creatures (possibly ordered by difficulty rating) would be sufficient.
+
+## Encounter manager
+
+A simple application for managing turn order (initiative), health points, stats.. In an encounter. The user-facing page is `encounter.html`.

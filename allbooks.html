@@ -4,20 +4,77 @@
 	<script src="utility.js"></script>
 	<script src="list-books.js"></script>
 	<script src="list-books-magic.js"></script>
+	<script src="list-books-combat.js"></script>
 	<script src="books.js"></script>
 	<script>
 	function displayAll()
 	{
 		var d = document.getElementById("debug")
-		var c = getAllBookCombinations(books,magicbooks)
-		for (i in c)
+		var t = document.getElementById("bookTable")
+		var c = getAllBookCombinations(books, magicbooks, combatbooks)
+		
+		// this is because getAllBookCombinations returns duplicates currently
+		// and just pruning them is less work than building better logic
+		// remember a name should ever map to one stat block
+		var alreadyThere = []
+		for (var i in c)
 		{
+			if (alreadyThere.indexOf(c[i].name) == -1)
+			{
+				var tradd=""
+				if (alreadyThere.length %2 == 0)
+					tradd+="class='gray' "
+				
+				var title = c[i].name
+				if (!c[i].appliedModifier || c[i].appliedModifier == "")
+				{
+					title = "<a href='"+window.location.pathname+"#"+c[i].name+"'>"+title+"</a>"
+					tradd+="id=\""+c[i].name+"\""
+				}
+				var uses = c[i].uses
+				if (!uses)
+					uses="--"
+					
+				var s = "<tr "+tradd+"><td>"+title+"</td><td style='background-color:"+getLightRGBfromString(c[i].cat+"")+";'>"+c[i].cat+"</td><td style='text-align:right;'>"+uses+"</td><td style='text-align:right;'>"+c[i].val+"</td><td>"+c[i].desc+"</td></tr>"
+				t.innerHTML+=s
+				alreadyThere.push(c[i].name)
+			}
+			else
+			{
+				console.log("Eliminated duplicate : "+c[i].name)
+			}
+			
 			d.innerHTML+= JSON.stringify(c[i],2)+"<br>"
 		}
 	}
 	</script>
+	<style>
+	.gray {
+		background-color:#EEE;
+	}
+	a:link {
+	color: #00C;
+	}
+	a:visited {
+		color: #00C;
+	}
+	td {
+		padding-right: 0.5em;
+		padding-left: 0.5em;
+	}
+	</style>
 </head>
 <body onload="displayAll()">
+<table id="bookTable">
+	<tr>
+		<th style="min-width:20em">Title</th>
+		<th style="min-width:10em">Categories</th>
+		<th style="min-width:4em">Uses</th>
+		<th style="min-width:4em">Value</th>
+		<th style="width:100%">Description</th>
+	</tr>
+</table>
+
 <p id="debug" style="font-family:monospace;">
 </p>
 </body>

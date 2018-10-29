@@ -1,0 +1,397 @@
+<head>
+	<title>Loot generator</title>
+	<meta charset="utf-8"/>
+	<script src="utility.js"></script>
+	<script src="web-utility.js"></script>
+	<script src="list-melee-weapons.js"></script>
+	<script src="list-ranged-weapons.js"></script>
+	<script src="list-armors.js"></script>
+	<script src="weapons.js"></script>
+	<script src="list-books.js"></script>
+	<script src="list-books-magic.js"></script>
+	<script src="list-books-combat.js"></script>
+	<script src="books.js"></script>
+	<script src="chest.js"></script>
+	<script>
+	
+	/**
+	 * all items
+	 */
+	function displayItems(chest)
+	{
+		var t=document.getElementById("itemsTable")
+		var wps=[]
+		var totalVal=0
+		var totalWeight=0
+		var ic = 0
+		for (var i in chest)
+		{
+			if (chest[i].type==="Melee Weapon"
+			 || chest[i].type==="Ranged Weapon"
+			 || chest[i].type==="Armor")
+				wps.push(chest[i])
+			else
+			{
+				var tr=document.createElement("tr")
+				var tdn = document.createElement("td")
+				tdn.innerHTML=chest[i].name
+				tr.appendChild(tdn)
+				var tdt = document.createElement("td")
+				tdt.innerHTML=chest[i].type
+				tr.appendChild(tdt)
+				var tdc = document.createElement("td")
+				if (chest[i].cat)
+					tdc.innerHTML=chest[i].cat
+				tr.appendChild(tdc)
+				var tdw = document.createElement("td")
+				tdw.innerHTML=chest[i].weight
+				tdw.style.textAlign="right"
+				tr.appendChild(tdw)
+				var tdv = document.createElement("td")
+				tdv.innerHTML=chest[i].val
+				tdv.style.textAlign="right"
+				tr.appendChild(tdv)
+				var tdd = document.createElement("td")
+				tdd.innerHTML=chest[i].desc
+				tr.appendChild(tdd)
+				if (ic%2==0)
+					tr.className="gray"
+				t.appendChild(tr)
+				totalVal+=chest[i].val
+				totalWeight+=chest[i].weight
+				ic++
+			}
+		}
+		displayWeapons(wps, {total:true, colors:true})
+		
+		if (ic===0)
+		{
+			var tr=document.createElement("tr")
+			var td = document.createElement("td")
+			td.innerHTML="No other items"
+			td.colSpan=6
+			tr.appendChild(td)
+			tr.className="gray"
+			t.appendChild(tr)
+			return
+		}
+		
+		// total
+		var tr=document.createElement("tr")
+		var tdt = document.createElement("td")
+		tdt.innerHTML="Total (items)"
+		tdt.colSpan=3
+		tr.appendChild(tdt)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=totalWeight
+		tdw.id="totalItemsWeight"
+		tdw.style.textAlign="right"
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=totalVal
+		tdv.id="totalItemsVal"
+		tdv.style.textAlign="right"
+		tr.appendChild(tdv)
+		//tr.appendChild(document.createElement("td"))
+		tr.style.backgroundColor="#DDF"
+		tr.style.fontWeight="bold"
+		t.appendChild(tr)
+		
+		
+		// debug
+		if (false)
+		{
+			document.getElementById("debug").innerHTML=""
+			for (var w in chest)
+			{
+				var p = document.createElement('p')
+				p.innerHTML=JSON.stringify(chest[w],2)
+				document.getElementById("debug").appendChild(p)
+			}
+		}
+	}
+	
+	/**
+	 * also returns the total value
+	 */
+	function displayGrandTotal()
+	{
+		var t = document.getElementById("ArmorTable")
+		try
+		{ var w = parseFloat(document.getElementById("totalWeaponsWeight").innerHTML) }
+		catch (err)
+		{ var w = 0 }
+		try 
+		{ w+= parseFloat(document.getElementById("totalItemsWeight").innerHTML) }
+		catch (err)
+		{ }
+		try
+		{ var v = parseFloat(document.getElementById("totalWeaponsVal").innerHTML) }
+		catch (err)
+		{ var v = 0 }
+		try 
+		{ v += parseFloat(document.getElementById("totalItemsVal").innerHTML) }
+		catch (err)
+		{ }
+		
+		var tr=document.createElement("tr")
+		var sep = document.createElement("tr")
+		sep.style.height = "3em"
+		t.appendChild(sep)
+		var tdt = document.createElement("td")
+		tdt.innerHTML="Grand total"
+		tdt.colSpan=4
+		tr.appendChild(tdt)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=w
+		tdw.id="totalWeight"
+		tdw.style.textAlign="right"
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=v
+		tdv.id="totalVal"
+		tdv.style.textAlign="right"
+		tr.appendChild(tdv)
+		tr.style.backgroundColor="#FDD"
+		tr.style.fontWeight="bold"
+		t.appendChild(tr)
+		
+	}
+	
+	function updateResults()
+	{
+		wipeResults()
+		var c = document.getElementsByName('choice')
+		for (var i in c)
+		{
+			if (c[i].checked)
+			{
+				var choice=c[i].value
+				break
+			}
+		}
+		
+		var v = parseInt(document.getElementById('itemsvalue').value)
+		
+		context = {}
+		
+		var o = document.getElementsByName('itemsowner')
+		for (var i in o)
+		{
+			if (o[i].checked)
+			{
+				context.owner=o[i].value
+				break
+			}
+		}
+		
+		var valueIsStrict = document.getElementById("valueIsStrict").checked
+
+		var weaponR = RandomWeaponSource(melee, ranged, armor)
+		var bookR = RandomBookSource(books, magicbooks, combatbooks)
+		
+		var rolledv = -10000
+		var safety = 0
+		var c = null
+		while (safety<100)
+		{
+			if (choice==="chest")
+				c = getChestContents(v, context, weaponR, bookR)
+			else if (choice==="wprack")
+				c=getWeaponRackContents(v, context, weaponR)
+			else if (choice==="library")
+				c=getLibraryContents(v,context,bookR)
+				
+			rolledv = calculateTotalValue(c)
+			
+			if (valueIsStrict && (rolledv<0.9*v || rolledv>1.1*v))
+				safety++
+			else
+			{
+				displayItems(c)
+				displayGrandTotal()
+				break
+			}
+			
+		}
+	}
+	
+	function wipeResults()
+	{
+				document.getElementById("results").innerHTML=`
+	<h3>Items</h3>
+	<table id="itemsTable">
+		<tr>
+			<th style="min-width:12em;">Name</th>
+			<th style="min-width:15em;" >Type</th>
+			<th style="min-width:21em;">Classes</th>
+			<th style="min-width:5em;" >Weight</th>
+			<th style="min-width:4em;" >Value</th>
+			<th style="width:100%;"    >Notes</th>
+		</tr>
+	</table>
+	
+	<h3>Weapons</h3>
+	<table id="MeleeWeaponsTable">
+		<tr>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:17em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+		</tr>
+	</table>
+	<div style="height:1em;"></div>
+	<table id="RangedWeaponsTable">
+		<tr>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:3.5em;" title="${getWeaponHelpText('min')}" >min</th> <!-- FIXME ??? Why .5 -->
+			<th style="min-width:4em;" title="${getWeaponHelpText('max')}"   >max</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+		</tr>
+	</table>
+	<div style="height:1em;"></div>
+	<table id="ArmorTable">
+		<tr>
+			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
+			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
+			<th style="min-width:16.25em;" title="${getWeaponHelpText('dexmod')}">DEX modifier</th> <!-- FIXME ??? Why .25 !!!! -->
+			<th style="min-width:10.25em;" title="${getWeaponHelpText('prot')}"   >PROT</th>
+			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+		</tr>
+	</table>
+	
+	<table id="totalTable">
+		<!--
+		<tr>
+			<th style="min-width:35em;">Name</th>
+			<th style="min-width:2em;">Weight</th>
+			<th style="min-width:3em;">Value</th>
+			<th style="width:100%;"   >Notes</th>
+		</tr>
+		-->
+	</table>
+
+	<p id="debug" style="font-family:monospace;">
+	</p>`;
+	}
+	</script>
+	<style>
+	fieldset {
+		font-family:sans-serif;
+	}
+	
+	th {
+
+	}
+	
+	.gray {
+		background-color:#EEE;
+	}
+	
+	td {
+		padding-right: 0.5em;
+		padding-left: 0.5em;
+	}
+	.menufield {
+		height:5em;
+		display:inline-block;
+		vertical-align:top;
+	}
+	
+	.emoji {
+		display:inline-block;
+		min-width:1.5em;
+		margin-right:0.2em;
+		text-align: center;
+	}
+	</style>
+</head>
+<body onload='updateResults();'>
+
+<!-- not in a form because of auto reload on submit -->
+<fieldset style="width:17em;" class="menufield">
+	<legend>Getting the inventory for..</legend>
+	
+	<div style="display:inline-block">
+		<div title="Chests contain a mix of items.">
+			<input type="radio" name="choice" value="chest" id="choicechest" checked />
+			<label for="choicechest">A chest</label>
+		</div>
+
+		<div title="Weapon racks only include weapons.">
+			<input type="radio" name="choice" value="wprack" id="choicewprack" />
+			<label for="choicewprack">A weapon rack</label>
+		</div>
+	</div>
+	<div style="display:inline-block">
+		<div title="Libraries only include books.">
+			<input type="radio" name="choice" value="library" id="choicelibrary" />
+			<label for="choicelibrary">A Library</label>
+		</div>
+		
+		<div title="Stores try to have a bit of everything and mark up their prices.">
+			<input type="checkbox" id="isStore" disabled> <label for="isStore">Store</label><br>
+		</div>
+		
+	</div>
+		
+</fieldset>
+<fieldset style="width:10em;" class="menufield">
+	<legend>Of total value..</legend>
+	<div title="The value will tend towards this parameter, but individual rolls can vary widely.">
+		<input id="itemsvalue" list="itemsvaluelist" value="50" style="width:4em" required/>
+		<datalist id="itemsvaluelist">
+			<option value="20">
+			<option value="50">
+			<option value="100">
+		</datalist>
+		Gold pieces<br>
+		<i>(Approximate)</i><br>
+	</div>
+	<div title="This forces re-rolling when the total value is not within 10% of the specified value.">
+	<input type="checkbox" id="valueIsStrict"> <label for="valueIsStrict">Strict</label><br>
+	</div>
+</fieldset>
+
+</fieldset>
+<fieldset style="width:7em;" class="menufield" title="This changes the repartition and average value of items.">
+	<legend>From..</legend>
+
+	<div>
+		<input type="radio" name="itemsowner" value="peasants" id="itemsownerpeasants" />
+		<label for="itemsownerpeasants">Peasants</label>
+	</div>
+
+	<div>
+		<input type="radio" name="itemsowner" value="soldiers" id="itemsownersoldiers" checked />
+		<label for="itemsownersoldiers">Soldiers</label>
+	</div>
+
+	<div>
+		<input type="radio" name="itemsowner" value="nobles" id="itemsownernobles" />
+		<label for="itemsownernobles">Nobles</label>
+	</div>
+</fieldset>
+
+<button onclick="updateResults()" style="vertical-align:bottom;">Roll</button>
+
+
+<div id="results">
+<p style="font-size:150%;">This is a JavaScript app, so you'll need to enable JavaScript.<br>If you don't want to run it online, it's fine, the repository is <a href="https://github.com/oleobal/loot">here</a><p>
+<!-- see JS wipeResults() -->
+</div>
+</body>

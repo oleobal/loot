@@ -65,10 +65,50 @@ items : [
 	
 	{
 		name:"Across the Stars",
-		cat:["Fiction", "Romance"],
+		cat:["Other"],
 		val:30,
 		desc:"The song of a young knight in love with whom he can never be with.",
-		commonness:[3, 0,1000]
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"Live, Battle and Travel",
+		cat:["Other"],
+		val:30,
+		desc:"A popular (if wordy) hero epic.",
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"Songs of the {people}",
+		cat:["Other"],
+		val:30,
+		desc:"A collection of traditional songs.",
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"The Art of measured chant",
+		cat:["Other"],
+		val:50,
+		desc:"An interesting treatise on rythm notation for music.",
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"Philosophy of the Ancients",
+		cat:["Other"],
+		val:60,
+		desc:"I wish I could spend my time pondering these questions.",
+		commonness:[1, 0, 1000]
+	},
+	
+	{
+		name:"Eastern Philosophy",
+		cat:["Other"],
+		val:70,
+		desc:"This is a fascinating and quite alien outlook on life.",
+		commonness:[1, 0, 1000]
 	},
 ],
 
@@ -130,14 +170,24 @@ subjectTypes : {
 			commonness:10
 		},
 		{
+			name:"Seafarers",
+			val:1,
+			commonness:2
+		},
+		{
 			name:"Pirates",
 			val:1,
-			commonness:5
+			commonness:2
 		},
 		{
 			name:"Nomads",
 			val:1.2,
 			commonness:5
+		},
+		{
+			name:"Barbarians",
+			val:1.2,
+			commonness:3
 		}
 	],
 	sceneries: [

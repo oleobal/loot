@@ -9,6 +9,7 @@ items : [
 		name:"The Secrets of {domain,c} Magic",
 		cat:["Magic"],
 		val:50,
+		uses:5,
 		desc:"Magic tomes are hard to come by, and this is better than nothing.",
 		commonness:[10, 0,1000]
 	},
@@ -16,6 +17,7 @@ items : [
 		name:"An Introduction to {domain,c}",
 		cat:["Magic"],
 		val:80,
+		uses:10,
 		desc:"I'm no expert, but I think this is pretty good. Very clear.",
 		commonness:[5, 0,1000]
 	},
@@ -23,6 +25,7 @@ items : [
 		name:"The Art of {domain,c}",
 		cat:["Magic"],
 		val:100,
+		uses:15,
 		desc:"The author is clearly a master of {domain,c} magic.",
 		commonness:[2, 0,1000]
 	},
@@ -32,6 +35,7 @@ items : [
 		name:"{element,c} ! A magic primer",
 		cat:["Magic"],
 		val:50,
+		uses:8,
 		desc:"Some parts are quite vague, but overall it is a good read.",
 		commonness:[10, 0,1000]
 	},
@@ -40,6 +44,7 @@ items : [
 		name:"Mastering {element,c}",
 		cat:["Magic"],
 		val:70,
+		uses:15,
 		desc:"{element,c} mages should have a copy of this in their collection.",
 		commonness:[5, 0,1000]
 	},
@@ -47,6 +52,7 @@ items : [
 		name:"Philosophy of {element,c}-bending",
 		cat:["Magic"],
 		val:100,
+		uses:20,
 		desc:"I'm not sure where it comes from, its approach is very different.",
 		commonness:[1, 0,1000]
 	},
@@ -61,7 +67,8 @@ badMods : [
 	},
 	{
 		"name":"with errors",
-		"val":0.8,
+		"val":0.75,
+		"uses":0.6,
 		"desc":"Many errors were made when this one was copied.",
 		"commonness":[20, 0, 1000]
 	}
