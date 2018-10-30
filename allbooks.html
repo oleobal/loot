@@ -13,6 +13,10 @@
 		var t = document.getElementById("bookTable")
 		var c = getAllBookCombinations(books, magicbooks, combatbooks)
 		
+		// add 'debug' to the GET arguments to enable debug output
+		var debug = (window.location.search.substr(1).indexOf("debug") >=0)
+		
+		
 		// this is because getAllBookCombinations returns duplicates currently
 		// and just pruning them is less work than building better logic
 		// remember a name should ever map to one stat block
@@ -44,7 +48,8 @@
 				console.log("Eliminated duplicate : "+c[i].name)
 			}
 			
-			d.innerHTML+= JSON.stringify(c[i],2)+"<br>"
+			if (debug)
+				d.innerHTML+= JSON.stringify(c[i],2)+"<br>"
 		}
 	}
 	</script>
@@ -67,7 +72,7 @@
 <body onload="displayAll()">
 <table id="bookTable">
 	<tr>
-		<th style="min-width:20em">Title</th>
+		<th style="min-width:25em">Title</th>
 		<th style="min-width:10em">Categories</th>
 		<th style="min-width:4em">Uses</th>
 		<th style="min-width:4em">Value</th>

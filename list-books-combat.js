@@ -10,7 +10,7 @@ items : [
 		cat:["Combat"],
 		val:50,
 		uses:5,
-		desc:"A reasonable introduction to the {weapon1h}-fighting.",
+		desc:"A reasonable introduction to {weapon1h}-fighting.",
 		commonness:[10, 0,1000]
 	},
 	

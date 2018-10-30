@@ -9,7 +9,7 @@ As of now, it aims to include :
  - A *creature generator* for NPCs and monsters
  - An *encounter manager* for combat
 
-These tools are mainly intended for game masters, to allow them to focus on what master and create richer worlds more easily. They are made under the belief that quality companion facilities are critical for players of FPLE to enjoy their time as much as possible.
+These tools are mainly intended for game masters, to allow them to focus on what matters and create richer worlds more easily. They are made under the belief that quality companion facilities are critical for players of FPLE to enjoy their time as much as possible.
 
 All the tools are client-side JavaScript. This provides ease of use (everyone has a browser) and flexibility (online or offline), at the cost of having to develop in JavaScript.
 
@@ -17,7 +17,7 @@ All the tools are client-side JavaScript. This provides ease of use (everyone ha
 
 The loot generator is used to both build complete lists of all possible items and generate inventories for treasure chests or stores.
 
-The `list-*` files define objects containing list of items, along with possible modifiers. These objects can then be passed to processing facilities ; as of now, there are only two : books.js and weapons.js (which manages melee, ranged and armor). A guiding principle throughout is that a single item name only maps to a single stat block. This way, a player can write down the name of an item, and its stats can be checked later on the item lists.
+The `list-*` files define objects containing list of items, along with possible modifiers. These objects can then be passed to processing facilities ; as of now, there are only two : `books.js` and `weapons.js` (which manages melee, ranged and armor). A guiding principle throughout is that a single item name only maps to a single stat block. This way, a player can write down the name of an item, and its stats can be checked later on the item lists.
 
 Three files are meant to be user-facing :
  - `index.html` is the loot generator proper
@@ -47,9 +47,13 @@ Items are defined by a large number of attributes, to each of which a modifier c
 
 Books have no need for the complex damage scaling, but they do instead have *subjects*, in addition to modifiers. A book will always be given a subject (if it needs one), and then possibly a modifier. This is done through string substitution in the titles and descriptions.
 
+Books that are not mere fluff (skill books) are also given a scalable number of *uses*, which represent their quality as instruction books.
+
 ## Creature generator
 
 The creature generator will be split it two, humanoids and monsters, with humanoids leveraging the equipment lists from the loot generator.
+
+User-facedness is a bit different than with items, in that there is no need to display every possible combination. Instead, general rules for the creature should be given : base stats and possible equipment and modifiers. I expect the main use of the generator proper will be in the encounter manager.
 
 Generating encounters (from a difficulty metric and an environment) is a possibility, but an uncertain one. Difficulty is hard to evaluate, with many game masters constantly reevaluating it (ie fudging rolls) ; in addition, encounters must make sense in the present situation. In practice, I believe presenting DMs with a list of creatures (possibly ordered by difficulty rating) would be sufficient.
 

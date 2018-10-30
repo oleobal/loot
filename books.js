@@ -90,7 +90,7 @@ function RandomBookSource(...booksobj)
 			r.booksObjPie.push(o)
 		
 		r.badModsPie[o]=[]
-		for (var i in r.badMods)
+		for (var i in r.badMods[o])
 		{
 			for (var j = 0;j < r.badMods[o][i].commonness[0];j++)
 				r.badModsPie[o].push(i)
