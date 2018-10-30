@@ -216,6 +216,10 @@
 		catch (err) {}
 	}
 	
+	function manageNotesChange(partID)
+	{
+		participants[partID].notes = document.getElementById("detailedPartNotes"+partID).value
+	}
 	
 	
 	function generateCreature(partID)
@@ -298,8 +302,9 @@
 		
 		d.innerHTML = `<input class="partInit${partID}" type="number" onchange="manageInitiativeChange(${partID},detailedPartInit${partID})" id="detailedPartInit${partID}" value="${p.initiative}" title="Initiative score" style="width:3em; font-size:250%;" required/><input oninput="manageNameChange(${partID},detailedPartName${partID})" title="Name" class="partName${partID}" id="detailedPartName${partID}" value="${p.name}" style="width:calc(100% - 6em);font-size:250%;"/><input oninput="manageHealthChange(${partID},detailedPartHealth${partID})" type="number" class="partHealth${partID}" title="Hitpoints (health)" id="detailedPartHealth${partID}" value="${p.currentHealth}" style="width:3em; font-size:250%;"/>
 		
-		<p title="Generate a stat block. Will automatically set HP, but not initiative.">Generate a.. ${htmlCreatureDropdown}&nbsp;? <button onclick="generateCreature(${partID})">Roll !</button></p>
+		<textarea id="detailedPartNotes${partID}" oninput="manageNotesChange(${partID})" placeholder="Take notes here" spellcheck="true" style="width:100%;height:10em;overflow-y:scroll">${p.notes}</textarea>
 		
+		<p title="Generate a stat block. Will automatically set HP, but not initiative.">Generate a.. ${htmlCreatureDropdown}&nbsp;? <button onclick="generateCreature(${partID})">Roll !</button></p>
 		<div id="detailedPartStats${partID}">
 		${creaDisplay}
 		</div>
