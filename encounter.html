@@ -4,6 +4,7 @@
 	
 	<script src="utility.js"></script>
 	<script src="web-utility.js"></script>
+	
 	<script src="list-melee-weapons.js"></script>
 	<script src="list-ranged-weapons.js"></script>
 	<script src="list-armors.js"></script>
@@ -15,6 +16,7 @@
 	
 	<script src="chest.js"></script>
 	
+	<script src="list-humanoids.js"></script>
 	<script src="humanoids.js"></script>
 	<script>
 	
@@ -31,6 +33,16 @@
 	 * (whereas displayed participants are in initiative order)
 	 */
 	var participantIDs=[]
+	var participants = {}
+	// yes, splitting those two is stupid
+	
+	
+	
+	var gearSources = {
+		"Melee Weapon":RandomWeaponSource(melee),
+		"Ranged Weapon":RandomWeaponSource(ranged),
+		"Armor":RandomWeaponSource(armor)
+	}
 	
 	
 	function initialize()
@@ -62,14 +74,7 @@
 		return b.childNodes[0].value - a.childNodes[0].value
 	}
 	
-	/**
-	 * change the right panel to that participant
-	 */
-	function displayDetailedParticipant(partID)
-	{
-		//TODO
-	}
-	
+
 	function resetAllParticipantTentativeActions()
 	{
 		for (var i in participantIDs)
@@ -148,17 +153,97 @@
 		document.getElementById("part"+partID).classList.add("markedParticipant")
 	}
 	
-	function manageHealthChange(partID)
+	
+	
+	function manageInitiativeChange(partID, source)
 	{
-		if (document.getElementById("partHealth"+partID).value > 0)
-			document.getElementById("part"+partID).classList.remove("deadParticipant")
+		if (!source)
+			var source = document.getElementById("partInit"+partID)
+		if (typeof(source) === "string")
+			var source = document.getElementById(source)
 			
-		else
-			document.getElementById("part"+partID).classList.add("deadParticipant")
+		// so, through apparent MAGIC, an ID string becomes an element ref
+		// whatever
+		
+		try{
+			participants[partID].initiative = parseFloat(source.value)
+			orderParticipants()
+			
+			var e = document.getElementsByClassName("partInit"+partID)
+			for (var i in e)
+				e[i].value = participants[partID].initiative
+		}
+		catch (err) {}
 	}
+	
+	function manageHealthChange(partID, source)
+	{
+		if (!source)
+			var source = document.getElementById("partHealth"+partID)
+		if (typeof(source) === "string")
+			var source = document.getElementById(source)
+		
+		try{
+			participants[partID].currentHealth = parseFloat(source.value)
+			
+			if (participants[partID].currentHealth > 0)
+				document.getElementById("part"+partID).classList.remove("deadParticipant")
+				
+			else
+				document.getElementById("part"+partID).classList.add("deadParticipant")
+			
+			var e = document.getElementsByClassName("partHealth"+partID)
+			for (var i in e)
+				e[i].value = participants[partID].currentHealth
+		}
+		catch (err) {}
+	}
+	
+	function manageNameChange(partID, source)
+	{
+		if (!source)
+			var source = document.getElementById("partName"+partID)
+		if (typeof(source) === "string")
+			var source = document.getElementById(source)
+		
+		try{
+			participants[partID].name = source.value
+			
+			var e = document.getElementsByClassName("partName"+partID)
+			for (var i in e)
+				e[i].value = participants[partID].name
+		}
+		catch (err) {}
+	}
+	
+	
+	
+	function generateCreature(partID)
+	{
+		var cname = document.getElementById("detailedPartCreatureGenSelect"+partID).value
+		var p = participants[partID]
+		
+		for (var j=0 ; j < humanoids.items.length ; j++)
+		{
+			if (humanoids.items[j].name === cname)
+				break
+		}
+		
+		// FIXME if I do a RandomNPCSource one day
+		p.creature = finalizeHumanoid(humanoids.items[j],null,gearSources)
+		var s = document.getElementById("detailedPartStats"+partID)
+		s.innerHTML=""
+		s.appendChild(getNPCdisplay(p.creature))
+		
+		document.getElementById("partHealth"+partID).value = p.creature.hp
+		manageHealthChange(partID, "partHealth"+partID)
+		
+	}
+	
 	
 	/**
 	 * return a HTML participant
+	 * also adds it to the participantIDs list and participants object
 	 */
 	function getParticipant(initiative, name)
 	{
@@ -170,11 +255,12 @@
 		else
 			var partID=participantIDs[participantIDs.length-1] + 1
 		participantIDs.push(partID)
+		participants[partID] = {'name':name, 'initiative':initiative, 'currentHealth':7, 'notes':"", 'creature':null}
 		
 		var p = document.createElement('div')
 		p.id = "part"+partID
 		p.classList.add("participant")
-		p.innerHTML = `<input type="number" onchange="orderParticipants()" id="partInit${partID}" value="${initiative}" title="Initiative score" style="width:3em" required/><input title="Name" name="partName" id="partName${partID}" value="${name}" style="width:calc(100% - 11em)"/><input oninput="manageHealthChange(${partID})" type="number" title="Health" id="partHealth${partID}" value="7" style="width:3em"/><button id="partButtMark${partID}" title="Mark this participant" type="button" onclick="markParticipant(${partID})" style="width:2.5em;">M</button><button name="partButt" id="partButt${partID}" title="Open detailed view" type="button" onclick="displayDetailedParticipant(${partID})" style="width:2.5em;">&gt;</button><br><span id="partAdd${partID}"><button id="buttPartAdd${partID}" title="Add a participant after this one" type="button" onclick="tentativelyAddParticipantAfter(${partID})" style="width:50%">Add after</button></span><span id="partRem${partID}"><button id="buttPartRem${partID}" title="Remove this participant" type="button" onclick="tentativelyRemoveParticipant(${partID})"   style="width:50%">Remove</button></span>
+		p.innerHTML = `<input class="partInit${partID}" type="number" onchange="manageInitiativeChange(${partID})" id="partInit${partID}" value="${initiative}" title="Initiative score" style="width:3em" required/><input oninput="manageNameChange(${partID})" title="Name" class="partName${partID}" id="partName${partID}" value="${name}" style="width:calc(100% - 11em)"/><input class="partHealth${partID}" oninput="manageHealthChange(${partID})" type="number" title="Hitpoints (health)" id="partHealth${partID}" value="7" style="width:3em"/><button id="partButtMark${partID}" title="Mark this participant" type="button" onclick="markParticipant(${partID})" style="width:2.5em;">M</button><button id="partButtDetail${partID}" title="Open detailed view" type="button" onclick="displayDetailedParticipant(${partID})" style="width:2.5em;">&gt;</button><br><span id="partAdd${partID}"><button id="buttPartAdd${partID}" title="Add a participant after this one" type="button" onclick="tentativelyAddParticipantAfter(${partID})" style="width:50%">Add after</button></span><span id="partRem${partID}"><button id="buttPartRem${partID}" title="Remove this participant" type="button" onclick="tentativelyRemoveParticipant(${partID})"   style="width:50%">Remove</button></span>
 		`
 		// TODO align the arrow button to the right
 		// TODO add confirmations to add and remove buttons, somehow
@@ -182,6 +268,44 @@
 		
 		return p
 	}
+	
+	/**
+	 * change the right panel to that participant
+	 */
+	function displayDetailedParticipant(partID)
+	{
+	
+		var oldb = document.getElementsByClassName("partButtDetailSelected")
+		for (var i=0 ; i < oldb.length; i++)
+			oldb[i].classList.remove("partButtDetailSelected")
+		
+		document.getElementById("partButtDetail"+partID).classList.add("partButtDetailSelected")
+		
+		var d = document.getElementById("detailedView")
+		var p = participants[partID]
+		
+		// kinda wasteful to put this here, but I don't want it lying around
+		var htmlCreatureDropdown=`<select id="detailedPartCreatureGenSelect${partID}">`
+		for (var i in humanoids.items)
+		{
+			htmlCreatureDropdown+="<option value=\""+humanoids.items[i].name+"\">"+humanoids.items[i].name+"</option>"
+		}
+		htmlCreatureDropdown+="</select>"
+		
+		var creaDisplay = getNPCdisplay(p.creature).outerHTML
+		if (typeof(creaDisplay) === "undefined")
+			creaDisplay=""
+		
+		d.innerHTML = `<input class="partInit${partID}" type="number" onchange="manageInitiativeChange(${partID},detailedPartInit${partID})" id="detailedPartInit${partID}" value="${p.initiative}" title="Initiative score" style="width:3em; font-size:250%;" required/><input oninput="manageNameChange(${partID},detailedPartName${partID})" title="Name" class="partName${partID}" id="detailedPartName${partID}" value="${p.name}" style="width:calc(100% - 6em);font-size:250%;"/><input oninput="manageHealthChange(${partID},detailedPartHealth${partID})" type="number" class="partHealth${partID}" title="Hitpoints (health)" id="detailedPartHealth${partID}" value="${p.currentHealth}" style="width:3em; font-size:250%;"/>
+		
+		<p title="Generate a stat block. Will automatically set HP, but not initiative.">Generate a.. ${htmlCreatureDropdown}&nbsp;? <button onclick="generateCreature(${partID})">Roll !</button></p>
+		
+		<div id="detailedPartStats${partID}">
+		${creaDisplay}
+		</div>
+		`
+	}
+	
 	</script>
 	
 	<style>
@@ -204,14 +328,50 @@
 		border-style:dotted;
 		background-color:#FCC;
 	}
+	.deadParticipant input {
+		background-color:#FDD;
+	}
 	
+	.partButtDetailSelected {
+		background-color:#FFA;
+		border-color:#00F;
+	}
+	
+	
+	
+	#participants {
+		display:inline-block;
+		width:30%;
+		max-width:23em;
+		height:100%;
+		min-height:100%;
+		max-height:100%;
+		overflow-y:scroll;"
+	}
+	
+	#detailedView {
+		display:inline-block;
+		min-width:70%;
+		width: calc(100% - 23em);
+		height:100%;
+		min-height:100%;
+		max-height:100%;
+		overflow-y:scroll;
+		overflow-x: hidden;
+	}
+	/* all children of detailedView */
+	#detailedView > * {
+		padding: 5px;
+	}
 	</style>
 </head>
 <body onload='initialize()'>
-
-
-<div id="participants"
-style="display:inline-block; width:30%; max-width:23em; height:100%; min-height:100%; max-height:100%; overflow-y:scroll;">
+<div id="participants">
 <p style="font-size:120%;">This is a JavaScript app, so you'll need to enable JavaScript.<br>If you don't want to run it online, it's fine, the repository is <a href="https://github.com/oleobal/loot">here</a><p>
+</div><div id="detailedView">
+
+<p>Click the arrow on one of the participants to bring up a detailed view</p>
+
 </div>
+
 </body>

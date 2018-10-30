@@ -65,40 +65,42 @@ function latexTableFromPerson(ch)
  */
 function finalizeHumanoid(p, mod, gearSources)
 {
+	var fp = Object.assign({},p)
 	// TODO handle modifiers
 	
-	if (!p.hp)
+	if (!fp.hp)
 	{
-		p.hp=7+p.abilities.CONS
+		fp.hp=7+fp.abilities.CONS
 	}
-	var inv = Object.assign({},p.inventory)
-	p.inventory=[]
+	var inv = Object.assign({},fp.inventory)
+	fp.inventory=[]
 	var constraints = {catmust:[]}
-	var s = Object.keys(p.skills)
+	var s = Object.keys(fp.skills)
 	for (var i in s)
 		constraints.catmust.push(s[i])
-	
 	for (var i in inv)
 	{
-		if (inv[i].name == "Gold")
-			p.inventory.push({type:"Gold", val:getRandom(Math.max(0,inv[i].val-5), inv[i].val+5) // FIXME better repartition
+		console.log(i, inv[i])
+		
+		if (inv[i].type == "Gold" || inv[i].name == "Gold")
+			fp.inventory.push({name:"Gold", type:"Gold", val:getRandom(Math.max(0,inv[i].val-5), inv[i].val+5) // FIXME better repartition
 			                  , weight:0, name:"Gold", desc:"A pouch of gold."})
 		else
-			p.inventory.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, simpleDictConcat(constraints, inv[i].constraints))[0])
+			fp.inventory.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, simpleDictConcat(constraints, inv[i].constraints))[0])
 	}
 	
-	if (p.armorVal > 0)
-		p.armor = gearSources["Armor"].getRandomWeapons(1, p.armorVal)[0]
+	if (fp.armorVal > 0)
+		fp.armor = gearSources["Armor"].getRandomWeapons(1, fp.armorVal)[0]
 	
-	p.cr = p.abilities.STR
-	     + p.abilities.DEX
-	     + p.abilities.INT
-	     + p.abilities.WIS /2
-	     + p.abilities.CHA /2
-	     + p.abilities.CONS
-	     + p.abilities.WILL /2
-	     + p.abilities.LUCK /2
-	     + p.abilities.MANA /2
+	fp.cr = fp.abilities.STR
+	      + fp.abilities.DEX
+	      + fp.abilities.INT
+	      + fp.abilities.WIS /2
+	      + fp.abilities.CHA /2
+	      + fp.abilities.CONS
+	      + fp.abilities.WILL /2
+	      + fp.abilities.LUCK /2
+	      + fp.abilities.MANA /2
 		 
-	return p
+	return fp
 }

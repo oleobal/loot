@@ -3,182 +3,19 @@
 	<meta charset="utf-8"/>
 	<script src="utility.js"></script>
 	<script src="web-utility.js"></script>
+	
 	<script src="list-melee-weapons.js"></script>
 	<script src="list-ranged-weapons.js"></script>
 	<script src="list-armors.js"></script>
 	<script src="weapons.js"></script>
+	
 	<script src="list-books.js"></script>
 	<script src="list-books-magic.js"></script>
 	<script src="books.js"></script>
+	
 	<script src="list-humanoids.js"></script>
 	<script src="humanoids.js"></script>
 	<script>
-	function displayNPC(npc)
-	{
-		var table = document.createElement('table')
-		table.style.borderCollapse="collapse"
-		table.style.borderStyle="solid"
-		var tr = document.createElement('tr')
-		tr.style.borderBottom = "1px solid"
-		var tdn = document.createElement('td')
-		tdn.style.textAlign="center"
-		tdn.colSpan = 2
-		tdn.innerHTML = "<b>"+npc.name+"</b>"
-		tr.appendChild(tdn)
-		var tdh = document.createElement('td')
-		tdh.innerHTML = "<i>HP&nbsp;:</i> <b>"+npc.hp+"</b>"
-		tr.appendChild(tdh)
-		var td = document.createElement('td')
-		td.innerHTML = npc.alignment
-		tr.appendChild(td)
-		
-		table.appendChild(tr)
-		
-		
-		tr = document.createElement('tr')
-		var tda = document.createElement('td')
-		tda.style.verticalAlign="top"
-		// abilities
-		var tab = document.createElement('table')
-		
-		var abi = Object.keys(npc.abilities)
-		for (var i in abi)
-		{
-			var tra = document.createElement('tr')
-			td = document.createElement('td')
-			td.innerHTML = abi[i]
-			tra.appendChild(td)
-			td = document.createElement('td')
-			if (abi[i] == "DEX" && npc.armor && npc.armor.dexmod != 0)
-			{
-				td.innerHTML=npc.abilities[abi[i]]+npc.armor.dexmod
-				if (npc.armor.dexmod > 0)
-					tra.style.color="#0A0"
-				else
-					tra.style.color="#A00"
-				tra.title="DEX "+npc.abilities[abi[i]]+" "+(npc.armor.dexmod>0?'+':'') + npc.armor.dexmod
-			}
-			else
-				td.innerHTML=npc.abilities[abi[i]]
-			td.style.textAlign = "right"
-			tra.appendChild(td)
-			tab.appendChild(tra)
-		}
-		tda.appendChild(tab)
-		tr.appendChild(tda)
-		
-		var tds = document.createElement('td')
-		tds.style.verticalAlign="top"
-		tds.style.borderLeft="1px solid"
-		tds.style.borderRight="1px solid"
-		tab = document.createElement('table')
-		var ski = Object.keys(npc.skills)
-		for (var i in ski)
-		{
-			var tra = document.createElement('tr')
-			td = document.createElement('td')
-			td.innerHTML = ski[i]
-			tra.appendChild(td)
-			td = document.createElement('td')
-			td.innerHTML=npc.skills[ski[i]]
-			td.style.textAlign = "right"
-			tra.appendChild(td)
-			tab.appendChild(tra)
-		}
-		tds.appendChild(tab)
-		tr.appendChild(tds)
-		
-		var tdi = document.createElement('td')
-		tdi.colSpan=2
-		tdi.style.verticalAlign="top"
-		tab = document.createElement('table')
-		var inv = Object.keys(npc.inventory)
-		for (var i in inv)
-		{
-			var item = npc.inventory[inv[i]]
-			var tra = document.createElement('tr')
-			tra.title = item.toString()
-			td = document.createElement('td')
-			td.style.minWidth="9em"
-			td.innerHTML = item.name
-			tra.appendChild(td)
-			if (item.type.indexOf("Weapon")>=0)
-			{
-				td = document.createElement('td')
-				var mods = 0
-				{
-					mods+=npc.abilities.DEX
-					if (npc.armor)
-						mods+=npc.armor.dexmod
-					var wpSkill = 0
-					for (var j in ski)
-					{
-						if (item.cat.indexOf(ski[j]) >= 0 && npc.skills[ski[j]] > wpSkill)
-							wpSkill = npc.skills[ski[j]]
-					}
-					mods+=wpSkill
-				}
-				if (mods > 0) {var wpColor = "#0A0" }
-				else if (mods > 0) {var wpColor = "#A00" }
-				else {var wpColor = "#000" }
-				td.innerHTML = item.atk+mods
-				td.title="ATK "+item.atk+" "+(mods>0?'+':'') + mods
-				if (item.hands==1)
-					td.title+="\n"+(item.atk+mods+1)+" if off-hand free"
-				td.style.color = wpColor
-				td.style.textAlign="right"
-				td.style.minWidth="1em"
-				tra.appendChild(td)
-				td = document.createElement('td')
-				td.innerHTML = item.par+mods
-				td.title="PAR "+item.par+" "+(mods>0?'+':'') + mods
-				if (item.hands==1)
-					td.title+="\n"+(item.par+mods+1)+" if off-hand free"
-				td.style.color = wpColor
-				td.style.textAlign="right"
-				td.style.minWidth="1em"
-				tra.appendChild(td)
-			}
-			else
-			{
-				tra.appendChild(document.createElement('td'))
-				tra.appendChild(document.createElement('td'))
-			}
-			td = document.createElement('td')
-			td.innerHTML=item.val
-			td.style.textAlign = "right"
-			td.style.minWidth="1.5em"
-			tra.appendChild(td)
-			tab.appendChild(tra)
-		}
-		tdi.appendChild(tab)
-		tr.appendChild(tdi)
-
-		table.appendChild(tr)
-		
-		if (npc.armor)
-			var armor = npc.armor
-		else
-			var armor = {name:"No armor", dmg:"0",toString:function(){return "Not wearing armor"}}
-		tr = document.createElement('tr')
-		tr.title = armor.toString()
-		tr.style.borderTop = "1px solid"
-		td = document.createElement('td')
-		td.colSpan=2
-		td.style.textAlign="center"
-		td.innerHTML = armor.name
-		tr.appendChild(td)
-		td = document.createElement('td')
-		td.colSpan=2
-		td.style.textAlign="right"
-		td.style.paddingRight="1em"
-		td.innerHTML = "<i>PROT&nbsp;:</i> <b>"+getWebDiceDisplay(armor.dmg)+"</b>"
-		tr.appendChild(td)
-		
-		table.appendChild(tr)
-		
-		document.getElementById('results').appendChild(table)
-	}
 	
 	function updateResults()
 	{
@@ -190,7 +27,7 @@
 			"Armor":RandomWeaponSource(armor)
 		}
 		for (var i in humanoids.items)
-			displayNPC(finalizeHumanoid(humanoids.items[i],null,gearSources))
+			document.getElementById('results').appendChild(getNPCdisplay(finalizeHumanoid(humanoids.items[i],null,gearSources)))
 	}
 	</script>
 	<style>
