@@ -61,6 +61,28 @@ function simpleDictConcat(a,b)
 	return res
 }
 
+/**
+ * returns an array that is the inner join of the two
+ * (order is not considered)
+ * indexOf() is used, so no objects
+ * duplicates are eliminated
+ */
+function innerJoinArrays(a,b)
+{
+	if (!a || !b || a.length==0 || b.length==0)
+		return []
+		
+	var res = []
+	for (var i in a)
+	{
+		if (b.indexOf(a[i])>=0 && res.indexOf(a[i])<0)
+			res.push(a[i])
+	}
+	return res
+}
+
+
+
 // uniform
 // max exclusive
 function getRandom(min, max)

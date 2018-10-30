@@ -78,15 +78,18 @@ function finalizeHumanoid(p, mod, gearSources)
 	var s = Object.keys(fp.skills)
 	for (var i in s)
 		constraints.catmust.push(s[i])
+	
 	for (var i in inv)
 	{
-		console.log(i, inv[i])
-		
 		if (inv[i].type == "Gold" || inv[i].name == "Gold")
 			fp.inventory.push({name:"Gold", type:"Gold", val:getRandom(Math.max(0,inv[i].val-5), inv[i].val+5) // FIXME better repartition
 			                  , weight:0, name:"Gold", desc:"A pouch of gold."})
 		else
-			fp.inventory.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, simpleDictConcat(constraints, inv[i].constraints))[0])
+		{
+			var cons = simpleDictConcat(constraints, inv[i].constraints)
+			cons.catmust = innerJoinArrays(constraints.catmust, inv[i].constraints.catmust)
+			fp.inventory.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, cons)[0])
+		}
 	}
 	
 	if (fp.armorVal > 0)
@@ -101,6 +104,6 @@ function finalizeHumanoid(p, mod, gearSources)
 	      + fp.abilities.WILL /2
 	      + fp.abilities.LUCK /2
 	      + fp.abilities.MANA /2
-		 
+	
 	return fp
 }

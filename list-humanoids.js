@@ -55,8 +55,11 @@ items : [
 			"Hunting":1
 		},
 		inventory:[
-			{name:"Melee Weapon", val:60, constraints : {catcant:["Shields"]}},
-			{name:"Melee Weapon", val:20, constraints: {catcant:["2-handed"]}},
+			// what I would like to express here is
+			// "either a sword and a shield, or a two-handed weapon"
+			// but I cannot
+			{name:"Melee Weapon", val:60, constraints: {catcant:["Shields","2-handed"]}},
+			{name:"Melee Weapon", val:20, constraints: {catmust:["Shields", "Daggers"]}},
 			{name:"Gold", val:5},
 		],
 		armorVal:60

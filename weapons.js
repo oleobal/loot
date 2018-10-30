@@ -491,7 +491,7 @@ function RandomWeaponSource(...weaponsobj)
 				// ok retrying until it works is stupid
 				if (constraints)
 				{
-					if (constraints.catmust)
+					if (constraints.catmust && constraints.catmust.length > 0)
 					{
 						var ok = false
 						for (i in c)
@@ -505,7 +505,7 @@ function RandomWeaponSource(...weaponsobj)
 						if (!ok)
 							{w = {val:-1000};continue}
 					}
-					if (constraints.catcant)
+					if (constraints.catcant && constraints.catmust.length > 0)
 					{
 						var ok = true
 						for (i in c)
