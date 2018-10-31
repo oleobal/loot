@@ -258,12 +258,13 @@ function getNPCdisplay(npc)
 	var table = document.createElement('table')
 	table.style.borderCollapse="collapse"
 	table.style.borderStyle="solid"
+	table.style.display="inline-block"
 	var tr = document.createElement('tr')
 	tr.style.borderBottom = "1px solid"
 	var tdn = document.createElement('td')
 	tdn.style.textAlign="center"
 	tdn.colSpan = 2
-	tdn.innerHTML = "<b>"+npc.name+"</b>"
+	tdn.innerHTML = "<b title=\"Challenge Rating : "+npc.cr+"\">"+npc.name+"</b>"
 	tr.appendChild(tdn)
 	
 	var tdh = document.createElement('td')
@@ -325,6 +326,9 @@ function getNPCdisplay(npc)
 	{
 		var tra = document.createElement('tr')
 		td = document.createElement('td')
+		td.style.minWidth="6em"
+		td.style.maxWidth="6em"
+		td.style.overflowX="scroll"
 		td.innerHTML = ski[i]
 		tra.appendChild(td)
 		td = document.createElement('td')
@@ -335,6 +339,8 @@ function getNPCdisplay(npc)
 	}
 	tds.appendChild(tab)
 	tr.appendChild(tds)
+	
+	// inventory
 	
 	var tdi = document.createElement('td')
 	tdi.colSpan=2
@@ -347,11 +353,17 @@ function getNPCdisplay(npc)
 		var tra = document.createElement('tr')
 		tra.title = item.toString()
 		td = document.createElement('td')
-		td.style.minWidth="9em"
+		td.style.minWidth="11em"
+		td.style.maxWidth="11em"
 		td.innerHTML = item.name
 		tra.appendChild(td)
 		if (item.type.indexOf("Weapon")>=0)
 		{
+			if (item.hands == 1)
+				td.innerHTML +="<span style=\"opacity: 0.7; color:#880; font-size:80%;\"> "+item.hands+"</span>"
+			else
+				td.innerHTML +="<span style=\"opacity: 0.7; color:#A50; font-size:80%;\"> "+item.hands+"</span>"
+			
 			td = document.createElement('td')
 			var mods = 0
 			{

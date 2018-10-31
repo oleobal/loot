@@ -505,7 +505,7 @@ function RandomWeaponSource(...weaponsobj)
 						if (!ok)
 							{w = {val:-1000};continue}
 					}
-					if (constraints.catcant && constraints.catmust.length > 0)
+					if (constraints.catcant && constraints.catcant.length > 0)
 					{
 						var ok = true
 						for (i in c)

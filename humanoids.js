@@ -74,23 +74,16 @@ function finalizeHumanoid(p, mod, gearSources)
 	}
 	var inv = Object.assign({},fp.inventory)
 	fp.inventory=[]
-	var constraints = {catmust:[]}
-	var s = Object.keys(fp.skills)
-	for (var i in s)
-		constraints.catmust.push(s[i])
-	
-	for (var i in inv)
+	var constraints = {}
+	if (fp.inventoryWeaponsNeedSkills)
 	{
-		if (inv[i].type == "Gold" || inv[i].name == "Gold")
-			fp.inventory.push({name:"Gold", type:"Gold", val:getRandom(Math.max(0,inv[i].val-5), inv[i].val+5) // FIXME better repartition
-			                  , weight:0, name:"Gold", desc:"A pouch of gold."})
-		else
-		{
-			var cons = simpleDictConcat(constraints, inv[i].constraints)
-			cons.catmust = innerJoinArrays(constraints.catmust, inv[i].constraints.catmust)
-			fp.inventory.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, cons)[0])
-		}
+		constraints = {catmust:[]}
+		var s = Object.keys(fp.skills)
+		for (var i in s)
+			constraints.catmust.push(s[i])
 	}
+	
+	fp.inventory = getObjects(inv, constraints, gearSources)
 	
 	if (fp.armorVal > 0)
 		fp.armor = gearSources["Armor"].getRandomWeapons(1, fp.armorVal)[0]
@@ -107,3 +100,51 @@ function finalizeHumanoid(p, mod, gearSources)
 	
 	return fp
 }
+
+/**
+ * takes an NPC inventory description and returns a set of objects
+ */
+function getObjects(inv, constraints, gearSources)
+{
+	var result = []
+	for (var i in inv)
+	{
+		if (inv[i].name === "EITHER")
+		{
+			var choice = inv[i].options[getRandom(0,inv[i].options.length)]
+			if (typeof(choice.name) !== "undefined") // it's not a list already
+				choice = [choice]                    // not great, I know
+			result = result.concat(getObjects(choice, constraints, gearSources))
+		}
+		
+		else if (inv[i].name === "Gold")
+			result.push({name:"Gold", type:"Gold", val:getRandom(Math.max(0,inv[i].val-5), inv[i].val+5) // FIXME better repartition
+			                  , weight:0, name:"Gold", desc:"A pouch of gold."})
+		
+		else
+		{
+			var cons = simpleDictConcat(constraints, inv[i].constraints)
+			cons.catmust = []
+			if (!inv[i].constraints || !inv[i].constraints.catmust || inv[i].constraints.catmust.length == 0)
+				var a = undefined
+			else
+				var a = inv[i].constraints.catmust
+			if (!constraints || !constraints.catmust || constraints.catmust.length == 0)
+				var b = undefined
+			else
+				var b = constraints.catmust
+			
+			if (!a)
+				cons.catmust = b
+			else if (!b)
+				cons.catmust = a
+			else
+				cons.catmust = innerJoinArrays(a,b)
+			
+			result.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, cons)[0])
+		}
+	}
+	return result
+}
+
+
