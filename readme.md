@@ -60,3 +60,6 @@ Generating encounters (from a difficulty metric and an environment) is a possibi
 ## Encounter manager
 
 A simple application for managing turn order (initiative), health points, stats.. In an encounter. The user-facing page is `encounter.html`.
+
+On the left is a list of participants to the encounter, sorted by initiative (the field to the right of the name ; left of the name are current HP). It is assumed initiative will be hand-rolled.
+Clicking the arrow button opens a detailed view for each participant.

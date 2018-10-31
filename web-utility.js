@@ -305,11 +305,12 @@ function getNPCdisplay(npc)
 				tra.style.color="#0A0"
 			else
 				tra.style.color="#A00"
-			tra.title="DEX "+npc.abilities[abi[i]]+" "+(npc.armor.dexmod>0?'+':'') + npc.armor.dexmod
+			tra.title="DEX "+npc.abilities[abi[i]]+" "+(npc.armor.dexmod>0?'+':'') + npc.armor.dexmod + "\n(armor)"
 		}
 		else
 			td.innerHTML=npc.abilities[abi[i]]
 		td.style.textAlign = "right"
+		td.style.minWidth="1em"
 		tra.appendChild(td)
 		tab.appendChild(tra)
 	}
