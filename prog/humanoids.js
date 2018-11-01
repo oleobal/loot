@@ -86,7 +86,7 @@ function finalizeHumanoid(p, mod, gearSources)
 	fp.inventory = getObjects(inv, constraints, gearSources)
 	
 	if (fp.armorVal > 0)
-		fp.armor = gearSources["Armor"].getRandomWeapons(1, fp.armorVal)[0]
+		fp.armor = gearSources["Armor"].getRandomItems(1, fp.armorVal)[0]
 	
 	fp.cr = fp.abilities.STR
 	      + fp.abilities.DEX
@@ -141,7 +141,7 @@ function getObjects(inv, constraints, gearSources)
 			else
 				cons.catmust = innerJoinArrays(a,b)
 			
-			result.push(gearSources[inv[i].name].getRandomWeapons(1,inv[i].val, cons)[0])
+			result.push(gearSources[inv[i].name].getRandomItems(1,inv[i].val, cons)[0])
 		}
 	}
 	return result

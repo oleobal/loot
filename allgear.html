@@ -1,5 +1,5 @@
 <head>
-	<title>Weapon list</title>
+	<title>Gear list</title>
 	<meta charset="utf-8"/>
 	<script src="prog/utility.js"></script>
 	<script src="prog/web-utility.js"></script>
@@ -7,7 +7,8 @@
 	<script src="items/list-melee-weapons.js"></script>
 	<script src="items/list-ranged-weapons.js"></script>
 	<script src="items/list-armors.js"></script>
-	<script src="prog/weapons.js"></script>
+	
+	<script src="prog/items.js"></script>
 	<script>
 	
 	function addPieComparator(a, b)
@@ -136,9 +137,8 @@
 		
 	}
 	
-	var c = getAllWeaponCombinations(melee.items, melee.goodMods.concat(melee.badMods.slice(1)))
-	c = c.concat(getAllWeaponCombinations(ranged.items, ranged.goodMods.concat(ranged.badMods.slice(1))))
-	c = c.concat(getAllWeaponCombinations(armor.items, armor.goodMods.concat(armor.badMods.slice(1))))
+	var c = getAllItemCombinations(melee,ranged,armor)
+	
 	function displayAll()
 	{
 		addPie(melee.items.concat(ranged.items).concat(armor.items), "weaponsPie")
@@ -274,6 +274,7 @@
 <div style="display:inline-block; vertical-align:top; min-width:30%;">
 <h3>Search</h3>
 <input type="text" id="wpSearchBar"
+placeholder="Type gear name here"
 style="width:100%"
 oninput="searchWeaponByName(getElementValue('wpSearchBar'))">
 <table id="wpSearchResults" style="width:100%">

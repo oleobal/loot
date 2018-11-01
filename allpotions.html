@@ -1,17 +1,17 @@
 <head>
-	<title>Book list</title>
+	<title>Potion list</title>
 	<meta charset="utf-8"/>
 	<script src="prog/utility.js"></script>
 	
 	<script src="items/list-potions.js"></script>
-	<script src="prog/things.js"></script>
+	<script src="prog/items.js"></script>
 	
 	<script>
 	function displayAll()
 	{
 		var d = document.getElementById("debug")
 		var t = document.getElementById("bookTable")
-		var c = getAllThingCombinations(potions)
+		var c = getAllItemCombinations(potions)
 		
 		// add 'debug' to the GET arguments to enable debug output
 		var debug = (window.location.search.substr(1).indexOf("debug") >=0)

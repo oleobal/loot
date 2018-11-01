@@ -68,9 +68,10 @@ goodMods : [
 	},
 	{
 		"name":"great",
-		"val":2,
+		"val":1.5,
 		"desc":"Roll a d2 on use ; if 2, repeat the effects.",
-		"commonness":[15, 30, 1000]
+		"commonness":[15, 20, 1000],
+		"catcant":["Medicine"]
 	},
 	
 	{

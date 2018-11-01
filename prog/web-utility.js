@@ -9,7 +9,7 @@
  */ 
 function getWebDiceDisplay(input)
 {
-	var res = input
+	var res = input+""
 	res = res.replace(/d/g, "<i style=\"opacity: 0.7;\">d</i>")
 	res = res.replace(/\+/g, "<i style=\"opacity: 0.7;\">+</i>")
 	return res
@@ -64,9 +64,9 @@ function displayWeapons(chest, options)
 	for (var c in conf)
 	{
 		for (var n in conf[c].attrs)
-			conf[c].tooltips.push(getWeaponHelpText(conf[c].attrs[n]))
+			conf[c].tooltips.push(getItemHelpText(conf[c].attrs[n]))
 	}
-	conf["Armor"].tooltips.dmg = getWeaponHelpText("prot")
+	conf["Armor"].tooltips.dmg = getItemHelpText("prot")
 	
 	
 	

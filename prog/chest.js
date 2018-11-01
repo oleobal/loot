@@ -2,8 +2,7 @@
  * Contains things to generate actual lists from parameters
  * Import before this file :
  *  - utility.js
- *  - weapons.js
- *  - things.js
+ *  - items.js
  */
 
 
@@ -72,9 +71,8 @@ function getWeaponRackContents(value, context, randomWeaponSource)
 		nbmoon = Math.round(nbwps*nbmoon)
 	}
 	
-	
-	var result = randomWeaponSource.getRandomWeapons(nbwps-nbmoon*moonmult, val)
-	return result.concat(randomWeaponSource.getRandomWeapons(nbmoon, moonshot))
+	var result = randomWeaponSource.getRandomItems(nbwps-nbmoon*moonmult, val, null)
+	return result.concat(randomWeaponSource.getRandomItems(nbmoon, moonshot, null))
 }
 
 /**
@@ -86,7 +84,7 @@ function getLibraryContents(value, context, randomBookSource)
 	var val=Math.round(getRandom(30,50))
 	var nbbooks = Math.max(1,Math.round(value/val))
 	
-	return randomBookSource.getRandomThings(nbbooks, val)
+	return randomBookSource.getRandomItems(nbbooks, val)
 }
 
 function calculateTotalValue(chest)

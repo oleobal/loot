@@ -7,12 +7,12 @@
 	<script src="items/list-melee-weapons.js"></script>
 	<script src="items/list-ranged-weapons.js"></script>
 	<script src="items/list-armors.js"></script>
-	<script src="prog/weapons.js"></script>
 	
 	<script src="items/list-books.js"></script>
 	<script src="items/list-books-magic.js"></script>
 	<script src="items/list-books-combat.js"></script>
-	<script src="prog/things.js"></script>
+	
+	<script src="prog/items.js"></script>
 	
 	<script src="prog/chest.js"></script>
 	<script>
@@ -195,8 +195,8 @@
 		
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
 
-		var weaponR = RandomWeaponSource(melee, ranged, armor)
-		var bookR = RandomThingSource(books, magicbooks, combatbooks)
+		var weaponR = RandomItemSource(melee, ranged, armor)
+		var bookR = RandomItemSource(books, magicbooks, combatbooks)
 		
 		var rolledv = -10000
 		var safety = 0
@@ -244,43 +244,43 @@
 	<h3>Weapons</h3>
 	<table id="MeleeWeaponsTable">
 		<tr>
-			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
-			<th style="min-width:17em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
-			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+			<th style="min-width:12em;" title="${getItemHelpText('name')}" >Name</th>
+			<th style="min-width:17em;" title="${getItemHelpText('cat')}"   >Classes</th>
+			<th style="min-width:4em;" title="${getItemHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getItemHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getItemHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getItemHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getItemHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getItemHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getItemHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
 	<div style="height:1em;"></div>
 	<table id="RangedWeaponsTable">
 		<tr>
-			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
-			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
-			<th style="min-width:3.5em;" title="${getWeaponHelpText('min')}" >min</th> <!-- FIXME ??? Why .5 -->
-			<th style="min-width:4em;" title="${getWeaponHelpText('max')}"   >max</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('atk')}"   >ATK</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('par')}"   >PAR</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('dmg')}"   >DMG</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('hands')}" >Hands</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
-			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+			<th style="min-width:12em;" title="${getItemHelpText('name')}" >Name</th>
+			<th style="min-width:9em;" title="${getItemHelpText('cat')}"   >Classes</th>
+			<th style="min-width:3.5em;" title="${getItemHelpText('min')}" >min</th> <!-- FIXME ??? Why .5 -->
+			<th style="min-width:4em;" title="${getItemHelpText('max')}"   >max</th>
+			<th style="min-width:4em;" title="${getItemHelpText('atk')}"   >ATK</th>
+			<th style="min-width:4em;" title="${getItemHelpText('par')}"   >PAR</th>
+			<th style="min-width:5em;" title="${getItemHelpText('dmg')}"   >DMG</th>
+			<th style="min-width:5em;" title="${getItemHelpText('hands')}" >Hands</th>
+			<th style="min-width:5em;" title="${getItemHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getItemHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getItemHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
 	<div style="height:1em;"></div>
 	<table id="ArmorTable">
 		<tr>
-			<th style="min-width:12em;" title="${getWeaponHelpText('name')}" >Name</th>
-			<th style="min-width:9em;" title="${getWeaponHelpText('cat')}"   >Classes</th>
-			<th style="min-width:16.25em;" title="${getWeaponHelpText('dexmod')}">DEX modifier</th> <!-- FIXME ??? Why .25 !!!! -->
-			<th style="min-width:10.25em;" title="${getWeaponHelpText('prot')}"   >PROT</th>
-			<th style="min-width:5em;" title="${getWeaponHelpText('weight')}">Weight</th>
-			<th style="min-width:4em;" title="${getWeaponHelpText('val')}"   >Value</th>
-			<th style="width:100%;"    title="${getWeaponHelpText('desc')}"  >Notes</th>
+			<th style="min-width:12em;" title="${getItemHelpText('name')}" >Name</th>
+			<th style="min-width:9em;" title="${getItemHelpText('cat')}"   >Classes</th>
+			<th style="min-width:16.25em;" title="${getItemHelpText('dexmod')}">DEX modifier</th> <!-- FIXME ??? Why .25 !!!! -->
+			<th style="min-width:10.25em;" title="${getItemHelpText('prot')}"   >PROT</th>
+			<th style="min-width:5em;" title="${getItemHelpText('weight')}">Weight</th>
+			<th style="min-width:4em;" title="${getItemHelpText('val')}"   >Value</th>
+			<th style="width:100%;"    title="${getItemHelpText('desc')}"  >Notes</th>
 		</tr>
 	</table>
 	

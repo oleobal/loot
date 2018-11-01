@@ -7,11 +7,12 @@
 	<script src="items/list-melee-weapons.js"></script>
 	<script src="items/list-ranged-weapons.js"></script>
 	<script src="items/list-armors.js"></script>
-	<script src="prog/weapons.js"></script>
 	
 	<script src="items/list-books.js"></script>
 	<script src="items/list-books-magic.js"></script>
-	<script src="prog/books.js"></script>
+	<script src="items/list-books-combat.js"></script>
+	
+	<script src="prog/items.js"></script>
 	
 	<script src="items/list-humanoids.js"></script>
 	<script src="prog/humanoids.js"></script>
@@ -22,9 +23,9 @@
 		document.getElementById('results').innerHTML = ""
 		
 		var gearSources = {
-			"Melee Weapon":RandomWeaponSource(melee),
-			"Ranged Weapon":RandomWeaponSource(ranged),
-			"Armor":RandomWeaponSource(armor)
+			"Melee Weapon":RandomItemSource(melee),
+			"Ranged Weapon":RandomItemSource(ranged),
+			"Armor":RandomItemSource(armor)
 		}
 		for (var i in humanoids.items)
 			document.getElementById('results').appendChild(getNPCdisplay(finalizeHumanoid(humanoids.items[i],null,gearSources)))
