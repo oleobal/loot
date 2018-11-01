@@ -3,7 +3,7 @@
  * Import before this file :
  *  - utility.js
  *  - weapons.js
- *  - books.js
+ *  - things.js
  */
 
 

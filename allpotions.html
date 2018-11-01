@@ -3,16 +3,15 @@
 	<meta charset="utf-8"/>
 	<script src="prog/utility.js"></script>
 	
-	<script src="items/list-books.js"></script>
-	<script src="items/list-books-magic.js"></script>
-	<script src="items/list-books-combat.js"></script>
+	<script src="items/list-potions.js"></script>
 	<script src="prog/things.js"></script>
+	
 	<script>
 	function displayAll()
 	{
 		var d = document.getElementById("debug")
 		var t = document.getElementById("bookTable")
-		var c = getAllThingCombinations(books, magicbooks, combatbooks)
+		var c = getAllThingCombinations(potions)
 		
 		// add 'debug' to the GET arguments to enable debug output
 		var debug = (window.location.search.substr(1).indexOf("debug") >=0)

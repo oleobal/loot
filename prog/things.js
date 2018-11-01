@@ -1,7 +1,8 @@
 /**
+ * manages books and potions
+ *
  * To import before :
  *  - utility.js
- *  - list-books.js
  */
 
 /**
@@ -12,14 +13,14 @@
  * also adds "appliedModifier" and "baseItem" fields
  * (null and name)
  */
-function finalizeBook(book, subjects, mod)
+function finalizeThing(thing, subjects, mod)
 {
-	var fb=Object.assign({}, book)
+	var fi=Object.assign({}, thing)
 	
-	fb.appliedModifier=null
-	fb.baseItem = fb.name
+	fi.appliedModifier=null
+	fi.baseItem = fi.name
 	
-	var bookSubs = getFormatFields(book.name+" "+book.desc)
+	var bookSubs = getFormatFields(thing.name+" "+thing.desc)
 	var subsToApply={}
 	var subdict = {}
 	for (var i in bookSubs)
@@ -33,37 +34,41 @@ function finalizeBook(book, subjects, mod)
 			}
 		}
 	}
-	fb.name=format(fb.name, subdict)
-	fb.desc=format(fb.desc, subdict)
+	fi.name=format(fi.name, subdict)
+	fi.desc=format(fi.desc, subdict)
 	
 	var s = Object.keys(subsToApply)
 	for (var i in s)
-		fb.val*=subsToApply[s[i]].val
+		fi.val*=subsToApply[s[i]].val
 	
 	
 	if (mod && mod.name != "")
 	{
-		fb.name+=" ("+mod.name+")"
-		fb.desc+=" "+mod.desc
-		fb.val*=mod.val
-		if (fb.uses && mod.uses)
-			fb.uses=Math.round(fb.uses*mod.uses)
-		fb.appliedModifier=mod.name
+		if (fi.type === "Potion")
+			fi.name=mod.name+" "+fi.name
+		else
+			fi.name+=" ("+mod.name+")"
+		fi.desc+=" "+mod.desc
+		fi.val*=mod.val
+		if (fi.uses && mod.uses)
+			fi.uses=Math.round(fi.uses*mod.uses)
+		fi.appliedModifier=mod.name
 	}
 	
-	fb.val = Math.round(fb.val)
-	return fb
+	fi.val = Math.round(fi.val)
+	fi.name=fi.name.charAt(0).toUpperCase()+fi.name.slice(1)
+	return fi
 }
 
 
-function RandomBookSource(...booksobj)
+function RandomThingSource(...thingsobj)
 {
 	var r={}
-	r.books=[] //booksobj
-	r.items=[] //booksobj.items
-	r.goodMods=[] //booksobj.goodMods
-	r.badMods=[] //booksobj.badMods
-	r.subjectTypes = [] //booksobj.subjectTypes
+	r.books=[] //thingsobj
+	r.items=[] //thingsobj.items
+	r.goodMods=[] //thingsobj.goodMods
+	r.badMods=[] //thingsobj.badMods
+	r.subjectTypes = [] //thingsobj.subjectTypes
 	
 	r.booksPie = []
 	r.badModsPie = []
@@ -71,13 +76,13 @@ function RandomBookSource(...booksobj)
 	r.subjectsPies = []
 	r.booksObjPie=[]
 
-	for (var o in booksobj)
+	for (var o in thingsobj)
 	{
-		r.books.push(booksobj[o])
-		r.items.push(booksobj[o].items)
-		r.goodMods.push(booksobj[o].goodMods)
-		r.badMods.push(booksobj[o].badMods)
-		r.subjectTypes.push(booksobj[o].subjectTypes)
+		r.books.push(thingsobj[o])
+		r.items.push(thingsobj[o].items)
+		r.goodMods.push(thingsobj[o].goodMods)
+		r.badMods.push(thingsobj[o].badMods)
+		r.subjectTypes.push(thingsobj[o].subjectTypes)
 	
 		
 		r.booksPie[o] = []
@@ -120,7 +125,7 @@ function RandomBookSource(...booksobj)
 	
 	
 	
-	r.getRandomBooks = function(nbItems, meanval)
+	r.getRandomThings = function(nbItems, meanval)
 	{
 		var chest=[]
 		var i=0
@@ -155,12 +160,12 @@ function RandomBookSource(...booksobj)
 						m=this.badMods[obji][this.badModsPie[obji][getRandom(0,this.badModsPie[obji].length)]]
 					else if (b.val < meanval)
 						m=this.goodMods[obji][this.goodModsPie[obji][getRandom(0,this.goodModsPie[obji].length)]]
-					var fb = finalizeBook(b, subs, m)
+					var fb = finalizeThing(b, subs, m)
 				}
 				catch (err)
 				{
 					console.log("getRandomBooks: "+err)
-					var fb = finalizeBook(b, subs, null)
+					var fb = finalizeThing(b, subs, null)
 				}
 			}
 			chest.push(fb)
@@ -176,24 +181,24 @@ function RandomBookSource(...booksobj)
 /**
  * return an array of all possible book combinations
  */
-function getAllBookCombinations(...booksobj)
+function getAllThingCombinations(...thingsobj)
 {
 	var result=[]
-	for (var o in booksobj)
+	for (var o in thingsobj)
 	{
 	
-		var mods = booksobj[o].goodMods.concat(booksobj[o].badMods.slice(1))
+		var mods = thingsobj[o].goodMods.concat(thingsobj[o].badMods.slice(1))
 		
-		for (var i in booksobj[o].items)
+		for (var i in thingsobj[o].items)
 		{
 			// FIXME this does not support multiple subjects per book
-			for (k in booksobj[o].subjects)
+			for (k in thingsobj[o].subjects)
 			{
 				for (var j in mods)
 				{
 					try
 					{
-						result.push(finalizeBook(booksobj[o].items[i], [booksobj[o].subjects[k]], mods[j]))
+						result.push(finalizeThing(thingsobj[o].items[i], [thingsobj[o].subjects[k]], mods[j]))
 					}
 					catch (err)
 					{
