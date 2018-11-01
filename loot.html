@@ -46,6 +46,11 @@
 				if (chest[i].cat)
 					tdc.innerHTML=chest[i].cat
 				tr.appendChild(tdc)
+				var tdu = document.createElement("td")
+				if (chest[i].uses)
+					tdu.innerHTML=chest[i].uses
+				tdu.style.textAlign="right"
+				tr.appendChild(tdu)
 				var tdw = document.createElement("td")
 				tdw.innerHTML=chest[i].weight
 				tdw.style.textAlign="right"
@@ -72,7 +77,7 @@
 			var tr=document.createElement("tr")
 			var td = document.createElement("td")
 			td.innerHTML="No other items"
-			td.colSpan=6
+			td.colSpan=7
 			tr.appendChild(td)
 			tr.className="gray"
 			t.appendChild(tr)
@@ -83,7 +88,7 @@
 		var tr=document.createElement("tr")
 		var tdt = document.createElement("td")
 		tdt.innerHTML="Total (items)"
-		tdt.colSpan=3
+		tdt.colSpan=4
 		tr.appendChild(tdt)
 		var tdw = document.createElement("td")
 		tdw.innerHTML=totalWeight
@@ -226,11 +231,13 @@
 	<table id="itemsTable">
 		<tr>
 			<th style="min-width:12em;">Name</th>
-			<th style="min-width:15em;" >Type</th>
-			<th style="min-width:21em;">Classes</th>
+			<th style="min-width:14em;" >Type</th>
+			<th style="min-width:17em;">Classes</th>
+			<th style="min-width:5em;" >Uses</th>
 			<th style="min-width:5em;" >Weight</th>
 			<th style="min-width:4em;" >Value</th>
 			<th style="width:100%;"    >Notes</th>
+		</tr>
 		</tr>
 	</table>
 	

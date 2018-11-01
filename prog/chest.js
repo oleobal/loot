@@ -86,7 +86,7 @@ function getLibraryContents(value, context, randomBookSource)
 	var val=Math.round(getRandom(30,50))
 	var nbbooks = Math.max(1,Math.round(value/val))
 	
-	return randomBookSource.getRandomBooks(nbbooks, val)
+	return randomBookSource.getRandomThings(nbbooks, val)
 }
 
 function calculateTotalValue(chest)
