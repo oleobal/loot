@@ -12,112 +12,14 @@
 	<script src="items/list-books-magic.js"></script>
 	<script src="items/list-books-combat.js"></script>
 	
+	<script src="items/list-potions.js"></script>
+	
 	<script src="prog/items.js"></script>
 	
 	<script src="prog/chest.js"></script>
 	<script>
 	
-	/**
-	 * all items
-	 */
-	function displayItems(chest)
-	{
-		var t=document.getElementById("itemsTable")
-		var wps=[]
-		var totalVal=0
-		var totalWeight=0
-		var ic = 0
-		for (var i in chest)
-		{
-			if (chest[i].type==="Melee Weapon"
-			 || chest[i].type==="Ranged Weapon"
-			 || chest[i].type==="Armor")
-				wps.push(chest[i])
-			else
-			{
-				var tr=document.createElement("tr")
-				var tdn = document.createElement("td")
-				tdn.innerHTML=chest[i].name
-				tr.appendChild(tdn)
-				var tdt = document.createElement("td")
-				tdt.innerHTML=chest[i].type
-				tr.appendChild(tdt)
-				var tdc = document.createElement("td")
-				if (chest[i].cat)
-					tdc.innerHTML=chest[i].cat
-				tr.appendChild(tdc)
-				var tdu = document.createElement("td")
-				if (chest[i].uses)
-					tdu.innerHTML=chest[i].uses
-				tdu.style.textAlign="right"
-				tr.appendChild(tdu)
-				var tdw = document.createElement("td")
-				tdw.innerHTML=chest[i].weight
-				tdw.style.textAlign="right"
-				tr.appendChild(tdw)
-				var tdv = document.createElement("td")
-				tdv.innerHTML=chest[i].val
-				tdv.style.textAlign="right"
-				tr.appendChild(tdv)
-				var tdd = document.createElement("td")
-				tdd.innerHTML=chest[i].desc
-				tr.appendChild(tdd)
-				if (ic%2==0)
-					tr.className="gray"
-				t.appendChild(tr)
-				totalVal+=chest[i].val
-				totalWeight+=chest[i].weight
-				ic++
-			}
-		}
-		displayWeapons(wps, {total:true, colors:true})
-		
-		if (ic===0)
-		{
-			var tr=document.createElement("tr")
-			var td = document.createElement("td")
-			td.innerHTML="No other items"
-			td.colSpan=7
-			tr.appendChild(td)
-			tr.className="gray"
-			t.appendChild(tr)
-			return
-		}
-		
-		// total
-		var tr=document.createElement("tr")
-		var tdt = document.createElement("td")
-		tdt.innerHTML="Total (items)"
-		tdt.colSpan=4
-		tr.appendChild(tdt)
-		var tdw = document.createElement("td")
-		tdw.innerHTML=totalWeight
-		tdw.id="totalItemsWeight"
-		tdw.style.textAlign="right"
-		tr.appendChild(tdw)
-		var tdv = document.createElement("td")
-		tdv.innerHTML=totalVal
-		tdv.id="totalItemsVal"
-		tdv.style.textAlign="right"
-		tr.appendChild(tdv)
-		//tr.appendChild(document.createElement("td"))
-		tr.style.backgroundColor="#DDF"
-		tr.style.fontWeight="bold"
-		t.appendChild(tr)
-		
-		
-		// debug
-		if (false)
-		{
-			document.getElementById("debug").innerHTML=""
-			for (var w in chest)
-			{
-				var p = document.createElement('p')
-				p.innerHTML=JSON.stringify(chest[w],2)
-				document.getElementById("debug").appendChild(p)
-			}
-		}
-	}
+
 	
 	/**
 	 * also returns the total value
@@ -183,6 +85,8 @@
 		
 		context = {}
 		
+		context.nbplayers=document.getElementById("nbplayers").value
+		
 		var o = document.getElementsByName('itemsowner')
 		for (var i in o)
 		{
@@ -193,10 +97,13 @@
 			}
 		}
 		
+		context.nicegold=document.getElementById("nicegold").checked
+		
 		var valueIsStrict = document.getElementById("valueIsStrict").checked
 
 		var weaponR = RandomItemSource(melee, ranged, armor)
 		var bookR = RandomItemSource(books, magicbooks, combatbooks)
+		var potR = RandomItemSource(potions)
 		
 		var rolledv = -10000
 		var safety = 0
@@ -204,11 +111,13 @@
 		while (safety<100)
 		{
 			if (choice==="chest")
-				c = getChestContents(v, context, weaponR, bookR)
+				c = getChestContents(v, context, weaponR, bookR, potR)
 			else if (choice==="wprack")
 				c=getWeaponRackContents(v, context, weaponR)
 			else if (choice==="library")
 				c=getLibraryContents(v,context,bookR)
+			else if (choice==="apothecary")
+				c=getApothecaryContents(v,context,potR)
 				
 			rolledv = calculateTotalValue(c)
 			
@@ -336,7 +245,7 @@
 <fieldset style="width:17em;" class="menufield">
 	<legend>Getting the inventory for..</legend>
 	
-	<div style="display:inline-block">
+	<div style="display:inline-block; vertical-align:top;">
 		<div title="Chests contain a mix of items.">
 			<input type="radio" name="choice" value="chest" id="choicechest" checked />
 			<label for="choicechest">A chest</label>
@@ -346,14 +255,18 @@
 			<input type="radio" name="choice" value="wprack" id="choicewprack" />
 			<label for="choicewprack">A weapon rack</label>
 		</div>
-	</div>
-	<div style="display:inline-block">
 		<div title="Libraries only include books.">
 			<input type="radio" name="choice" value="library" id="choicelibrary" />
 			<label for="choicelibrary">A Library</label>
 		</div>
+	</div>
+	<div style="display:inline-block; vertical-align:top;">
+		<div title="Apothecaries only include potions.">
+			<input type="radio" name="choice" value="apothecary" id="choiceapothecary" />
+			<label for="choiceapothecary">An Apothecary</label>
+		</div>
 		
-		<div title="Stores try to have a bit of everything and mark up their prices.">
+		<div title="(Coming soon) Stores try to have a bit of everything and mark up their prices.">
 			<input type="checkbox" id="isStore" disabled> <label for="isStore">Store</label><br>
 		</div>
 		
@@ -394,6 +307,18 @@
 	<div>
 		<input type="radio" name="itemsowner" value="nobles" id="itemsownernobles" />
 		<label for="itemsownernobles">Nobles</label>
+	</div>
+</fieldset>
+
+<fieldset style="width:10em;" class="menufield" title="This tries to accomodate your players.">
+	<legend>With..
+	<div title="How many players share the loot." style="display:inline;">
+		<input id="nbplayers" type="number" value="4" style="width:3em" required/> Players
+	</div>
+	</legend>
+	
+	<div title="This forces gold to be divisible by the number of players.">
+	<input type="checkbox" id="nicegold"> <label for="nicegold">Nice gold</label><br>
 	</div>
 </fieldset>
 

@@ -10,15 +10,18 @@
  * Contents include weapons, gold, and precious items
  * 
  */
-function getChestContents(value, context, randomWeaponSource, randomBookSource)
+function getChestContents(value, context, randomWeaponSource, randomBookSource, randomPotionSource)
 {
 	// decide what part of the total value to allocate to what
 	if (context && context.owner=="soldiers")
 		var wpval = getRandom(Math.round(value/3),value)
 	else
 		var wpval = getRandom(0,value)
-	var itval = getRandom(0,value-wpval)
-	var gdval = value-wpval-itval
+	var ptval = getRandom(0,value-wpval)
+	if (ptval>value/3)
+		ptval = Math.round(value/3)
+	var itval = getRandom(0,value-wpval-ptval)
+	var gdval = value-wpval-itval-ptval
 	
 	var nbwps = getRandom(1,Math.round((wpval/30))+2)
 	//console.log(wpval, itval, gdval, nbwps)
@@ -26,12 +29,43 @@ function getChestContents(value, context, randomWeaponSource, randomBookSource)
 	
 	var chest=getWeaponRackContents(wpval, context, randomWeaponSource)
 	
+	if (context && context.owner == "peasants")
+		itval+=ptval
+	else
+		chest = chest.concat(getApothecaryContents(ptval,context,randomPotionSource))
+	
 	if (context && context.owner=="nobles")
 		chest = chest.concat(getLibraryContents(itval, context, randomBookSource))
 	else //TODO improve
 		chest.push({type:"Other", val:itval, weight:1, name:"Kitchen ustensils", desc:"Great for making quiche."})
 	
-	chest.push({type:"Gold", val:gdval, weight:0, name:"Gold", desc:"A pouch of gold."})
+	if (context && context.nbplayers && context.nicegold)
+	{
+		if (gdval > context.nbplayers)
+		{
+			var r = gdval%context.nbplayers
+			if (r>context.nbplayers/2)
+				gdval-=r
+			else
+				gdval+=context.nbplayers-r
+		}
+		else
+			gdval=getRandom(0,2)*context.nbplayers
+	}
+	
+	// help text
+	var gddescadd=""
+	if (context && context.nbplayers && gdval > context.nbplayers)
+	{
+		var r = gdval%context.nbplayers
+		if (r == 0)
+			gddescadd=" ("+((gdval-r)/context.nbplayers)+"x"+context.nbplayers+")"
+		else
+			gddescadd=" ("+((gdval-r)/context.nbplayers)+"x"+context.nbplayers+"+"+r+")"
+	}
+	
+	if (gdval > 0)
+		chest.push({type:"Gold", val:gdval, weight:0, name:"Gold", desc:"A pouch of gold."+gddescadd})
 	
 	return chest
 }
@@ -85,6 +119,14 @@ function getLibraryContents(value, context, randomBookSource)
 	var nbbooks = Math.max(1,Math.round(value/val))
 	
 	return randomBookSource.getRandomItems(nbbooks, val)
+}
+
+function getApothecaryContents(value, context, randomPotionSource)
+{
+	var val=Math.round(getRandom(5,40))
+	var nbpots = Math.max(1,Math.round(value/val))
+	
+	return randomPotionSource.getRandomItems(nbpots, val)
 }
 
 function calculateTotalValue(chest)

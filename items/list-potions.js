@@ -22,12 +22,21 @@ items : [
 	},
 	
 	{
-		name:"combat potion of {element,c}",
+		name:"{element} vial",
 		cat:["Combat"],
 		val:10,
 		desc:"When opened, deals 1d4 {element} damage on contact.",
-		commonness:[15, 0, 1000]
+		commonness:[10, 0, 1000]
 	},
+	
+	{
+		name:"{element} grenade",
+		cat:["Combat"],
+		val:21,
+		desc:"When opened, deals 1d4 {element} damage to all adjacent squares (9 total).",
+		commonness:[20, 0, 1000]
+	},
+	
 	{
 		name:"potion of {ability1,c}",
 		cat:["Ability"],
@@ -52,10 +61,16 @@ badMods : [
 		"commonness":[100, 0, 1000]
 	},
 	{
+		"name":"expired",
+		"val":0.8,
+		"desc":"Roll a d10 on use ; if 1, this potion has no or adverse effects.",
+		"commonness":[30, 0, 50]
+	},
+	{
 		"name":"crude",
 		"val":0.6,
 		"desc":"Roll a d6 on use ; if 1, this potion has no or adverse effects.",
-		"commonness":[20, 0, 25]
+		"commonness":[30, 0, 30]
 	}
 ],
 
@@ -67,10 +82,10 @@ goodMods : [
 		"commonness":[100, 0, 1000]
 	},
 	{
-		"name":"great",
+		"name":"fine",
 		"val":1.5,
 		"desc":"Roll a d2 on use ; if 2, repeat the effects.",
-		"commonness":[15, 20, 1000],
+		"commonness":[30, 20, 1000],
 		"catcant":["Medicine"]
 	},
 	
@@ -97,6 +112,9 @@ subjectTypes : {
 		},
 	],
 	
+	// all those modifiers are 1 to conform to the alchemy rules
+	// maybe there should be a merchant algo to mark up prices depending
+	// on rarity (TODO)
 	element: [
 		{
 			name:"fire",
@@ -105,17 +123,17 @@ subjectTypes : {
 		},
 		{
 			name:"water",
-			val:1.5,
+			val:1,
 			commonness:1
 		},
 		{
 			name:"ice",
-			val:1.5,
+			val:1,
 			commonness:10
 		},
 		{
 			name:"lightning",
-			val:1.5,
+			val:1,
 			commonness:2
 		},
 	],
@@ -132,12 +150,12 @@ subjectTypes : {
 		},
 		{
 			name:"intelligence",
-			val:2,
+			val:1,
 			commonness:5
 		},
 		{
 			name:"wisdom",
-			val:1.5,
+			val:1,
 			commonness:2
 		},
 		{
@@ -160,7 +178,7 @@ subjectTypes : {
 		},
 		{
 			name:"luck",
-			val:2,
+			val:1,
 			commonness:2
 		},
 	],

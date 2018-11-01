@@ -15,6 +15,151 @@ function getWebDiceDisplay(input)
 	return res
 }
  
+ 
+/**
+ * all items
+ * it expects there to be a table id-ed "itemsTable",
+ * and will call displayWeapons() for weapons
+ */
+function displayItems(chest)
+{
+	var t=document.getElementById("itemsTable")
+	var wps=[]
+	var items=[]
+	var tempitems=[]
+	var itemsCount = {}
+	var totalVal=0
+	var totalWeight=0
+	var ic = 0
+	for (var i in chest)
+	{
+		if (chest[i].type==="Melee Weapon"
+		 || chest[i].type==="Ranged Weapon"
+		 || chest[i].type==="Armor")
+			wps.push(chest[i])
+		else
+		{
+			totalVal+=chest[i].val
+			totalWeight+=chest[i].weight
+			if (itemsCount[chest[i].name])
+				itemsCount[chest[i].name]++
+			else
+			{
+				tempitems.push(chest[i])
+				itemsCount[chest[i].name]=1
+			}
+		}
+	}
+	
+	for (var i in tempitems)
+	{
+		if (itemsCount[tempitems[i].name]>1)
+		{
+			tempitems[i].weight = "<b style=\"color:#C00\">"+itemsCount[tempitems[i].name]*tempitems[i].weight +"</b> <br>("+tempitems[i].weight+")"
+			tempitems[i].val = "<b style=\"color:#C00\">"+itemsCount[tempitems[i].name]*tempitems[i].val +"</b> <br>("+tempitems[i].val+")"
+			tempitems[i].name = "<b style=\"color:#C00\">"+itemsCount[tempitems[i].name]+"x</b> "+tempitems[i].name
+		}
+		items.push(tempitems[i])
+	}
+	
+	
+	displayWeapons(wps, {total:true, colors:true})
+	
+	for (var i in items)
+	{
+		var tr=document.createElement("tr")
+		var tdn = document.createElement("td")
+		tdn.innerHTML=items[i].name
+		tdn.title = getItemHelpText("name")
+		tr.appendChild(tdn)
+		var tdt = document.createElement("td")
+		tdt.innerHTML=items[i].type
+		if (items[i].type !== "Gold")
+			tdt.style.backgroundColor = getLightRGBfromString(items[i].type+"")
+		else
+			tr.style.backgroundColor = "#FFC"
+		tr.appendChild(tdt)
+		var tdc = document.createElement("td")
+		if (items[i].cat)
+		{
+			tdc.innerHTML=items[i].cat
+			tdc.style.backgroundColor = getLightRGBfromString(items[i].cat+"")
+		}
+		tdc.title = getItemHelpText("cat")
+		tr.appendChild(tdc)
+		var tdu = document.createElement("td")
+		if (items[i].uses)
+			tdu.innerHTML=items[i].uses
+		tdu.style.textAlign="right"
+		tdu.title = getItemHelpText("uses")
+		tr.appendChild(tdu)
+		var tdw = document.createElement("td")
+		tdw.innerHTML=items[i].weight
+		tdw.style.textAlign="right"
+		tdw.title = getItemHelpText("weight")
+		tr.appendChild(tdw)
+		var tdv = document.createElement("td")
+		tdv.innerHTML=items[i].val
+		tdv.style.textAlign="right"
+		tdv.title = getItemHelpText("val")
+		tr.appendChild(tdv)
+		var tdd = document.createElement("td")
+		tdd.innerHTML=items[i].desc
+		tdd.title = getItemHelpText("desc")
+		tr.appendChild(tdd)
+		if (ic%2==0)
+			tr.className="gray"
+		t.appendChild(tr)
+		ic++
+	}
+	
+	if (ic===0)
+	{
+		var tr=document.createElement("tr")
+		var td = document.createElement("td")
+		td.innerHTML="<i>No other items</i>"
+		td.colSpan=7
+		tr.appendChild(td)
+		tr.className="gray"
+		t.appendChild(tr)
+		return
+	}
+	
+	// total
+	var tr=document.createElement("tr")
+	var tdt = document.createElement("td")
+	tdt.innerHTML="Total (items)"
+	tdt.colSpan=4
+	tr.appendChild(tdt)
+	var tdw = document.createElement("td")
+	tdw.innerHTML=totalWeight
+	tdw.id="totalItemsWeight"
+	tdw.style.textAlign="right"
+	tr.appendChild(tdw)
+	var tdv = document.createElement("td")
+	tdv.innerHTML=totalVal
+	tdv.id="totalItemsVal"
+	tdv.style.textAlign="right"
+	tr.appendChild(tdv)
+	//tr.appendChild(document.createElement("td"))
+	tr.style.backgroundColor="#DDF"
+	tr.style.fontWeight="bold"
+	t.appendChild(tr)
+	
+	
+	// debug
+	if (window.location.search.substr(1).indexOf("debug") >=0)
+	{
+		document.getElementById("debug").innerHTML=""
+		for (var w in chest)
+		{
+			var p = document.createElement('p')
+			p.innerHTML=JSON.stringify(chest[w],2)
+			document.getElementById("debug").appendChild(p)
+		}
+	}
+}
+ 
 /**
  * for displaying weapons in a table.
  * It expects there to be a table for each weapon type with appropriate ID
