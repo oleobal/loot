@@ -154,7 +154,7 @@ function getLuthierContents(value, context, randomMusicSource)
 		total-=moonshot
 	}
 	
-	var val=7
+	var val=getRandom(5,9)
 	var nb = Math.max(1,Math.round(total/val))-1
 	
 	result= result.concat(randomMusicSource.getRandomItems(nb, val))

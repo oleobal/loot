@@ -307,7 +307,7 @@ function RandomItemSource(...thingsobj)
 			return []
 		if (!nbItems || !meanval)
 			throw "Please provide nbItems and meanval"
-			
+		
 		var chest=[]
 		var i=0
 		while (i<nbItems)
@@ -317,7 +317,7 @@ function RandomItemSource(...thingsobj)
 			
 			var b = {val:-1000}
 			var safety=0
-			while ((b.val < 0.5*meanval || b.val > 1.5*meanval) && safety<200)
+			while ((b.val < 0.4*meanval || b.val > 1.6*meanval) && safety<200)
 			{
 				safety++
 				b=this.items[obji][this.itemsPie[obji][getRandom(0,this.itemsPie[obji].length)]]
@@ -399,11 +399,10 @@ function RandomItemSource(...thingsobj)
 							var fb = finalizeItem(b, subs, null)
 							break
 						}
-						
 					}
-					
 				}
 			}
+			
 			chest.push(fb)
 			i++
 		}
