@@ -68,6 +68,25 @@ items : [
 		desc:"All possibilities offered by {weapons2h} are on display here.",
 		commonness:[5, 0,1000]
 	},
+	
+	
+	{
+		name:"Hand-to-hand combat",
+		cat:["Combat"],
+		val:50,
+		uses:5,
+		desc:"An enthusiastic (if confusing) overview of unarmed combat.",
+		commonness:[8, 0,1000]
+	},
+	
+	{
+		name:"The possibilies of unarmed combat",
+		cat:["Combat"],
+		val:120,
+		uses:15,
+		desc:"A fascinating deconstruction of hand-to-hand combat.",
+		commonness:[5, 0,1000]
+	},
 ],
 
 badMods : [

@@ -6,13 +6,13 @@
 var armor = {
 items : [
 	{
-		name:"padding",
+		name:"gambeson",
 		cat:["Light Armors"],
 		dmg:2,
 		dmgspread:0.5,
 		val:10,
 		dexmod:-0.2,
-		desc:"Thick clothing, often worn under a set.",
+		desc:"Thick padding, often worn under a set.",
 		weight:3,
 		"materials":{"fabric":[100, 0, 1000]},
 		"commonness":[10, 0, 1000]

@@ -223,7 +223,7 @@ function finalizeItem(item, subjects, mod)
 	var f = Object.keys(fi)
 	for (var i in f)
 	{
-		if (typeof(fi[f[i]]) === "number")
+		if (typeof(fi[f[i]]) === "number" && f[i] !== "weight")
 			fi[f[i]] = Math.round(fi[f[i]])
 	}
 	

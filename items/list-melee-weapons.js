@@ -78,7 +78,7 @@ items:[
 		"weight":0.5,
 		"dmgspread":2,
 		"materials":{"steel":[100, 2, 1000], "iron":[20, 0, 5]},
-		"commonness":[15, 0,10]
+		"commonness":[15, 0, 10]
 	},
 	
 	{
@@ -271,11 +271,27 @@ items:[
 	// AXES
 	
 	{
+		"name":"hammer",
+		"cat":["Axes"],
+		"hiddencat":["Civilian"],
+		"desc":"A small common hammer.",
+		"atk": 2,
+		"par": -2,
+		"dmg": 4,
+		"val": 1,
+		"hands":1,
+		"weight":0.5,
+		"dmgspread":2.1,
+		"materials":{"iron":[100, 10, 1000], "wood":[20, 0, 10]},
+		"commonness":[50, 10, 1000]
+	},
+	
+	{
 		"name":"battle axe",
 		"cat":["Axes"],
 		"desc":"Great for getting over shields and ending it quickly !",
 		"atk": 4,
-		"par": -1,
+		"par": -2,
 		"dmg": 8,
 		"val": 30,
 		"hands":1,
@@ -294,7 +310,7 @@ items:[
 		"dmg": 12,
 		"val": 65,
 		"hands":1,
-		"weight":3,
+		"weight":2,
 		"dmgspread":2.25,
 		"materials":{"steel":[100, 10, 1000]},
 		"commonness":[30, 10, 1000]

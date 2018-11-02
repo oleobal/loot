@@ -1,5 +1,5 @@
 <head>
-	<title>Book list</title>
+	<title>Objects list</title>
 	<meta charset="utf-8"/>
     <link rel="icon"
       type="image/png"
@@ -10,16 +10,48 @@
 	<script src="items/list-books.js"></script>
 	<script src="items/list-books-magic.js"></script>
 	<script src="items/list-books-combat.js"></script>
+	
+	<script src="items/list-potions.js"></script>
+	<script src="items/list-musical-instruments.js"></script>
+	<script src="items/list-objects.js"></script>
+	
 	<script src="prog/items.js"></script>
+	
 	<script>
 	function displayAll()
 	{
 		var d = document.getElementById("debug")
 		var t = document.getElementById("bookTable")
-		var c = getAllItemCombinations(books, magicbooks, combatbooks)
+		
+		var getargs = window.location.search.substr(1)
+		
+		var typei = 0
+		var types = []
+		while (typei<getargs.length)
+		{
+			typei = getargs.indexOf("type")
+			if (typei < -1)
+				break
+			typei+=5 //length of "type="
+			var type = ""
+			while (getargs[typei] != "&" && typei<getargs.length)
+			{
+				type+=getargs[typei]
+				typei++
+			}
+			getargs = getargs.substring(typei)
+			typei=0
+			types.push(window[type])
+			typei++
+		}
+		if (types.length == 0)
+			throw "No types given"
 		
 		// add 'debug' to the GET arguments to enable debug output
-		var debug = (window.location.search.substr(1).indexOf("debug") >=0)
+		var debug = (getargs.indexOf("debug") >=0)
+		
+		var c = getAllItemCombinations(...types)
+		
 		
 		
 		// this is because getAllBookCombinations returns duplicates currently
@@ -42,9 +74,9 @@
 				}
 				var uses = c[i].uses
 				if (!uses)
-					uses="--"
+					uses=""
 					
-				var s = "<tr "+tradd+"><td>"+title+"</td><td style='background-color:"+getLightRGBfromString(c[i].cat+"")+";'>"+c[i].cat+"</td><td style='text-align:right;'>"+uses+"</td><td style='text-align:right;'>"+c[i].val+"</td><td>"+c[i].desc+"</td></tr>"
+				var s = "<tr "+tradd+"><td title='"+getItemHelpText("name")+"'>"+title+"</td><td title='"+getItemHelpText("type")+"' style='background-color:"+getLightRGBfromString(c[i].type+"")+";'>"+c[i].type+"</td><td title='"+getItemHelpText("cat")+"' style='background-color:"+getLightRGBfromString(c[i].cat+"")+";'>"+c[i].cat+"</td><td title='"+getItemHelpText("weight")+"' style='text-align:right;'>"+c[i].weight+"</td><td title='"+getItemHelpText("uses")+"' style='text-align:right;'>"+uses+"</td><td title='"+getItemHelpText("val")+"' style='text-align:right;'>"+c[i].val+"</td><td title='"+getItemHelpText("desc")+"' >"+c[i].desc+"</td></tr>"
 				t.innerHTML+=s
 				alreadyThere.push(c[i].name)
 			}
@@ -78,7 +110,9 @@
 <table id="bookTable">
 	<tr>
 		<th style="min-width:25em">Title</th>
+		<th style="min-width:6em">Type</th>
 		<th style="min-width:10em">Categories</th>
+		<th style="min-width:4em">Weight</th>
 		<th style="min-width:4em">Uses</th>
 		<th style="min-width:4em">Value</th>
 		<th style="width:100%">Description</th>

@@ -10,7 +10,7 @@
  * Contents include weapons, gold, and precious items
  * 
  */
-function getChestContents(value, context, randomWeaponSource, randomBookSource, randomPotionSource)
+function getChestContents(value, context, randomWeaponSource, randomBookSource, randomPotionSource, randomMusicSource, randomOtherSource)
 {
 	// decide what part of the total value to allocate to what
 	if (context && context.owner=="soldiers")
@@ -35,9 +35,12 @@ function getChestContents(value, context, randomWeaponSource, randomBookSource, 
 		chest = chest.concat(getApothecaryContents(ptval,context,randomPotionSource))
 	
 	if (context && context.owner=="nobles")
-		chest = chest.concat(getLibraryContents(itval, context, randomBookSource))
+	{
+		chest = chest.concat(getLibraryContents(itval*0.6, context, randomBookSource))
+		chest = chest.concat(getOtherObjects(itval*0.4, context, randomOtherSource))
+	}
 	else //TODO improve
-		chest.push({type:"Other", val:itval, weight:1, name:"Kitchen ustensils", desc:"Great for making quiche."})
+		chest = chest.concat(getOtherObjects(itval, context, randomOtherSource))
 	
 	if (context && context.nbplayers && context.nicegold)
 	{
@@ -128,6 +131,50 @@ function getApothecaryContents(value, context, randomPotionSource)
 	
 	return randomPotionSource.getRandomItems(nbpots, val)
 }
+
+function getLuthierContents(value, context, randomMusicSource)
+{
+	var total = value
+	var result = []
+	// generate some better stuff
+	while (total > 150)
+	{
+		if (getRandom(0,3)>0)
+		{
+			if (total > 500)
+				var moonshot = getRandom(60,600)
+			else
+				var moonshot = getRandom(20,200)
+		}
+		else
+		{
+			var moonshot = 10
+		}
+		result = result.concat(randomMusicSource.getRandomItems(1, moonshot))
+		total-=moonshot
+	}
+	
+	var val=7
+	var nb = Math.max(1,Math.round(total/val))-1
+	
+	result= result.concat(randomMusicSource.getRandomItems(nb, val))
+	result= result.concat(randomMusicSource.getRandomItems(total-val*nb+1, 1))
+	
+	
+	return result
+}
+
+
+function getOtherObjects(value, context, randomObjectSource)
+{
+	var val = 1
+	if (context && context.owner == "nobles")
+		val = 10
+	
+	var nb = Math.max(1,Math.round(value/val))
+	return randomObjectSource.getRandomItems(nb, val)
+}
+
 
 function calculateTotalValue(chest)
 {

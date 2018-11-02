@@ -80,22 +80,6 @@ items : [
 	},
 	
 	{
-		name:"Songs of the {people}",
-		cat:["Other"],
-		val:30,
-		desc:"A collection of traditional songs.",
-		commonness:[3, 0, 1000]
-	},
-	
-	{
-		name:"The Art of measured chant",
-		cat:["Other"],
-		val:50,
-		desc:"An interesting treatise on rythm notation for music.",
-		commonness:[3, 0, 1000]
-	},
-	
-	{
 		name:"Philosophy of the Ancients",
 		cat:["Other"],
 		val:60,
@@ -109,6 +93,32 @@ items : [
 		val:70,
 		desc:"This is a fascinating and quite alien outlook on life.",
 		commonness:[1, 0, 1000]
+	},
+	
+	
+	{
+		name:"Songs of the {people}",
+		cat:["Music"],
+		val:30,
+		desc:"A collection of traditional songs.",
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"The Art of measured chant",
+		cat:["Music"],
+		val:50,
+		desc:"An interesting treatise on rythm notation for music.",
+		commonness:[3, 0, 1000]
+	},
+	
+	{
+		name:"Playing the {instrument,c}",
+		cat:["Music"],
+		val:50,
+		uses:10,
+		desc:"A treatise on playing the {instrument} for noble courts.",
+		commonness:[7, 0, 1000]
 	},
 ],
 
@@ -125,6 +135,7 @@ badMods : [
 	{
 		"name":"with errors",
 		"val":0.8,
+		"uses":0.6,
 		"desc":"Many errors were made when this one was copied.",
 		"commonness":[20, 0, 1000]
 	}
@@ -140,6 +151,7 @@ goodMods : [
 	{
 		"name":"illuminated",
 		"val":2,
+		"uses":1.1,
 		"desc":"Beautiful illustrations.",
 		"commonness":[20, 0, 1000]
 	},
@@ -221,8 +233,64 @@ subjectTypes : {
 			val:1.2,
 			commonness:5
 		},
-	]
+	],
 	
+	instrument: [
+		{
+			name:"lute",
+			val:1,
+			commonness:25
+		},
+		{
+			name:"lyre",
+			val:1,
+			commonness:10
+		},
+		{
+			name:"fiddle",
+			val:1,
+			commonness:10
+		},
+		{
+			name:"hurdy-gurdy",
+			val:2,
+			commonness:3
+		},
+		
+		{
+			name:"percussion",
+			val:1,
+			commonness:10
+		},
+		{
+			name:"flute",
+			val:1,
+			commonness:10
+		},
+		{
+			name:"chalumeau",
+			val:1,
+			commonness:5
+		},
+		
+		{
+			name:"shawm",
+			val:1,
+			commonness:5
+		},
+		
+		{
+			name:"horn",
+			val:1,
+			commonness:10
+		},
+		
+		{
+			name:"bagpipes",
+			val:1,
+			commonness:5
+		},
+	]
 }
 
 

@@ -18,6 +18,9 @@
 	
 	<script src="items/list-potions.js"></script>
 	
+	<script src="items/list-musical-instruments.js"></script>
+	<script src="items/list-objects.js"></script>
+	
 	<script src="prog/items.js"></script>
 	
 	<script src="prog/chest.js"></script>
@@ -107,7 +110,9 @@
 
 		var weaponR = RandomItemSource(melee, ranged, armor)
 		var bookR = RandomItemSource(books, magicbooks, combatbooks)
-		var potR = RandomItemSource(potions)
+		var /*harry*/ potR = RandomItemSource(potions)
+		var musicR = RandomItemSource(musicalinstruments)
+		var otherR = RandomItemSource(objects, musicalinstruments)
 		
 		var rolledv = -10000
 		var safety = 0
@@ -115,14 +120,16 @@
 		while (safety<100)
 		{
 			if (choice==="chest")
-				c = getChestContents(v, context, weaponR, bookR, potR)
+				c = getChestContents(v, context, weaponR, bookR, potR, musicR, otherR)
 			else if (choice==="wprack")
 				c=getWeaponRackContents(v, context, weaponR)
 			else if (choice==="library")
 				c=getLibraryContents(v,context,bookR)
 			else if (choice==="apothecary")
 				c=getApothecaryContents(v,context,potR)
-				
+			else if (choice==="luthier")
+				c=getLuthierContents(v,context,musicR)
+			
 			rolledv = calculateTotalValue(c)
 			
 			if (valueIsStrict && (rolledv<0.9*v || rolledv>1.1*v))
@@ -268,6 +275,12 @@
 		<div title="Apothecaries only include potions.">
 			<input type="radio" name="choice" value="apothecary" id="choiceapothecary" />
 			<label for="choiceapothecary">An Apothecary</label>
+		</div>
+		
+		<div title="Luthieries only include musical instruments.
+What do you mean, 'Not a real word' ?">
+			<input type="radio" name="choice" value="luthier" id="choiceluthier" />
+			<label for="choiceluthier">A Luthiery</label>
 		</div>
 		
 		<div title="(Coming soon) Stores try to have a bit of everything and mark up their prices.">
