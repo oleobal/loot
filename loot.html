@@ -116,8 +116,9 @@
 		
 		var rolledv = -10000
 		var safety = 0
+		var safetymax = 100
 		var c = null
-		while (safety<100)
+		while (safety<safetymax)
 		{
 			if (choice==="chest")
 				c = getChestContents(v, context, weaponR, bookR, potR, musicR, otherR)
@@ -133,15 +134,17 @@
 			rolledv = calculateTotalValue(c)
 			
 			if (valueIsStrict && (rolledv<0.9*v || rolledv>1.1*v))
-				safety++
+			{ }
 			else
 			{
 				displayItems(c)
 				displayGrandTotal()
 				break
 			}
-			
+			safety++
 		}
+		if (safety == safetymax)
+			alert("Couldn't satisfy the given requirements."+ (valueIsStrict? " Try disabling strict value." : "") )
 	}
 	
 	function wipeResults()
